@@ -70,7 +70,7 @@ export default async function Item({ params }: Props) {
 
   return (
     <div className="flex flex-col  h-full">
-      <BackHeader title={product.name} />
+      <BackHeader title="" />
       <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
         <div className="flex flex-col gap-2">
           <div className="w-full ">
