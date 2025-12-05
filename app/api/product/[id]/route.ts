@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
-import { Product } from "@/app/types/home.type";
-import { TestData } from "@/app/api/product/data.mock";
+import { TestData } from "../data.mock";
+import { type NextRequest } from "next/server";
 
-// GET /api/products/:id
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt((await params).id, 10);
+  // 解析 params promise
+  const params = await context.params;
+  const { id } = params;
 
-  const product = TestData.find((item) => item.id == id);
+  const product = TestData.find((item) => item.id.toString() === id);
 
   if (!product) {
-    return NextResponse.json(
-      { code: 1, message: `未找到商品${id}` },
-      { status: 404 }
-    );
+    return NextResponse.json({ code: 1, message: "Not Found" });
   }
 
   return NextResponse.json({ code: 0, data: product });
