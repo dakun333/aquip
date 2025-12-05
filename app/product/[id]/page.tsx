@@ -34,9 +34,7 @@ async function getProductById(id: string): Promise<Product | null> {
   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
   try {
-    const res = await fetch(`${protocol}://${host}/api/product/${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`${protocol}://${host}/api/product/${id}`);
 
     if (!res.ok) {
       return null;
