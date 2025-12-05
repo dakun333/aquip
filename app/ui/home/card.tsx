@@ -5,29 +5,33 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 import Image from "next/image";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function ProductCard({ product }: { product: Product }) {
-  // const router = useRouter();
+  const router = useRouter();
   const detailHandle = () => {
-    // router.push(`/product/${product.id}`);
+    router.push(`/product/${product.id}`);
   };
   return (
     <Card
       key={product.id}
-      className="p-3 gap-1 cursor-pointer"
+      className="p-3 gap-1 cursor-pointer transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-gray-200/50 hover:scale-[1.02]"
       onClick={detailHandle}
     >
       <CardContent className="flex justify-center items-center">
         <Image
-          width={200}
-          height={200}
-          src="https://m.media-amazon.com/images/I/91nAi-LWOFL._AC_UL480_FMwebp_QL65_.jpg"
+          width={253}
+          height={253}
+          // src="https://m.media-amazon.com/images/I/91nAi-LWOFL._AC_UL480_FMwebp_QL65_.jpg"
+          src={product.cover}
           alt={product.name}
           className="object-contain select-none"
         />
       </CardContent>
 
+      <CardDescription className="flex justify-between items-center">
+        {product.description}
+      </CardDescription>
       <CardDescription className="flex justify-between items-center">
         <Button variant="ghost">
           <Heart />

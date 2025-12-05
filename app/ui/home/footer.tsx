@@ -3,8 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { HomeIcon, MessageCircleMore, ShoppingCart, User2 } from "lucide-react";
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
 
 const tabs = [
   { icon: HomeIcon, label: "Home", href: "/" },

@@ -25,7 +25,7 @@ export default function RootLayout({
               md:max-w-[560px]
               lg:max-w-[640px]
               xl:max-w-[720px]
-              min-h-screen"
+              h-screen bg-white"
         >
           {children}
         </div>

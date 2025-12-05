@@ -141,3 +141,10 @@ body {
 * {
   -ms-overflow-style: none;
 }
+/* shadcn 的按钮悬浮鼠标样式 */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

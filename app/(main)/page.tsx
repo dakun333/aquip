@@ -16,13 +16,14 @@ import {
   User,
   User2,
 } from "lucide-react";
-import { Product } from "./types/home.type";
+import { Product } from "../types/home.type";
 import { headers } from "next/headers";
 import Image from "next/image";
 
-import HomeFooter from "./ui/home/footer";
-import ProductCard from "./ui/home/card";
+import HomeFooter from "../ui/home/footer";
+import ProductCard from "../ui/home/card";
 import { Suspense } from "react";
+import Link from "next/link";
 export const metadata: Metadata = {
   title: {
     template: "%s | Aquip",
@@ -38,7 +39,7 @@ async function getProducts(): Promise<Product[]> {
   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
   const res = await fetch(`${protocol}://${host}/api/product`, {
-    cache: "no-store",
+    // cache: "no-store",
   });
   console.log("获取到的数据:", res);
   if (!res.ok) {
@@ -59,7 +60,7 @@ export default async function Home() {
   const products = await getProducts();
 
   return (
-    <div className="flex flex-col h-screen bg-white gap-1">
+    <div className="flex h-full flex-col bg-white gap-1 justify-between">
       {/* 顶部 */}
       <div className="shrink-0 h-20 border-b px-4 flex items-center justify-between">
         <div className="text-2xl font-bold cursor-pointer">Aquip</div>
@@ -68,12 +69,16 @@ export default async function Home() {
           <Button variant="outline">
             <Search className="w-5 h-5" />
           </Button>
-          <Button variant="outline">
-            <User className="w-5 h-5" />
-          </Button>
-          <Button variant="outline">
-            <ShoppingCart className="w-5 h-5" />
-          </Button>
+          <Link href="/user">
+            <Button variant="outline">
+              <User className="w-5 h-5" />
+            </Button>
+          </Link>
+          <Link href="/cart">
+            <Button variant="outline">
+              <ShoppingCart className="w-5 h-5" />
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -89,8 +94,6 @@ export default async function Home() {
       </div>
 
       {/* 底部 */}
-
-      <HomeFooter />
     </div>
   );
 }
