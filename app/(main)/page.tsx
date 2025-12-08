@@ -49,12 +49,6 @@ async function getProducts(): Promise<Product[]> {
   const json = await res.json();
   return json.data;
 }
-const tabs = [
-  { icon: HomeIcon, label: "Home" },
-  { icon: MessageCircleMore, label: "Discover" },
-  { icon: ShoppingCart, label: "Cart" },
-  { icon: User2, label: "User" },
-];
 
 export default async function Home() {
   const products = await getProducts();
@@ -97,3 +91,4 @@ export default async function Home() {
     </div>
   );
 }
+export const revalidate = 60; // 1 分钟 ISR

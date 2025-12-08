@@ -64,3 +64,27 @@ export function formatMoney(money: number | string, config?: Config): string {
     return `${formattedNumber}${unit}`;
   }
 }
+
+/**
+ * 格式化倒计时
+ * @param seconds 总秒数
+ * @param format 自定义格式，支持：
+ *   H / HH   小时、两位小时
+ *   m / mm   分钟、两位分钟
+ *   s / ss   秒、两位秒
+ */
+export function FormatCountdown(seconds: number, format = "mm:ss") {
+  let h = Math.floor(seconds / 3600);
+  let m = Math.floor((seconds % 3600) / 60);
+  let s = seconds % 60;
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return format
+    .replace(/HH/g, pad(h))
+    .replace(/H/g, String(h))
+    .replace(/mm/g, pad(m))
+    .replace(/m/g, String(m))
+    .replace(/ss/g, pad(s))
+    .replace(/s/g, String(s));
+}
