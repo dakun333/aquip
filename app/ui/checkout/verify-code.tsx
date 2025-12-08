@@ -93,9 +93,9 @@ export default function VerifyCodeDialog({
             Verify
           </AQButton>
 
-          <div className="text-xs text-gray-500 cursor-pointer">
+          <p className="text-xs text-gray-500 cursor-pointer">
             Change phone number?
-          </div>
+          </p>
         </div>
       </DialogContent>
     </Dialog>
