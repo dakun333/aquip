@@ -11,6 +11,7 @@ export default function CardIcon({
     [CardType.Unknown]: "/card/card.svg",
     [CardType.Visa]: "/card/visa.svg",
   };
+  const uri = typeMap[type] || typeMap[CardType.Unknown];
 
-  return <Image src={typeMap[type]} alt={type} width={40} height={25} />;
+  return <Image src={uri} alt={type} width={40} height={25} />;
 }
