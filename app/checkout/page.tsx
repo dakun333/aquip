@@ -13,10 +13,12 @@ import { IPayCardInfo } from "../types/checkout.type";
 import { AQButton } from "../ui/button";
 import { set } from "zod";
 import VerifyCode from "../ui/checkout/verify-code";
+import VerifyCodeDialog from "../ui/checkout/verify-code";
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || 1;
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   // console.log("id:", id);
   if (!id) {
@@ -40,6 +42,13 @@ export default function CheckoutPage() {
   };
   const submitHandle = () => {
     setLoading(true);
+    setOpen(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+  const verifyHandle = () => {
+    setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -49,7 +58,7 @@ export default function CheckoutPage() {
       <div className="relative flex flex-col h-full">
         <BackHeader title="支付" />
 
-        {/* <div className="flex-1 overflow-y-auto flex flex-col p-2">
+        <div className="flex-1 overflow-y-auto flex flex-col p-2">
           <div className="mb-8 mx-2 mt-2">
             <VirtualCard cardInfo={cardInfo} />
           </div>
@@ -58,7 +67,6 @@ export default function CheckoutPage() {
             onValidChange={validChange}
           ></PaymentForm>
 
-       
           <div className="mt-10 pt-4 border-t border-gray-200 mx-2">
             <div className="flex justify-between items-center mb-6">
               <span className="text-base font-medium">Total</span>
@@ -79,8 +87,14 @@ export default function CheckoutPage() {
               Encrypted & Secure Payment
             </p>
           </div>
-        </div> */}
-        <VerifyCode />
+        </div>
+        {/* <VerifyCode /> */}
+        <VerifyCodeDialog
+          open={open}
+          onOpenChange={setOpen}
+          phone="+1 234 **** 89"
+          onSubmit={verifyHandle}
+        />
       </div>
     </>
   );
