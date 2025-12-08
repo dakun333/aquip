@@ -6,15 +6,6 @@ import { Headset, Heart, Minus, MoveLeft, Plus, Store } from "lucide-react";
 import { headers } from "next/headers";
 
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   Accordion,
   AccordionContent,
@@ -74,19 +65,6 @@ export default async function Item({ params }: Props) {
           <div className="w-full ">
             <ProductGallery product={product} />
           </div>
-          {/* 小图列表 */}
-          {/* <div className="relative flex items-center p-2 gap-2">
-            {product.imgs?.map((o, i) => (
-              <Image
-                key={i}
-                src={o}
-                alt={product.name}
-                width={80}
-                height={80}
-                className="flex-shrink-0 w-20 h-20 object-cover rounded"
-              />
-            ))}
-          </div> */}
 
           <div className="px-4 py-2">
             <div className="text-2xl">{product.name}</div>
