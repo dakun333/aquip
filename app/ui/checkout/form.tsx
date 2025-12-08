@@ -7,19 +7,27 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IPayCardInfo } from "@/app/types/checkout.type";
+import { CardType, IPayCardInfo } from "@/app/types/checkout.type";
 import { useEffect, useRef } from "react";
-
+import CardValidator from "card-validator";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import CardIcon from "./card-icon";
 const PayCardSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Cardholder name required"),
-  expireDate: z.string().min(3, "Invalid date"),
-  cvv: z.string().min(3, "Invalid CVV"),
+  id: z.string().trim().length(19, "Card number must be 16 digits"),
+  name: z.string().trim().min(1, "Cardholder name required"),
+  expireDate: z.string().trim().min(3, "Invalid date"),
+  cvv: z.string().trim().min(3, "Invalid CVV"),
+  type: z.enum(CardType).optional(),
 });
 
 type PayCardForm = z.infer<typeof PayCardSchema>;
@@ -47,14 +55,19 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
   const previousIsValidRef = useRef<boolean>(false);
 
   const watchAllFields = watch();
+  const watchId = form.watch("id");
+  const cardType = CardValidator.number(watchId).card?.type as CardType;
 
   // 当表单数据变化时通知父组件
   useEffect(() => {
     // 只有当值真正改变时才调用onChange
+
     if (
       JSON.stringify(watchAllFields) !==
       JSON.stringify(previousValueRef.current)
     ) {
+      // const cardType = CardValidator.number(watchId).card?.type as CardType;
+      form.setValue("type", cardType);
       previousValueRef.current = watchAllFields;
       onChange?.(watchAllFields);
     }
@@ -78,8 +91,9 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
             <FormItem>
               <FormLabel>Cardholder Name</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="John Doe" />
+                <Input {...field} placeholder="Name on card" />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -91,20 +105,36 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
             <FormItem>
               <FormLabel>Card Number</FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Input
+                <InputGroup>
+                  <InputGroupInput
                     {...field}
+                    value={field.value || ""}
                     className="pr-12"
-                    placeholder="5544 2345 8765 3456"
+                    placeholder="**** **** **** ****"
+                    onChange={(e) => {
+                      let value = e.target.value;
+
+                      // 1. 去掉非数字
+                      value = value.replace(/\D/g, "");
+
+                      // 2. 每 4 位加空格
+                      value = value.replace(/(.{4})/g, "$1 ").trim();
+
+                      field.onChange(value);
+                    }}
                   />
-                </div>
+                  <InputGroupAddon align="inline-end">
+                    <CardIcon type={cardType} />
+                  </InputGroupAddon>
+                </InputGroup>
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
 
         {/* Expiry Date / CVV */}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 items-start">
           <FormField
             name="expireDate"
             render={({ field }) => (
@@ -113,6 +143,7 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
                 <FormControl>
                   <Input {...field} placeholder="MM/YY" />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -122,8 +153,9 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
               <FormItem className="flex-1">
                 <FormLabel>CVV / CVC</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="123" />
+                  <Input {...field} placeholder="***" />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

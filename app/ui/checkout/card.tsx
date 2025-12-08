@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Label } from "@radix-ui/react-label";
 import { IPayCardInfo } from "@/app/types/checkout.type";
+import CardIcon from "./card-icon";
 interface IProps {
   cardInfo: IPayCardInfo;
 }
@@ -14,7 +15,8 @@ export default function VirtualCard({ cardInfo }: IProps) {
         <div className="flex justify-between items-start">
           {/* Replace with your logo/icon */}
           <div className="h-8 w-12 bg-yellow-500 rounded-sm"></div>
-          <Image src="/visa.svg" alt="VISA" width={40} height={25} />
+          <CardIcon type={cardInfo?.type} />
+          {/* <Image src="/visa.svg" alt="VISA" width={40} height={25} /> */}
         </div>
 
         {/* Card Number */}
