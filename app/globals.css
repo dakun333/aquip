@@ -1,5 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@media (max-width: 640px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 641px) {
+  html {
+    font-size: 16px;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 
