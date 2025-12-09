@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { AQButton } from "../button";
 import { formatMoney } from "@/app/utils/format";
+import { useRouter } from "next/navigation";
 const fetchList = async () => {
   // const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000
   // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
@@ -24,6 +25,7 @@ const fetchList = async () => {
   return json.data;
 };
 export default function CartList() {
+  const router = useRouter();
   const [cart, setCart] = useState<Shop[]>([]);
   const [selectNum, setSelectNum] = useState<number>(2);
   const [money, setMoney] = useState({
@@ -38,6 +40,9 @@ export default function CartList() {
     } catch (error) {
       console.log(error);
     }
+  };
+  const payHandle = () => {
+    router.push("/checkout");
   };
   useEffect(() => {
     getList();
@@ -71,7 +76,9 @@ export default function CartList() {
               </span>
             </span>
           </div>
-          <AQButton disabled={selectNum == 0}>领券结算（{selectNum}）</AQButton>
+          <AQButton disabled={selectNum == 0} onClick={payHandle}>
+            领券结算（{selectNum}）
+          </AQButton>
         </div>
       </div>
     </div>

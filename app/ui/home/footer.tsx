@@ -8,7 +8,7 @@ const tabs = [
   { icon: HomeIcon, label: "Home", href: "/" },
   { icon: MessageCircleMore, label: "Message", href: "/msg" },
   { icon: ShoppingCart, label: "Cart", href: "/cart" },
-  { icon: User2, label: "User", href: "/user" },
+  { icon: User2, label: "User", href: "/my" },
 ];
 export default function HomeFooter() {
   const pathname = usePathname();

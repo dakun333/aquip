@@ -18,15 +18,14 @@ export default function CartCard({ shop }: IProps) {
   }
 
   return (
-    <div className="flex flex-col mb-2 rounded-md px-4 py-8 bg-white ">
-      <div className="flex items-center gap-2">
-        <div className="">
-          <Checkbox
-            className="my-auto"
-            defaultChecked={CheckedEnum[shop.checked]}
-          />
-        </div>
-        <span>{shop.name}</span>
+    <div className="flex flex-col mb-2 rounded-md px-4 pt-4 pb-8 bg-white ">
+      <div className="flex items-center gap-2 h-6 mb-2">
+        <Checkbox
+          className="my-auto"
+          defaultChecked={CheckedEnum[shop.checked]}
+        />
+
+        <span className="text-xl">{shop.name}</span>
       </div>
       <div className="">
         {shop.items.map((item) => (
