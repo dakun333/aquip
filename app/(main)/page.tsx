@@ -63,7 +63,7 @@ export default async function Home() {
           <Button variant="outline">
             <Search className="w-5 h-5" />
           </Button>
-          <Link href="/user">
+          <Link href="/my">
             <Button variant="outline">
               <User className="w-5 h-5" />
             </Button>
