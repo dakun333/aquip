@@ -16,33 +16,35 @@ import { formatMoney } from "@/app/[lang]/utils/format";
 import ProductGallery from "@/app/[lang]/ui/product/imgs";
 import Link from "next/link";
 import BackHeader from "@/app/[lang]/ui/backHeader";
+import { TestData } from "@/app/api/product/data.mock";
 
 interface Props {
   params: { id: string };
 }
 async function getProductById(id: string): Promise<Product | null> {
-  const host = (await headers()).get("host");
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  // const host = (await headers()).get("host");
+  // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
-  try {
-    const res = await fetch(`${protocol}://${host}/api/product/${id}`);
+  // try {
+  //   const res = await fetch(`${protocol}://${host}/api/product/${id}`);
 
-    if (!res.ok) {
-      return null;
-    }
+  //   if (!res.ok) {
+  //     return null;
+  //   }
 
-    const result: { code: number; data?: Product; message?: string } =
-      await res.json();
+  //   const result: { code: number; data?: Product; message?: string } =
+  //     await res.json();
 
-    if (result.code !== 0 || !result.data) {
-      return null;
-    }
+  //   if (result.code !== 0 || !result.data) {
+  //     return null;
+  //   }
 
-    return result.data; // ✅ 返回 Product
-  } catch (err) {
-    console.error(err);
-    return null; // ✅ 异常也返回 null
-  }
+  //   return result.data; // ✅ 返回 Product
+  // } catch (err) {
+  //   console.error(err);
+  //   return null; // ✅ 异常也返回 null
+  // }
+  return TestData[0];
 }
 
 export default async function Item({ params }: Props) {
