@@ -24,6 +24,7 @@ import HomeFooter from "../ui/home/footer";
 import ProductCard from "../ui/home/card";
 import { Suspense } from "react";
 import Link from "next/link";
+import LocaleSwitcher from "../ui/lang-switch";
 export const metadata: Metadata = {
   title: {
     template: "%s | Aquip",
@@ -60,6 +61,7 @@ export default async function Home() {
         <div className="text-2xl font-bold cursor-pointer">Aquip</div>
 
         <div className="flex items-center gap-2">
+          <LocaleSwitcher></LocaleSwitcher>
           <Button variant="outline">
             <Search className="w-5 h-5" />
           </Button>

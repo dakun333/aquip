@@ -1,0 +1,10 @@
+{
+  "home": {
+    "tabs": {
+      "home": "Home",
+      "msg": "Msg",
+      "cart": "Cart",
+      "my": "My"
+    }
+  }
+}

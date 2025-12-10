@@ -10,3 +10,9 @@ export interface Product {
   updatedAt?: Date;
   imgs?: string[];
 }
+export interface FooterTab {
+  name: string;
+
+  label: string;
+  href: string;
+}
