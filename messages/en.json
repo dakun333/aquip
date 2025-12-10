@@ -1,0 +1,26 @@
+{
+  "common": {
+    "select_all": "Select All",
+    "cancel_select_all": "Deselect All"
+  },
+  "home": {
+    "tabs": {
+      "home": "Home",
+      "msg": "Messages",
+      "cart": "Cart",
+      "my": "My"
+    }
+  },
+  "msg": {
+    "title": "Messages{num, plural, =0 {} other { ({num})}}"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "total": "Total",
+    "discount": "Discount",
+    "pay_voucher": "Checkout with Voucher ({num})"
+  },
+  "my": {
+    "title": "User Center"
+  }
+}

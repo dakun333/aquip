@@ -1,0 +1,26 @@
+{
+  "common": {
+    "select_all": "全选",
+    "cancel_select_all": "取消全选"
+  },
+  "home": {
+    "tabs": {
+      "home": "首页",
+      "msg": "消息",
+      "cart": "购物车",
+      "my": "我的"
+    }
+  },
+  "msg": {
+    "title": "消息{num, plural, =0 {} other { ({num})}}"
+  },
+  "cart": {
+    "title": "购物车",
+    "total": "总计",
+    "discount": "共减",
+    "pay_voucher": "领券结算({num})"
+  },
+  "my": {
+    "title": "个人中心"
+  }
+}
