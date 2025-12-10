@@ -1,4 +1,4 @@
-import ChatCard from "@/app/[lang]/ui/msg/chat-card";
+import ChatCard from "@/app/[locale]/ui/msg/chat-card";
 import { useTranslations } from "next-intl";
 
 const chatData = {

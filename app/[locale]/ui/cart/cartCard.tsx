@@ -1,9 +1,9 @@
-import { Shop } from "@/app/[lang]/types/cart.type";
+import { Shop } from "@/app/[locale]/types/cart.type";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import NumberInput from "../input-number";
-import { formatMoney } from "@/app/[lang]/utils/format";
+import { formatMoney } from "@/app/[locale]/utils/format";
 interface IProps {
   shop: Shop;
 }

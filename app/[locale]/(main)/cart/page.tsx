@@ -1,4 +1,4 @@
-import CartList from "@/app/[lang]/ui/cart/list";
+import CartList from "@/app/[locale]/ui/cart/list";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 

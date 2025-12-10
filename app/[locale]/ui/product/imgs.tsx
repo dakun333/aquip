@@ -7,7 +7,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { Product } from "@/app/[lang]/types/home.type";
+import { Product } from "@/app/[locale]/types/home.type";
 import Autoplay from "embla-carousel-autoplay";
 import React, { useRef, useState } from "react";
 interface Props {

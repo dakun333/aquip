@@ -1,5 +1,5 @@
-import { Product } from "@/app/[lang]/types/home.type";
-import BackBtn from "@/app/[lang]/ui/back";
+import { Product } from "@/app/[locale]/types/home.type";
+import BackBtn from "@/app/[locale]/ui/back";
 import { Button } from "@/components/ui/button";
 import { Headset, Heart, Minus, MoveLeft, Plus, Store } from "lucide-react";
 
@@ -12,10 +12,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatMoney } from "@/app/[lang]/utils/format";
-import ProductGallery from "@/app/[lang]/ui/product/imgs";
+import { formatMoney } from "@/app/[locale]/utils/format";
+import ProductGallery from "@/app/[locale]/ui/product/imgs";
 import Link from "next/link";
-import BackHeader from "@/app/[lang]/ui/backHeader";
+import BackHeader from "@/app/[locale]/ui/backHeader";
 import { TestData } from "@/app/api/product/data.mock";
 import { host } from "@/config";
 

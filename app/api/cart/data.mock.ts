@@ -1,4 +1,4 @@
-import { Shop } from "@/app/[lang]/types/cart.type";
+import { Shop } from "@/app/[locale]/types/cart.type";
 
 export const MockShoppingCartData: Shop[] = [
   {

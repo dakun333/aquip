@@ -1,4 +1,4 @@
-import BackHeader from "@/app/[lang]/ui/backHeader";
+import BackHeader from "@/app/[locale]/ui/backHeader";
 
 export default function ProductDeatilLoading() {
   return (

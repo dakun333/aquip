@@ -1,6 +1,6 @@
 "use client";
 
-import { FormatCountdown } from "@/app/[lang]/utils/format";
+import { FormatCountdown } from "@/app/[locale]/utils/format";
 import { useEffect, useState } from "react";
 
 export interface CountdownProps {

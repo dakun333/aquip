@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
 };
 
-export default async function Home() {
+export default async function Home({ params }: PageProps<"/[locale]">) {
   const products = await getProducts();
 
   return (

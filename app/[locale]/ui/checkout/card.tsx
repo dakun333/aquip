@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import Image from "next/image";
 import { Label } from "@radix-ui/react-label";
-import { IPayCardInfo } from "@/app/[lang]/types/checkout.type";
+import { IPayCardInfo } from "@/app/[locale]/types/checkout.type";
 import CardIcon from "./card-icon";
 
 interface IProps {

@@ -3,11 +3,11 @@
 // import { headers } from "next/headers";
 import CartCard from "./cartCard";
 import { useEffect, useState } from "react";
-import { Shop } from "@/app/[lang]/types/cart.type";
+import { Shop } from "@/app/[locale]/types/cart.type";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { AQButton } from "../button";
-import { formatMoney } from "@/app/[lang]/utils/format";
+import { formatMoney } from "@/app/[locale]/utils/format";
 import { useRouter } from "next/navigation";
 const fetchList = async () => {
   // const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000

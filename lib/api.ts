@@ -1,4 +1,4 @@
-import { Product } from "@/app/[lang]/types/home.type";
+import { Product } from "@/app/[locale]/types/home.type";
 import { TestData } from "@/app/api/product/data.mock";
 import { host } from "@/config";
 // import { headers } from "next/headers";
