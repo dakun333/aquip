@@ -1,4 +1,3 @@
-import { use } from "react";
 import HomeFooter from "../ui/home/footer";
 import { setRequestLocale } from "next-intl/server";
 import { Locale, useTranslations } from "next-intl";
