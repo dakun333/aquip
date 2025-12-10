@@ -2,7 +2,7 @@ import CartList from "@/app/[locale]/ui/cart/list";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 
-export default function Cart() {
+export default function Cart({ params }: PageProps<"/[locale]/cart">) {
   const t = useTranslations("cart");
   return (
     <>
