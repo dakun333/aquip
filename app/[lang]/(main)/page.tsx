@@ -25,6 +25,8 @@ import ProductCard from "../ui/home/card";
 import { Suspense } from "react";
 import Link from "next/link";
 import LocaleSwitcher from "../ui/lang-switch";
+import { TestData } from "@/app/api/product/data.mock";
+import { getProducts } from "@/lib/api";
 export const metadata: Metadata = {
   title: {
     template: "%s | Aquip",
@@ -33,23 +35,6 @@ export const metadata: Metadata = {
   description: "Aquip 测试demo.",
   metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
 };
-
-async function getProducts(): Promise<Product[]> {
-  console.log(process.env.NEXT_PUBLIC_API_URL);
-  const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-
-  const res = await fetch(`${protocol}://${host}/api/product`, {
-    // cache: "no-store",
-  });
-  console.log("获取到的数据:", res);
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  const json = await res.json();
-  return json.data;
-}
 
 export default async function Home() {
   const products = await getProducts();
