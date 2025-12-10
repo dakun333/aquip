@@ -41,6 +41,7 @@ export default function CartCard({ shop }: IProps) {
                 src={item.image}
                 alt={item.name}
                 fill
+                sizes="100%"
                 className="rounded-md object-cover"
               />
             </div>
