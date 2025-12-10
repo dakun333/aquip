@@ -27,6 +27,8 @@ import Link from "next/link";
 import LocaleSwitcher from "../ui/lang-switch";
 import { TestData } from "@/app/api/product/data.mock";
 import { getProducts } from "@/lib/api";
+import { setRequestLocale } from "next-intl/server";
+import { Locale } from "next-intl";
 export const metadata: Metadata = {
   title: {
     template: "%s | Aquip",
@@ -37,6 +39,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
   const products = await getProducts();
 
   return (

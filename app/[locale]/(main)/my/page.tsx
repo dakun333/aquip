@@ -1,7 +1,12 @@
-import { useTranslations } from "next-intl";
+import { Locale, useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { use } from "react";
 
-export default function My() {
+export default function My({ params }: PageProps<"/[locale]/my">) {
+  const { locale } = use(params);
+  setRequestLocale(locale as Locale);
   const t = useTranslations("my");
+
   return (
     <>
       <div className="h-full w-full flex flex-col">

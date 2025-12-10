@@ -1,8 +1,11 @@
 import CartList from "@/app/[locale]/ui/cart/list";
-import { useTranslations } from "next-intl";
-import { Suspense } from "react";
+import { Locale, useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { Suspense, use } from "react";
 
 export default function Cart({ params }: PageProps<"/[locale]/cart">) {
+  const { locale } = use(params);
+  setRequestLocale(locale as Locale);
   const t = useTranslations("cart");
   return (
     <>

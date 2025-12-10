@@ -1,5 +1,7 @@
 import ChatCard from "@/app/[locale]/ui/msg/chat-card";
-import { useTranslations } from "next-intl";
+import { Locale, useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { use } from "react";
 
 const chatData = {
   id: "1",
@@ -11,7 +13,10 @@ const chatData = {
   name: "测试用户",
   tag: "测试标签",
 };
-export default function Home() {
+export default function Home({ params }: PageProps<"/[locale]/msg">) {
+  const { locale } = use(params);
+  setRequestLocale(locale as Locale);
+
   const t = useTranslations("msg");
   return (
     <div className="flex flex-col h-full">
