@@ -1,7 +1,6 @@
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import "./globals.css";
-import { inter } from "../[lang]/ui/fonts";
+
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
@@ -13,6 +12,11 @@ interface IProps {
   children: React.ReactNode;
   params: Promise<{ lang: Locale }>;
 }
+/**
+ * 多语言的布局，必须要放在[lang]下多语言才生效
+ * @param props
+ * @returns
+ */
 export default async function LocaleLayout(props: IProps) {
   const params = await props.params;
 
@@ -23,24 +27,8 @@ export default async function LocaleLayout(props: IProps) {
   }
   setRequestLocale(lang);
   return (
-    <html lang={params.lang}>
-      <body
-        className={`${inter.className} antialiased bg-gray-100 flex justify-center`}
-      >
-        <NextIntlClientProvider>
-          <div
-            className=" w-full 
-              max-w-[420px]
-              sm:max-w-[480px]
-              md:max-w-[560px]
-              lg:max-w-[640px]
-              xl:max-w-[720px]
-              h-screen bg-white"
-          >
-            {children}
-          </div>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+      <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    </>
   );
 }

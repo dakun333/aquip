@@ -14,8 +14,8 @@ export default function HomeFooter() {
       <div className="border-t rounded-t-xl h-20 flex bg-white overflow-hidden">
         {tabs.map((tab, index) => {
           return (
-            <Suspense>
-              <ActiveLink key={index} tab={tab} />
+            <Suspense key={tab.name}>
+              <ActiveLink tab={tab} />
             </Suspense>
           );
         })}
