@@ -8,11 +8,8 @@ export const metadata: Metadata = {
 };
 interface IProps {
   children: React.ReactNode;
-  params: Promise<{ lang: Locale }>;
 }
 export default async function LocaleLayout(props: IProps) {
-  const params = await props.params;
-
   const { children } = props;
   return (
     <html>
