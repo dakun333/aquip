@@ -1,4 +1,4 @@
-import { Product } from "@/app/[locale]/types/home.type";
+import { Product } from "@/app/types/home.type";
 
 export const TestData: Product[] = [
   {

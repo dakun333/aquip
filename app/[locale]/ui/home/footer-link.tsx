@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 
 import { HomeIcon, MessageCircleMore, ShoppingCart, User2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FooterTab } from "../../types/home.type";
+import { FooterTab } from "../../../types/home.type";
 const iconMap = {
   home: HomeIcon,
   msg: MessageCircleMore,

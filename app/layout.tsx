@@ -1,6 +1,7 @@
+import { Metadata } from "next";
 import "./globals.css";
 
-interface IProps {
+export interface IProps {
   children: React.ReactNode;
 }
 export default async function LocaleLayout(props: IProps) {

@@ -1,4 +1,4 @@
-import { CardType } from "@/app/[locale]/types/checkout.type";
+import { CardType } from "@/app/types/checkout.type";
 import Image from "next/image";
 interface IProps {
   type?: CardType;

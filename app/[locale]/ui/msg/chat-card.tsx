@@ -1,4 +1,4 @@
-import { Chat } from "@/app/[locale]/types/msg.type";
+import { Chat } from "@/app/types/msg.type";
 import Image from "next/image";
 import Tag from "./tag";
 import Link from "next/link";

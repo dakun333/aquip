@@ -16,7 +16,7 @@ import {
   User,
   User2,
 } from "lucide-react";
-import { Product } from "../types/home.type";
+import { Product } from "../../types/home.type";
 import { headers } from "next/headers";
 import Image from "next/image";
 
@@ -29,14 +29,6 @@ import { TestData } from "@/app/api/product/data.mock";
 import { getProducts } from "@/lib/api";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "next-intl";
-export const metadata: Metadata = {
-  title: {
-    template: "%s | Aquip",
-    default: "Aquip",
-  },
-  description: "Aquip 测试demo.",
-  metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
-};
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;

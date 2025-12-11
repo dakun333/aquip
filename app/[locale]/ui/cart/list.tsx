@@ -3,7 +3,7 @@
 // import { headers } from "next/headers";
 import CartCard from "./cartCard";
 import { useEffect, useState } from "react";
-import { Shop } from "@/app/[locale]/types/cart.type";
+import { Shop } from "@/app/types/cart.type";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { AQButton } from "../button";

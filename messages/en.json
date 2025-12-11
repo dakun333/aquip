@@ -1,4 +1,13 @@
 {
+  "manifest": {
+    "name": "AQuip"
+  },
+  "metadata": {
+    "default_title": "AQuip",
+    "description": "AQuip - Shopping Mall",
+    "keywords": "AQuip,Shopping Mall,AQuip Shopping Mall",
+    "template": "AQuip"
+  },
   "common": {
     "select_all": "Select All",
     "cancel_select_all": "Deselect All"
@@ -12,7 +21,8 @@
     }
   },
   "msg": {
-    "title": "Messages{num, plural, =0 {} other { ({num})}}"
+    "title": "Messages",
+    "header": "Messages{num, plural, =0 {} other { ({num})}}"
   },
   "cart": {
     "title": "Shopping Cart",

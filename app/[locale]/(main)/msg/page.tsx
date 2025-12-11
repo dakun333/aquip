@@ -1,8 +1,22 @@
 import ChatCard from "@/app/[locale]/ui/msg/chat-card";
+import { Metadata } from "next";
 import { Locale, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { use } from "react";
+export async function generateMetadata(
+  props: Omit<PageProps<"/[locale]/msg">, "children">
+) {
+  const { locale } = await props.params;
 
+  const t = await getTranslations({
+    locale: locale as Locale,
+    namespace: "msg",
+  });
+
+  return {
+    title: t("title"),
+  };
+}
 const chatData = {
   id: "1",
   content:
@@ -13,11 +27,11 @@ const chatData = {
   name: "测试用户",
   tag: "测试标签",
 };
-export default function Home({ params }: PageProps<"/[locale]/msg">) {
-  const { locale } = use(params);
+export default async function Home({ params }: PageProps<"/[locale]/msg">) {
+  const { locale } = await params;
   setRequestLocale(locale as Locale);
 
-  const t = useTranslations("msg");
+  const t = await getTranslations("msg");
   return (
     <div className="flex flex-col h-full">
       <div className="shrink-0 h-16 flex justify-center items-center text-2xl font-bold border-b">
