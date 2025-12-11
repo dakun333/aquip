@@ -36,6 +36,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
   setRequestLocale(locale);
   return (
     <>
