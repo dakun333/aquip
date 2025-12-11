@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "@/app/[locale]/types/home.type";
+import { Product } from "@/app/types/home.type";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { Heart } from "lucide-react";

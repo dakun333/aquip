@@ -1,4 +1,4 @@
-import { Product } from "@/app/[locale]/types/home.type";
+import { Product } from "@/app/types/home.type";
 import BackBtn from "@/app/[locale]/ui/back";
 import { Button } from "@/components/ui/button";
 import { Headset, Heart, Minus, MoveLeft, Plus, Store } from "lucide-react";

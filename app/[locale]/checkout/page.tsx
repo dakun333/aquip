@@ -9,7 +9,7 @@ import VirtualCard from "../ui/checkout/card";
 import PaymentForm from "../ui/checkout/form";
 import { notFound, useSearchParams } from "next/navigation";
 import { use, useState } from "react";
-import { IPayCardInfo } from "../types/checkout.type";
+import { IPayCardInfo } from "../../types/checkout.type";
 import { AQButton } from "../ui/button";
 import { set } from "zod";
 import VerifyCode from "../ui/checkout/verify-code";

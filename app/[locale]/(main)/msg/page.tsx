@@ -27,11 +27,11 @@ const chatData = {
   name: "测试用户",
   tag: "测试标签",
 };
-export default function Home({ params }: PageProps<"/[locale]/msg">) {
-  const { locale } = use(params);
+export default async function Home({ params }: PageProps<"/[locale]/msg">) {
+  const { locale } = await params;
   setRequestLocale(locale as Locale);
 
-  const t = useTranslations("msg");
+  const t = await getTranslations("msg");
   return (
     <div className="flex flex-col h-full">
       <div className="shrink-0 h-16 flex justify-center items-center text-2xl font-bold border-b">

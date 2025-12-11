@@ -1,4 +1,4 @@
-import { Shop } from "@/app/[locale]/types/cart.type";
+import { Shop } from "@/app/types/cart.type";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import type { CheckedState } from "@radix-ui/react-checkbox";

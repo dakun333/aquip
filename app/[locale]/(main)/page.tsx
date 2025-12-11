@@ -16,7 +16,7 @@ import {
   User,
   User2,
 } from "lucide-react";
-import { Product } from "../types/home.type";
+import { Product } from "../../types/home.type";
 import { headers } from "next/headers";
 import Image from "next/image";
 

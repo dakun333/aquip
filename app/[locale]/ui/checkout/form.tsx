@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CardType, IPayCardInfo } from "@/app/[locale]/types/checkout.type";
+import { CardType, IPayCardInfo } from "@/app/types/checkout.type";
 import { useEffect, useRef } from "react";
 import CardValidator from "card-validator";
 import {

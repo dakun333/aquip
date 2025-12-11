@@ -16,10 +16,18 @@ export async function generateMetadata(
     title: t("title"),
   };
 }
-export default function Cart({ params }: PageProps<"/[locale]/cart">) {
-  const { locale } = use(params);
+/**
+ * 加了async之后就不能使用 use和useTranslations
+ * @param param0
+ * @returns
+ */
+export default async function Cart({ params }: PageProps<"/[locale]/cart">) {
+  // const { locale } = use(params);
+  // setRequestLocale(locale as Locale);
+  // const t = useTranslations("cart");
+  const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const t = useTranslations("cart");
+  const t = await getTranslations("cart");
   return (
     <>
       <div className="h-full flex flex-col ">

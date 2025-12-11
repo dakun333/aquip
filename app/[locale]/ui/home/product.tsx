@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "@/app/[locale]/types/home.type";
+import { Product } from "@/app/types/home.type";
 import { Card } from "@/components/ui/card";
 
 export default async function ProductList() {

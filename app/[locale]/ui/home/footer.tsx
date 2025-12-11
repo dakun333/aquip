@@ -1,4 +1,4 @@
-import { FooterTab } from "../../types/home.type";
+import { FooterTab } from "../../../types/home.type";
 import ActiveLink from "./footer-link";
 import { Suspense } from "react";
 
