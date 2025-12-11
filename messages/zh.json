@@ -1,4 +1,13 @@
 {
+  "manifest": {
+    "name": "AQuip"
+  },
+  "metadata": {
+    "default_title": "AQuip",
+    "description": "AQuip - 购物商城",
+    "keywords": "AQuip,购物商城,AQuip购物商城",
+    "template": "AQuip"
+  },
   "common": {
     "select_all": "全选",
     "cancel_select_all": "取消全选"
@@ -12,7 +21,8 @@
     }
   },
   "msg": {
-    "title": "消息{num, plural, =0 {} other { ({num})}}"
+    "title": "消息",
+    "header": "消息{num, plural, =0 {} other { ({num})}}"
   },
   "cart": {
     "title": "购物车",

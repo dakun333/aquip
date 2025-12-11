@@ -28,3 +28,8 @@
   ```
   Type 'typeof import("D:/Project/aquip/app/layout")' does not satisfy the constraint 'LayoutConfig<"/">'.
   ```
+
+## mainfest.ts
+
+- 配置文件，用于生成 `manifest.json` 文件
+- 里面的 name: t("name") 会影响应用安装到手机主屏幕后的名称，但不会影响浏览器标签页上显示的 <title>

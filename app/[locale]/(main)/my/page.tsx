@@ -1,7 +1,21 @@
+import { Metadata } from "next";
 import { Locale, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { use } from "react";
+export async function generateMetadata(
+  props: Omit<PageProps<"/[locale]/my">, "children">
+) {
+  const { locale } = await props.params;
 
+  const t = await getTranslations({
+    locale: locale as Locale,
+    namespace: "my",
+  });
+
+  return {
+    title: t("title"),
+  };
+}
 export default function My({ params }: PageProps<"/[locale]/my">) {
   const { locale } = use(params);
   setRequestLocale(locale as Locale);

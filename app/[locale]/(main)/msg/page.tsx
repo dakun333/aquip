@@ -1,8 +1,22 @@
 import ChatCard from "@/app/[locale]/ui/msg/chat-card";
+import { Metadata } from "next";
 import { Locale, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { use } from "react";
+export async function generateMetadata(
+  props: Omit<PageProps<"/[locale]/msg">, "children">
+) {
+  const { locale } = await props.params;
 
+  const t = await getTranslations({
+    locale: locale as Locale,
+    namespace: "msg",
+  });
+
+  return {
+    title: t("title"),
+  };
+}
 const chatData = {
   id: "1",
   content:
