@@ -24,8 +24,9 @@ interface Props {
 }
 async function getProductById(id: string): Promise<Product | null> {
   try {
+    console.log("商品详情 - host", host);
     const res = await fetch(`${host}/api/product/${id}`);
-
+    console.log("商品详情 - res", res);
     if (!res.ok) {
       return null;
     }
@@ -39,7 +40,7 @@ async function getProductById(id: string): Promise<Product | null> {
 
     return result.data; // ✅ 返回 Product
   } catch (err) {
-    console.error(err);
+    console.error("报错", err);
     return null; // ✅ 异常也返回 null
   }
   // return TestData[0];

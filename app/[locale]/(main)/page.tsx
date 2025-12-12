@@ -10,7 +10,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
   const videos = await getBilibiliRecommendList();
-  console.log("b站视频:", videos);
+  // console.log("b站视频:", videos);
 
   return (
     <div className="flex h-full flex-col bg-white gap-1 justify-between">
