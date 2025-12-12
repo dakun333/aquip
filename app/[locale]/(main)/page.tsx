@@ -8,11 +8,25 @@ import { TestData } from "@/app/api/product/data.mock";
 import { getProducts } from "@/lib/api";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "next-intl";
+const fetchList = async () => {
+  // const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000
+  // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
+  const res = await fetch(`/api/product`, {
+    // cache: "no-store",
+  });
+  console.log("获取到的数据:", res);
+  if (!res.ok) {
+    throw new Error("Failed to fetch products");
+  }
+
+  const json = await res.json();
+  return json.data;
+};
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const products = await getProducts();
+  const products = await fetchList();
 
   return (
     <div className="flex h-full flex-col bg-white gap-1 justify-between">
