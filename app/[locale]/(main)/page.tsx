@@ -8,6 +8,7 @@ import { TestData } from "@/app/api/product/data.mock";
 import { getProducts } from "@/lib/api";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "next-intl";
+import { getBilibiliRecommendList } from "@/lib/bilibili.test";
 const fetchList = async () => {
   // const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000
   // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
@@ -26,7 +27,9 @@ const fetchList = async () => {
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const products = await fetchList();
+  const products = [];
+  const videos = await getBilibiliRecommendList();
+  console.log("b站视频:", videos);
 
   return (
     <div className="flex h-full flex-col bg-white gap-1 justify-between">
