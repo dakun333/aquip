@@ -1,24 +1,16 @@
 import { Product } from "@/app/types/home.type";
-import { TestData } from "@/app/api/product/data.mock";
-import { host } from "@/config";
-import { headers } from "next/headers";
 
 export async function getProducts(): Promise<Product[]> {
   // return TestData;
 
-  const apiUrl = `${host}/api/product`;
-
-  console.log("环境 host:", host); // 仍然可以保留此行
+  const apiUrl = `/api/product`;
 
   // 使用完整的绝对 URL
   const res = await fetch(apiUrl, {
-    cache: "no-store",
-    headers: {
-      Cookie: (await headers()).get("cookie") || "", // 传递当前的 Cookies 头部
-    },
+    // cache: "no-store",
   });
 
-  console.log("获取到的数据:", res);
+  console.log("商品列表:", res);
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.status}`);

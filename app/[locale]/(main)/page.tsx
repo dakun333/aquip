@@ -1,33 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Search, ShoppingCart, User } from "lucide-react";
-import ProductCard from "../ui/home/card";
-import { Suspense } from "react";
 import Link from "next/link";
 import LocaleSwitcher from "../ui/lang-switch";
-import { TestData } from "@/app/api/product/data.mock";
-import { getProducts } from "@/lib/api";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "next-intl";
 import { getBilibiliRecommendList } from "@/lib/bilibili.test";
-const fetchList = async () => {
-  // const host = (await headers()).get("host"); // 自动获取当前访问域名，比如 localhost:3000
-  // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-
-  const res = await fetch(`/api/product`, {
-    // cache: "no-store",
-  });
-  console.log("获取到的数据:", res);
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  const json = await res.json();
-  return json.data;
-};
+import ProductList from "../ui/home/list";
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  // const products = [];
   const videos = await getBilibiliRecommendList();
   console.log("b站视频:", videos);
 
@@ -57,13 +38,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
 
       {/* 内容区域 */}
       <div className="flex-1 overflow-auto p-2">
-        <div className="grid grid-cols-2 gap-2">
-          {/* {products.map((item) => (
-            <Suspense key={item.id}>
-              <ProductCard key={item.id} product={item} />
-            </Suspense>
-          ))} */}
-        </div>
+        <ProductList />
       </div>
 
       {/* 底部 */}
