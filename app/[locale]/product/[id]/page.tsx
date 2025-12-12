@@ -48,8 +48,8 @@ async function getProductById(id: string): Promise<Product | null> {
 export default async function Item({ params }: Props) {
   const id = (await params).id;
 
-  console.log("传入的id", id);
   const result = await getProductById(id);
+  console.log("传入的id", id, result);
 
   if (!result) {
     notFound();
