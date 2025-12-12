@@ -42,7 +42,7 @@ export default async function LocaleLayout({
     <>
       <html lang={locale}>
         <body
-          className={`${inter.className} antialiased bg-gray-100 flex justify-center`}
+          className={`${inter.className} antialiased bg-white flex justify-center`}
         >
           <div
             className=" w-full 
