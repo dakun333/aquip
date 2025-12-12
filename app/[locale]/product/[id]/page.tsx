@@ -25,7 +25,9 @@ interface Props {
 async function getProductById(id: string): Promise<Product | null> {
   try {
     console.log("商品详情 - host", host);
-    const res = await fetch(`${host}/api/product/${id}`);
+    const res = await fetch(`${host}/api/product/${id}`, {
+      headers: await headers(),
+    });
     console.log("商品详情 - res", res);
     if (!res.ok) {
       return null;
