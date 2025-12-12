@@ -1,7 +1,7 @@
 import { Product } from "@/app/types/home.type";
 import { TestData } from "@/app/api/product/data.mock";
 import { host } from "@/config";
-// import { headers } from "next/headers";
+import { headers } from "next/headers";
 
 export async function getProducts(): Promise<Product[]> {
   // return TestData;
@@ -13,6 +13,9 @@ export async function getProducts(): Promise<Product[]> {
   // 使用完整的绝对 URL
   const res = await fetch(apiUrl, {
     cache: "no-store",
+    headers: {
+      Cookie: (await headers()).get("cookie") || "", // 传递当前的 Cookies 头部
+    },
   });
 
   console.log("获取到的数据:", res);
