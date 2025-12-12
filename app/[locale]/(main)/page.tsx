@@ -1,26 +1,5 @@
-import { Metadata } from "next";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Heart,
-  HomeIcon,
-  Info,
-  MessageCircleMore,
-  Search,
-  ShoppingCart,
-  User,
-  User2,
-} from "lucide-react";
-import { Product } from "../../types/home.type";
-import { headers } from "next/headers";
-import Image from "next/image";
-
-import HomeFooter from "../ui/home/footer";
+import { Search, ShoppingCart, User } from "lucide-react";
 import ProductCard from "../ui/home/card";
 import { Suspense } from "react";
 import Link from "next/link";
