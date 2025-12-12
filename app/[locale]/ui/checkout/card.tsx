@@ -21,17 +21,19 @@ export default function VirtualCard({ cardInfo }: IProps) {
         </div>
 
         {/* Card Number */}
-        <p className="text-xl tracking-wider font-mono">{cardInfo?.id}</p>
+        <p className="text-xl tracking-wider font-mono">
+          {cardInfo?.id || "**** **** **** ****"}
+        </p>
 
         {/* Details */}
         <div className="flex justify-between text-sm uppercase">
           <div>
             <Label className="text-xs text-gray-400">Card Holder</Label>
-            <p className="font-semibold">{cardInfo?.name}</p>
+            <p className="font-semibold">{cardInfo?.name || "*****"}</p>
           </div>
           <div className="text-right">
             <Label className="text-xs text-gray-400">Expires</Label>
-            <p className="font-semibold">{cardInfo?.expireDate}</p>
+            <p className="font-semibold">{cardInfo?.expireDate || "MM / YY"}</p>
           </div>
         </div>
       </CardContent>

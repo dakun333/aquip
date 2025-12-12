@@ -11,7 +11,13 @@ const defaultConfig = { unit: "￥", decimal: 2, position: "left" };
  * @param money 金额数值或字符串
  * @returns 格式化后的金额字符串
  */
-export function formatMoney(money: number | string, config?: Config): string {
+export function formatMoney(
+  money: number | string | undefined,
+  config?: Config
+): string {
+  if (money === undefined) {
+    return "";
+  }
   // 仅进行一次对象合并。
   // 合并后的 mergedConfig 保证所有属性都来自 defaultConfig 或 config。
   const mergedConfig = { ...defaultConfig, ...config };
