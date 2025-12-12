@@ -27,7 +27,7 @@ const fetchList = async () => {
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const products = [];
+  // const products = [];
   const videos = await getBilibiliRecommendList();
   console.log("b站视频:", videos);
 
@@ -58,11 +58,11 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
       {/* 内容区域 */}
       <div className="flex-1 overflow-auto p-2">
         <div className="grid grid-cols-2 gap-2">
-          {products.map((item) => (
+          {/* {products.map((item) => (
             <Suspense key={item.id}>
               <ProductCard key={item.id} product={item} />
             </Suspense>
-          ))}
+          ))} */}
         </div>
       </div>
 
