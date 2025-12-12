@@ -22,37 +22,12 @@ import { host } from "@/config";
 interface Props {
   params: { id: string };
 }
-async function getProductById(id: string): Promise<Product | null> {
-  try {
-    console.log("商品详情 - host", host);
-    const res = await fetch(`${host}/api/product/${id}`, {
-      headers: await headers(),
-    });
-    console.log("商品详情 - res", res);
-    if (!res.ok) {
-      return null;
-    }
-
-    const result: { code: number; data?: Product; message?: string } =
-      await res.json();
-
-    if (result.code !== 0 || !result.data) {
-      return null;
-    }
-
-    return result.data; // ✅ 返回 Product
-  } catch (err) {
-    console.error("报错", err);
-    return null; // ✅ 异常也返回 null
-  }
-  // return TestData[0];
-}
 
 export default async function Item({ params }: Props) {
   const id = (await params).id;
 
-  const result = await getProductById(id);
-  console.log("传入的id", id, result);
+  const result = TestData.find((item) => item.id === Number(id)) as Product;
+  // console.log("传入的id", id, result);
 
   if (!result) {
     notFound();
