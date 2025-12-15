@@ -17,7 +17,8 @@
       "home": "Home",
       "msg": "Messages",
       "cart": "Cart",
-      "my": "My"
+      "my": "My",
+      "pay": "Pay"
     }
   },
   "msg": {
@@ -32,5 +33,18 @@
   },
   "my": {
     "title": "User Center"
+  },
+  "checkout": {
+    "enter_amount": "Enter payment amount:",
+    "submit_amount": "Submit {amount}",
+    "total": "Total",
+    "pay_amount": "Pay {amount}",
+    "modify_amount": "Modify Amount",
+    "secure_payment": "Encrypted & Secure Payment",
+    "verify_title": "Verify Code",
+    "verify_desc": "Please enter the 4-digit code sent to your phone",
+    "resend_prefix": "Resend code in",
+    "verify_button": "Verify",
+    "change_phone": "Change phone number?"
   }
 }

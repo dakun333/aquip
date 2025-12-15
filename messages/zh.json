@@ -17,7 +17,8 @@
       "home": "首页",
       "msg": "消息",
       "cart": "购物车",
-      "my": "我的"
+      "my": "我的",
+      "pay": "支付"
     }
   },
   "msg": {
@@ -32,5 +33,18 @@
   },
   "my": {
     "title": "个人中心"
+  },
+  "checkout": {
+    "enter_amount": "请输入支付金额：",
+    "submit_amount": "提交 {amount}",
+    "total": "总计",
+    "pay_amount": "支付 {amount}",
+    "modify_amount": "修改金额",
+    "secure_payment": "加密安全支付",
+    "verify_title": "验证码",
+    "verify_desc": "请输入发送到您手机的4位验证码",
+    "resend_prefix": "重新发送验证码倒计时",
+    "verify_button": "验证",
+    "change_phone": "更换手机号？"
   }
 }

@@ -22,13 +22,32 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import CardIcon from "./card-icon";
-const PayCardSchema = z.object({
-  id: z.string().trim().length(19, "Card number must be 16 digits"),
-  name: z.string().trim().min(1, "Cardholder name required"),
-  expireDate: z.string().trim().min(3, "Invalid date"),
-  cvv: z.string().trim().min(3, "Invalid CVV"),
-  type: z.enum(CardType).optional(),
-});
+const PayCardSchema = z
+  .object({
+    id: z.string().trim().length(19, "Card number must be 16 digits"),
+    name: z.string().trim().min(1, "Cardholder name required"),
+    expireDate: z
+      .string()
+      .trim()
+      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Invalid date"),
+    cvv: z
+      .string()
+      .trim()
+      .regex(/^\d{3,4}$/, "Invalid CVV"),
+    type: z.enum(CardType).optional(),
+  })
+
+  .refine(
+    (data) => {
+      // CVV 长度根据卡类型判断，默认 3 位
+      const targetLength = data.type === CardType.Amex ? 4 : 3;
+      return data.cvv.length === targetLength;
+    },
+    {
+      message: "Invalid CVV length",
+      path: ["cvv"],
+    }
+  );
 
 type PayCardForm = z.infer<typeof PayCardSchema>;
 
@@ -56,7 +75,8 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
 
   const watchAllFields = watch();
   const watchId = form.watch("id");
-  const cardType = CardValidator.number(watchId).card?.type as CardType;
+  const cardType =
+    (CardValidator.number(watchId).card?.type as CardType) ?? CardType.Unknown;
 
   // 当表单数据变化时通知父组件
   useEffect(() => {
@@ -117,7 +137,10 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
                       // 1. 去掉非数字
                       value = value.replace(/\D/g, "");
 
-                      // 2. 每 4 位加空格
+                      // 2. 限制为最多 16 位数字
+                      value = value.slice(0, 16);
+
+                      // 3. 每 4 位加空格用于展示
                       value = value.replace(/(.{4})/g, "$1 ").trim();
 
                       field.onChange(value);
@@ -141,7 +164,21 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
               <FormItem className="flex-1">
                 <FormLabel>Expiry Date</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="MM/YY" />
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    placeholder="MM/YY"
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, "");
+                      // 限制最多 4 位数字
+                      value = value.slice(0, 4);
+                      // 格式化为 MM/YY
+                      if (value.length > 2) {
+                        value = `${value.slice(0, 2)}/${value.slice(2)}`;
+                      }
+                      field.onChange(value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,7 +190,17 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
               <FormItem className="flex-1">
                 <FormLabel>CVV / CVC</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="***" />
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    placeholder={cardType === CardType.Amex ? "****" : "***"}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, "");
+                      const maxLen = cardType === CardType.Amex ? 4 : 3;
+                      value = value.slice(0, maxLen);
+                      field.onChange(value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

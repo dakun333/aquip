@@ -10,6 +10,14 @@ export enum CardType {
   Visa = "visa",
   MasterCard = "mastercard",
   Amex = "amex",
+  ELO = "elo",
+  Diners = "diners",
+  Discover = "discover",
+  Hiper = "hiper",
+  JCB = "jcb",
+  Mir = "mir",
+  PayPal = "paypal",
+  UnionPay = "unionpay",
   Unknown = "unknown",
 }
 

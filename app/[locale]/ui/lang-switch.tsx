@@ -24,16 +24,14 @@ export default function LocaleSwitcher() {
   const handleLocaleChange = (newLocale: Locale) => {
     // 2. 构造新的路径：替换当前 URL 中的语言参数
     // 例如：将 /zh/dashboard 变成 /en/dashboard
-
     // 分割路径：['', 'zh', 'dashboard']
     const segments = pathname.split("/");
 
     // 替换索引 1 处的语言代码
-    segments[1] = newLocale;
+    segments[0] = newLocale;
 
     // 合并路径：/en/dashboard
     const newPath = segments.join("/");
-
     // 3. 使用 router.push 进行客户端导航
     router.push(newPath);
   };

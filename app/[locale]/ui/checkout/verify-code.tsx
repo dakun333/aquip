@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { AQButton } from "../button";
 import Countdown from "./count-down";
+import { useTranslations } from "next-intl";
 
 interface VerifyCodeDialogProps {
   open: boolean;
@@ -32,8 +33,18 @@ export default function VerifyCodeDialog({
   seconds = 180,
   onSubmit,
 }: VerifyCodeDialogProps) {
+  const t = useTranslations("checkout");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleOpenChange = (v: boolean) => {
+    if (!v) {
+      // 关闭弹窗时重置输入
+      setCode("");
+      setLoading(false);
+    }
+    onOpenChange(v);
+  };
 
   const submitHandler = async () => {
     if (code.length !== 4) return;
@@ -48,16 +59,17 @@ export default function VerifyCodeDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="rounded-xl w-[340px]  flex flex-col items-center gap-2 aspect-48/56">
         <Image src="/safe.svg" alt="safe" width={64} height={64} />
-
-        <div className="text-center">Verify Code</div>
+        <DialogHeader className="w-full">
+          <DialogTitle className="text-center text-base font-semibold">
+            {t("verify_title")}
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="flex flex-col items-center text-center gap-3">
-          <div className="text-xs text-gray-500">
-            Please enter the 4-digit code sent to
-          </div>
+          <div className="text-xs text-gray-500">{t("verify_desc")}</div>
           <div className="text-xs text-gray-500 font-medium">{phone}</div>
 
           {/* OTP */}
@@ -80,7 +92,7 @@ export default function VerifyCodeDialog({
 
           {/* Countdown */}
           <div className="text-blue-600 text-xs">
-            Resend code in <Countdown seconds={seconds} />
+            {t("resend_prefix")} <Countdown seconds={seconds} />
           </div>
 
           {/* Confirm */}
@@ -90,11 +102,11 @@ export default function VerifyCodeDialog({
             loading={loading}
             onClick={submitHandler}
           >
-            Verify
+            {t("verify_button")}
           </AQButton>
 
           <p className="text-xs text-gray-500 cursor-pointer">
-            Change phone number?
+            {t("change_phone")}
           </p>
         </div>
       </DialogContent>
