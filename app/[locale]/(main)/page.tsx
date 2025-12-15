@@ -1,7 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, User } from "lucide-react";
-import Link from "next/link";
-import LocaleSwitcher from "../ui/lang-switch";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "next-intl";
 import { getBilibiliRecommendList } from "@/lib/bilibili.test";

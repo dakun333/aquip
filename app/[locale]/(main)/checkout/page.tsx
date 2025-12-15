@@ -86,7 +86,7 @@ export default function CheckoutPage() {
                     step={0.1}
                     type="number"
                     value={amount}
-                    className="w-full hide-arrow"
+                    className="w-full hide-arrow border-2 h-12"
                     placeholder=""
                     onChange={amountChangeHandle}
                   />
