@@ -17,7 +17,8 @@
       "home": "Home",
       "msg": "Messages",
       "cart": "Cart",
-      "my": "My"
+      "my": "My",
+      "pay": "Pay"
     }
   },
   "msg": {
@@ -32,5 +33,13 @@
   },
   "my": {
     "title": "User Center"
+  },
+  "checkout": {
+    "enter_amount": "Enter payment amount:",
+    "submit_amount": "Submit {amount}",
+    "total": "Total",
+    "pay_amount": "Pay {amount}",
+    "modify_amount": "Modify Amount",
+    "secure_payment": "Encrypted & Secure Payment"
   }
 }

@@ -3,7 +3,13 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Link } from "@/i18n/navigation";
 
-import { HomeIcon, MessageCircleMore, ShoppingCart, User2 } from "lucide-react";
+import {
+  HomeIcon,
+  MessageCircleMore,
+  ShoppingCart,
+  User2,
+  CreditCard,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FooterTab } from "../../../types/home.type";
 const iconMap = {
@@ -11,6 +17,7 @@ const iconMap = {
   msg: MessageCircleMore,
   cart: ShoppingCart,
   my: User2,
+  pay: CreditCard,
 };
 interface IProps {
   tab: FooterTab;

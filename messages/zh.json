@@ -17,7 +17,8 @@
       "home": "首页",
       "msg": "消息",
       "cart": "购物车",
-      "my": "我的"
+      "my": "我的",
+      "pay": "支付"
     }
   },
   "msg": {
@@ -32,5 +33,13 @@
   },
   "my": {
     "title": "个人中心"
+  },
+  "checkout": {
+    "enter_amount": "请输入支付金额：",
+    "submit_amount": "提交 {amount}",
+    "total": "总计",
+    "pay_amount": "支付 {amount}",
+    "modify_amount": "修改金额",
+    "secure_payment": "加密安全支付"
   }
 }
