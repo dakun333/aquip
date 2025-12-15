@@ -101,7 +101,7 @@ export default function CheckoutPage() {
               </>
             ) : (
               <>
-                <div className="w-full mb-8">
+                <div className="w-[90%] mb-8">
                   <VirtualCard cardInfo={cardInfo} />
                 </div>
                 <PaymentForm
