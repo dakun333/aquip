@@ -1,4 +1,5 @@
 import { Product } from "@/app/types/home.type";
+import { db } from "./db";
 
 export async function getProducts(): Promise<Product[]> {
   // return TestData;
@@ -18,4 +19,9 @@ export async function getProducts(): Promise<Product[]> {
 
   const json = await res.json();
   return json.data;
+}
+
+export async function getAllUser() {
+  const data = await db`select * from users`;
+  return data;
 }
