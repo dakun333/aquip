@@ -10,7 +10,7 @@ interface IProps {
 }
 export default function VirtualCard({ cardInfo }: IProps) {
   return (
-    <Card className="w-full bg-black text-white aspect-[85.6/53.98] shadow-2xl relative">
+    <Card className=" bg-black text-white aspect-[85.6/53.98] shadow-2xl relative">
       <CardContent className="p-4 flex flex-col justify-between h-full">
         {/* Top Section */}
         <div className="flex justify-between items-start">
@@ -21,7 +21,7 @@ export default function VirtualCard({ cardInfo }: IProps) {
         </div>
 
         {/* Card Number */}
-        <p className="text-xl tracking-wider font-mono">
+        <p className="text-2xl tracking-wider font-mono">
           {cardInfo?.id || "**** **** **** ****"}
         </p>
 
