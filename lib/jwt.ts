@@ -16,7 +16,7 @@ export async function signUserJwt(
 ) {
   const exp = options?.expiresIn ?? "7d"; // 默认 7 天
   console.log("signUserJwt", exp);
-  return await new SignJWT(user as JWTPayload)
+  return await new SignJWT(user as unknown as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(exp)
