@@ -48,7 +48,7 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
 
   useEffect(() => {
     fetchUsers();
-    getInfo();
+    // getInfo();
   }, []);
 
   return (

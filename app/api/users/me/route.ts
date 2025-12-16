@@ -23,8 +23,8 @@ export async function GET(req: NextRequest) {
     console.log("userId", userId);
     // 2. 从数据库查询用户信息
     const rows = (await db`
-      select id, name, email
-      from users
+      select *
+      from user
       where id = ${userId}
       limit 1;
     `) as Omit<User, "password">[];

@@ -1,22 +1,22 @@
 import { jsonResponse } from "@/app/api/util";
-import { User } from "@/app/types/api.type";
-import { db } from "@/lib/db";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const rows = (await db`
-      select id, name, email
-      from users
-      order by name;
-    `) as User[];
+    // Prisma 会自动处理表名（映射到 users）和关键字问题
+    const rows = await prisma.user.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-    return jsonResponse<User[]>({
+    return jsonResponse({
       code: 0,
       data: rows,
     });
   } catch (error) {
     console.error("GET /api/users error:", error);
-    return jsonResponse<User[]>({
+    return jsonResponse({
       code: 500,
       data: [],
       message: "Failed to fetch users",

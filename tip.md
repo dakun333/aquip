@@ -46,3 +46,31 @@
 - 但是注意，vercel 在前端界面并不会显示 401，而是显示 500，所以需要在 vercel 的 logs 里面自己看
 - 调用第三方服务时倒是可以直接访问的（比如 B 站）
 - 所以要注意添加认证之后的修改请求
+
+## prisma
+
+- 新版本的 prisma 不能直接配置
+
+```
+  datasource db {
+    provider = "postgresql"
+    url = ""
+  }
+```
+
+这样写会报错 The datasource property `url` is no longer supported in schema files. Move connection URLs for Migrate to `prisma.config.ts` and pass either `adapter` for a direct database connection or `accelerateUrl` for Accelerate to the `PrismaClient` constructor. See https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
+
+注意迁移到 prisma config
+
+- 如果数据库里面有表，可以用 npx prisma db pull 先初始化一下，大厨师花钱需要先配置
+
+```
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+```

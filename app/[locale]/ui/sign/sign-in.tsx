@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 
 import { saveToken } from "@/lib/utils";
 import { loginByEmail } from "@/lib/api.client";
+import { signIn } from "@/lib/auth-client";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -43,6 +44,22 @@ export default function SignIn() {
       // TODO: 可以加 toast 提示
     } finally {
       setLoading(false);
+    }
+  };
+  const betterAuthLoginHandle = async () => {
+    try {
+      const { data, error } = await signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      });
+      if (error) {
+        console.error(error.message);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -98,7 +115,7 @@ export default function SignIn() {
             <Label htmlFor="remember">Remember me</Label>
           </div>
 
-          <Button
+          {/* <Button
             type="submit"
             className="w-full"
             disabled={loading}
@@ -108,6 +125,18 @@ export default function SignIn() {
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <p> Login </p>
+            )}
+          </Button> */}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+            onClick={betterAuthLoginHandle}
+          >
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <p> Better Auth Login </p>
             )}
           </Button>
 

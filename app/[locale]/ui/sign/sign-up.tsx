@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { registerByEmail } from "@/lib/api.client";
 import { saveToken } from "@/lib/utils";
+import { signUp } from "@/lib/auth-client";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -68,6 +69,19 @@ export default function SignUp() {
       toast.error(e?.message || "Register failed");
     } finally {
       setLoading(false);
+    }
+  };
+  const betterAuthSignUpHandle = async () => {
+    const res = await signUp.email({
+      name: `${firstName} ${lastName}`,
+      email,
+      password,
+    });
+
+    if (res.error) {
+      console.error(res.error.message || "Something went wrong.");
+    } else {
+      router.push("/dashboard");
     }
   };
 
@@ -179,6 +193,18 @@ export default function SignUp() {
             type="submit"
             className="w-full"
             disabled={loading}
+            onClick={betterAuthSignUpHandle}
+          >
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <p> Better Auth Sign Up </p>
+            )}
+          </Button>
+          {/* <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
             onClick={signUpHandle}
           >
             {loading ? (
@@ -186,7 +212,7 @@ export default function SignUp() {
             ) : (
               "Create an account"
             )}
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>
