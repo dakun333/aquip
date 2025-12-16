@@ -33,3 +33,44 @@
 
 - 配置文件，用于生成 `manifest.json` 文件
 - 里面的 name: t("name") 会影响应用安装到手机主屏幕后的名称，但不会影响浏览器标签页上显示的 <title>
+
+## 用户登录和注册
+
+- 用本来选用的库是 next-auth，但是发现 next-auth 在 5.0 beta 版本已经不在发布新版本，并且交由 better-auth 团队进行维护，所以更改了技术栈
+- 使用 better-auth
+
+## 如果是部署在 vercel，需要注意使用开启了 better-auth
+
+- 开启登录之后，ssr 组件中调用本地模拟的 mock 数据的头，vercel 都会自动增加验证
+- 验证失败，会返回 401，需要处理，因为要么直接访问 localhost：3000，要么时跨域
+- 但是注意，vercel 在前端界面并不会显示 401，而是显示 500，所以需要在 vercel 的 logs 里面自己看
+- 调用第三方服务时倒是可以直接访问的（比如 B 站）
+- 所以要注意添加认证之后的修改请求
+
+## prisma
+
+- 新版本的 prisma 不能直接配置
+
+```
+  datasource db {
+    provider = "postgresql"
+    url = ""
+  }
+```
+
+这样写会报错 The datasource property `url` is no longer supported in schema files. Move connection URLs for Migrate to `prisma.config.ts` and pass either `adapter` for a direct database connection or `accelerateUrl` for Accelerate to the `PrismaClient` constructor. See https://pris.ly/d/config-datasource and https://pris.ly/d/prisma7-client-config
+
+注意迁移到 prisma config
+
+- 如果数据库里面有表，可以用 npx prisma db pull 先初始化一下，大厨师花钱需要先配置
+
+```
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+```

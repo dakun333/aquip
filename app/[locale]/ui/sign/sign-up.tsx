@@ -14,9 +14,11 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
-import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { registerByEmail } from "@/lib/api.client";
+import { saveToken } from "@/lib/utils";
+import { signUp } from "@/lib/auth-client";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -38,6 +40,48 @@ export default function SignUp() {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+  const signUpHandle = async () => {
+    if (!email || !password || !firstName || !lastName) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (password !== passwordConfirmation) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { token } = await registerByEmail({
+        email,
+        password,
+        name: `${firstName} ${lastName}`,
+      });
+      if (token) {
+        saveToken(token);
+      }
+      router.push("/");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Register failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const betterAuthSignUpHandle = async () => {
+    const res = await signUp.email({
+      name: `${firstName} ${lastName}`,
+      email,
+      password,
+    });
+
+    if (res.error) {
+      console.error(res.error.message || "Something went wrong.");
+    } else {
+      router.push("/dashboard");
     }
   };
 
@@ -149,36 +193,26 @@ export default function SignUp() {
             type="submit"
             className="w-full"
             disabled={loading}
-            onClick={async () => {
-              await signUp.email({
-                email,
-                password,
-                name: `${firstName} ${lastName}`,
-                image: image ? await convertImageToBase64(image) : "",
-                callbackURL: "/",
-                fetchOptions: {
-                  onResponse: () => {
-                    setLoading(false);
-                  },
-                  onRequest: () => {
-                    setLoading(true);
-                  },
-                  onError: (ctx) => {
-                    toast.error(ctx.error.message);
-                  },
-                  onSuccess: async () => {
-                    router.push("/");
-                  },
-                },
-              });
-            }}
+            onClick={betterAuthSignUpHandle}
+          >
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <p> Better Auth Sign Up </p>
+            )}
+          </Button>
+          {/* <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+            onClick={signUpHandle}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
               "Create an account"
             )}
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>

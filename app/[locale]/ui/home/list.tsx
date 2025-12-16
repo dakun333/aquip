@@ -1,8 +1,9 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import ProductCard from "./card";
-import { getProducts } from "@/lib/api";
+
 import { Product } from "@/app/types/home.type";
+import { getProducts } from "@/lib/api.client";
 
 export default function ProductList() {
   const [list, setList] = useState<Product[]>([]);
