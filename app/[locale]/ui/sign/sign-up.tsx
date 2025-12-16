@@ -41,6 +41,35 @@ export default function SignUp() {
       reader.readAsDataURL(file);
     }
   };
+  const signUpHandle = async () => {
+    if (!email || !password || !firstName || !lastName) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (password !== passwordConfirmation) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { token } = await registerByEmail({
+        email,
+        password,
+        name: `${firstName} ${lastName}`,
+      });
+      if (token) {
+        saveToken(token);
+      }
+      router.push("/");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Register failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className="z-50 rounded-md rounded-t-none max-w-md">
@@ -150,35 +179,7 @@ export default function SignUp() {
             type="submit"
             className="w-full"
             disabled={loading}
-            onClick={async () => {
-              if (!email || !password || !firstName || !lastName) {
-                toast.error("Please fill all required fields");
-                return;
-              }
-
-              if (password !== passwordConfirmation) {
-                toast.error("Passwords do not match");
-                return;
-              }
-
-              try {
-                setLoading(true);
-                const { token } = await registerByEmail({
-                  email,
-                  password,
-                  name: `${firstName} ${lastName}`,
-                });
-                if (token) {
-                  saveToken(token);
-                }
-                router.push("/");
-              } catch (e: any) {
-                console.error(e);
-                toast.error(e?.message || "Register failed");
-              } finally {
-                setLoading(false);
-              }
-            }}
+            onClick={signUpHandle}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />

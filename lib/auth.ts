@@ -1,6 +1,17 @@
 import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { pool } from "./db";
+import { prisma } from "./prisma";
 
 export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7天过期
+    updateAge: 60 * 60 * 24, // 每天自动刷新（只要用户活跃）
+  },
   emailAndPassword: {
     enabled: true,
     // async sendResetPassword(data, request) {

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Loader2, Key } from "lucide-react";
 // import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
@@ -20,7 +20,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { saveToken } from "@/lib/utils";
-import { IResponse, User } from "@/app/types/api.type";
 import { loginByEmail } from "@/lib/api.client";
 
 export default function SignIn() {
@@ -31,12 +30,9 @@ export default function SignIn() {
   const router = useRouter();
 
   const handleEmailLogin = async () => {
-    console.log("执行这里====", email, password);
     if (!email || !password) return;
     try {
       setLoading(true);
-      console.log("执行这里", email, password);
-
       const { token } = await loginByEmail(email, password);
       if (token) {
         saveToken(token);
@@ -49,21 +45,6 @@ export default function SignIn() {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-
-      try {
-        const resp = await fetch("/api/users", { cache: "no-store" });
-        const data = (await resp.json()) as IResponse<User[]>;
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
 
   return (
     <Card className="w-[80%] max-w-md">
