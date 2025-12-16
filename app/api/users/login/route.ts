@@ -1,11 +1,15 @@
-// app/api/jwt-login/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import type { User } from "@/app/types/api.type";
 import { signUserJwt } from "@/lib/jwt";
+import crypto from "crypto";
+
+function hashPassword(password: string) {
+  return crypto.createHash("sha256").update(password).digest("hex");
+}
 
 export async function POST(req: NextRequest) {
-  console.log("POST /api/jwt-login");
+  console.log("POST /api/login");
   const { email, password } = (await req.json()) as {
     email: string;
     password: string;
@@ -34,8 +38,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 2. 校验密码（这里假设是明文，要安全的话建议改成 hash + bcrypt.compare）
-  if (user.password !== password) {
+  // 2. 校验密码：对输入密码做同样的哈希后再比较
+  const hashedInput = hashPassword(password);
+  if (user.password !== hashedInput) {
     return NextResponse.json(
       { code: 401, message: "Invalid credentials" },
       { status: 401 }
@@ -49,7 +54,7 @@ export async function POST(req: NextRequest) {
     name: user.name,
   });
 
-  // 方案 A：写到 httpOnly cookie 里（推荐）
+  // 写入 httpOnly cookie
   const res = NextResponse.json({
     code: 0,
     data: { token },

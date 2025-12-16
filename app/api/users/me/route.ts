@@ -1,6 +1,8 @@
 // app/api/me/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { verifyUserJwt } from "@/lib/jwt";
+import { db } from "@/lib/db";
+import type { User } from "@/app/types/api.type";
 
 export async function GET(req: NextRequest) {
   const token =
@@ -15,7 +17,26 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const user = await verifyUserJwt(token);
+    // 1. 验证 JWT token 获取用户 ID
+    const jwtPayload = await verifyUserJwt(token);
+    const userId = jwtPayload.id;
+    console.log("userId", userId);
+    // 2. 从数据库查询用户信息
+    const rows = (await db`
+      select id, name, email
+      from users
+      where id = ${userId}
+      limit 1;
+    `) as Omit<User, "password">[];
+    console.log("rows", rows);
+    const user = rows[0];
+    if (!user) {
+      return NextResponse.json(
+        { code: 404, message: "User not found" },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({ code: 0, data: user });
   } catch {
     return NextResponse.json(

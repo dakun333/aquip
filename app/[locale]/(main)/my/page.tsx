@@ -4,47 +4,51 @@ import Link from "next/link";
 
 import { AQButton } from "../../ui/button";
 import { Locale, useTranslations } from "next-intl";
-
-import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import type { IResponse, User } from "@/app/types/api.type";
 
 export default function My({ params }: PageProps<"/[locale]/my">) {
   const t = useTranslations("my");
-
+  const [user, setUser] = useState<User>({} as User);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const getInfo = async () => {
     try {
-      const res = await fetch("/api/users/me", { cache: "no-store" });
-      console.log("获取用户信息", res);
+      const res = await fetch("/api/users/me");
+      const data = (await res.json()) as IResponse<User>;
+      console.log("获取用户信息", data);
+      if (data.code === 0) {
+        setUser(data.data);
+      } else {
+        setError(data.message || "加载失败");
+      }
     } catch (error) {
       console.error("get usr info error", error);
     }
   };
-  useEffect(() => {
-    getInfo();
-  }, []);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const resp = await fetch("/api/users", { cache: "no-store" });
-        const data = (await resp.json()) as IResponse<User[]>;
-        if (data.code === 0) {
-          setUsers(data.data || []);
-        } else {
-          setError(data.message || "加载失败");
-        }
-      } catch (e) {
-        setError("加载失败");
-      } finally {
-        setLoading(false);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const resp = await fetch("/api/users", { cache: "no-store" });
+      const data = (await resp.json()) as IResponse<User[]>;
+      if (data.code === 0) {
+        setUsers(data.data || []);
+      } else {
+        setError(data.message || "加载失败");
       }
-    };
+    } catch (e) {
+      setError("加载失败");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
+    getInfo();
   }, []);
 
   return (
@@ -54,9 +58,9 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
           {t("title")}
         </div>
         <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-2">
-          {/* <div>当前用户名：{res?.data?.user.id}</div>
-          <div>当前用户名：{res?.data?.user.name}</div>
-          <div>当前用户名：{res?.data?.user.email}</div> */}
+          <div>当前用户名：{user.id}</div>
+          <div>当前用户名：{user.name}</div>
+          <div>当前用户名：{user.email}</div>
 
           <Link href="/sign-up">
             <AQButton>注册</AQButton>
