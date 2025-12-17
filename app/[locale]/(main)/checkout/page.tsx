@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <div className="relative flex flex-col h-full ">
+      <div className="relative flex flex-col h-full">
         <div className="flex-1 overflow-y-auto ">
           <div className="flex flex-col justify-center items-center p-2 ">
             {step == "mount" ? (

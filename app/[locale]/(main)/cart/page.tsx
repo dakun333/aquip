@@ -30,8 +30,8 @@ export default async function Cart({ params }: PageProps<"/[locale]/cart">) {
   const t = await getTranslations("cart");
   return (
     <>
-      <div className="h-full flex flex-col ">
-        <div className="flex-1 flex flex-col overflow-y-auto">
+      <div className="h-full flex flex-col  max-w-[100vw] ">
+        <div className="flex-1 flex flex-col overflow-y-auto ">
           <Suspense>
             <CartList />
           </Suspense>

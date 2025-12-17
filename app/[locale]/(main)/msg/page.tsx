@@ -33,7 +33,7 @@ export default async function Home({ params }: PageProps<"/[locale]/msg">) {
 
   const t = await getTranslations("msg");
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full mx-auto">
       <div className="fle-1 flex flex-col overflow-y-auto">
         <ChatCard chat={chatData} />
         <ChatCard chat={chatData} />

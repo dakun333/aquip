@@ -103,7 +103,7 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
 
   return (
     <Form {...form}>
-      <form className="space-y-6 mx-4">
+      <form className="space-y-6 w-full">
         {/* Cardholder Name */}
         <FormField
           name="name"
