@@ -23,7 +23,7 @@ export async function generateMetadata(
       template: `%s | ${t("template")}`,
       default: t("default_title"),
     },
-    description: "Aquip 测试demo.",
+    description: "Aquipay 测试demo.",
     metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
   };
 }

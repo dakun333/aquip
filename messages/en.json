@@ -1,12 +1,12 @@
 {
   "manifest": {
-    "name": "AQuip"
+    "name": "Aquipay"
   },
   "metadata": {
-    "default_title": "AQuip",
-    "description": "AQuip - Shopping Mall",
-    "keywords": "AQuip,Shopping Mall,AQuip Shopping Mall",
-    "template": "AQuip"
+    "default_title": "Aquipay",
+    "description": "Aquipay - Shopping Mall",
+    "keywords": "Aquipay,Shopping Mall,Aquipay Shopping Mall",
+    "template": "Aquipay"
   },
   "common": {
     "select_all": "Select All",

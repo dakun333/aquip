@@ -1,12 +1,12 @@
 {
   "manifest": {
-    "name": "AQuip"
+    "name": "Aquipay"
   },
   "metadata": {
-    "default_title": "AQuip",
-    "description": "AQuip - 购物商城",
-    "keywords": "AQuip,购物商城,AQuip购物商城",
-    "template": "AQuip"
+    "default_title": "Aquipay",
+    "description": "Aquipay - 购物商城",
+    "keywords": "Aquipay,购物商城,Aquipay购物商城",
+    "template": "Aquipay"
   },
   "common": {
     "select_all": "全选",
