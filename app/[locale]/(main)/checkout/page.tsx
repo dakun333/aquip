@@ -68,7 +68,7 @@ export default function CheckoutPage() {
     <>
       <div className="relative flex flex-col h-full ">
         <div className="flex-1 overflow-y-auto ">
-          <div className="flex flex-col justify-center items-center p-2 w-[92%] sm:w-[85%] md:w-[80%] max-w-[460px] mx-auto">
+          <div className="flex flex-col justify-center items-center p-2 ">
             {step == "mount" ? (
               <>
                 <Amount onChange={setAmount} value={amount} />

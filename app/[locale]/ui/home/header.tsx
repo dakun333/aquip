@@ -3,6 +3,8 @@ import LocaleSwitcher from "../lang-switch";
 import { Search, ShoppingCart, User } from "lucide-react";
 
 import Avator from "./avator";
+import Link from "next/link";
+import { AQButton } from "../button";
 
 export default function HomeHeader() {
   return (
@@ -11,6 +13,9 @@ export default function HomeHeader() {
         <div className="text-2xl font-bold cursor-pointer">Aquipay</div>
 
         <div className="flex items-center gap-2">
+          <Link href="/checkout">
+            <AQButton>支付</AQButton>
+          </Link>
           <LocaleSwitcher></LocaleSwitcher>
           <Button variant="outline">
             <Search className="w-5 h-5" />

@@ -17,7 +17,6 @@ import ProductGallery from "@/app/[locale]/ui/product/imgs";
 import Link from "next/link";
 import BackHeader from "@/app/[locale]/ui/backHeader";
 import { TestData } from "@/app/api/product/data.mock";
-import { host } from "@/config";
 
 interface Props {
   params: { id: string };
@@ -36,7 +35,7 @@ export default async function Item({ params }: Props) {
   const product = result;
 
   return (
-    <div className="flex flex-col  h-full">
+    <div className="flex flex-col  h-full max-w-[640px] mx-auto">
       <BackHeader title="" />
       <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
         <div className="flex flex-col gap-2">
