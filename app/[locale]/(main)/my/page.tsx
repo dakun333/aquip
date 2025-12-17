@@ -6,27 +6,33 @@ import { AQButton } from "../../ui/button";
 import { Locale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import type { IResponse, User } from "@/app/types/api.type";
+import { authClient } from "@/lib/auth-client";
 
 export default function My({ params }: PageProps<"/[locale]/my">) {
   const t = useTranslations("my");
-  const [user, setUser] = useState<User>({} as User);
+  // const [user, setUser] = useState<User>({} as User);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const getInfo = async () => {
-    try {
-      const res = await fetch("/api/users/me");
-      const data = (await res.json()) as IResponse<User>;
-      console.log("获取用户信息", data);
-      if (data.code === 0) {
-        setUser(data.data);
-      } else {
-        setError(data.message || "加载失败");
-      }
-    } catch (error) {
-      console.error("get usr info error", error);
-    }
-  };
+  // 1. 使用 Better-Auth 的 Hook 获取当前用户 (替代 getInfo)
+  // 这会自动共享全局登录状态
+  const { data: session, isPending: isSessionLoading } =
+    authClient.useSession();
+  const user = session?.user;
+  // const getInfo = async () => {
+  //   try {
+  //     const res = await fetch("/api/users/me");
+  //     const data = (await res.json()) as IResponse<User>;
+  //     console.log("获取用户信息", data);
+  //     if (data.code === 0) {
+  //       setUser(data.data);
+  //     } else {
+  //       setError(data.message || "加载失败");
+  //     }
+  //   } catch (error) {
+  //     console.error("get usr info error", error);
+  //   }
+  // };
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -58,9 +64,9 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
           {t("title")}
         </div>
         <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-2">
-          <div>当前用户名：{user.id}</div>
-          <div>当前用户名：{user.name}</div>
-          <div>当前用户名：{user.email}</div>
+          <div>ID: {user?.id}</div>
+          <div>名: {user?.name}</div>
+          <div>邮: {user?.email}</div>
 
           <Link href="/sign-up">
             <AQButton>注册</AQButton>

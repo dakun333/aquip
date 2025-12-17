@@ -6,7 +6,7 @@ import HomeHeader from "../ui/home/header";
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const videos = await getBilibiliRecommendList();
+  // const videos = await getBilibiliRecommendList();
   // console.log("b站视频:", videos);
 
   return (

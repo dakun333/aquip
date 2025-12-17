@@ -4,6 +4,8 @@ import { inter } from "./ui/fonts";
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 export async function generateMetadata(
   props: Omit<LayoutProps<"/[locale]">, "children">
 ) {
@@ -36,7 +38,9 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
-
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   setRequestLocale(locale);
   return (
     <>

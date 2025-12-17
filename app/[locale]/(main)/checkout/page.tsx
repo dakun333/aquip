@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatMoney } from "../../utils/format";
 import HomeHeader from "../../ui/home/header";
+import Amount from "../../ui/checkout/amount";
 
 export default function CheckoutPage() {
   const t = useTranslations("checkout");
@@ -76,28 +77,7 @@ export default function CheckoutPage() {
           <div className="flex flex-col justify-center items-center p-2 max-w-[460px] w-[80%] mx-auto">
             {step == "mount" ? (
               <>
-                <div className="w-full  mt-[20%]">
-                  <Label htmlFor="amount" className="mb-4">
-                    {t("enter_amount")}
-                  </Label>
-                  <Input
-                    id="amount"
-                    min="0"
-                    step={0.1}
-                    type="number"
-                    value={amount}
-                    className="w-full hide-arrow border-2 h-12"
-                    placeholder=""
-                    onChange={amountChangeHandle}
-                  />
-                  <AQButton
-                    disabled={amount == undefined || amount <= 0}
-                    className="w-full h-12 text-lg mt-8"
-                    onClick={() => setStep("pay")}
-                  >
-                    {t("submit_amount", { amount: formatMoney(amount) })}
-                  </AQButton>
-                </div>
+                <Amount onChange={() => setStep("pay")} value={amount} />
               </>
             ) : (
               <>
