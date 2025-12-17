@@ -32,7 +32,54 @@
     "pay_voucher": "Checkout with Voucher ({num})"
   },
   "my": {
-    "title": "User Center"
+    "title": "User Center",
+    "id": "ID",
+    "name": "Name",
+    "email": "Email",
+    "logout": "Logout",
+    "register": "Register",
+    "login": "Login",
+    "all_users": "All Users",
+    "loading": "Loading...",
+    "load_failed": "Load Failed",
+    "no_users": "No users"
+  },
+  "sign": {
+    "sign_in": {
+      "title": "Sign In",
+      "description": "Enter your email below to login to your account",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Password",
+      "password_placeholder": "password",
+      "forgot_password": "Forgot your password?",
+      "remember_me": "Remember me",
+      "login_button": "Login",
+      "better_auth_login": "Better Auth Login",
+      "login_failed": "Login failed"
+    },
+    "sign_up": {
+      "title": "Sign Up",
+      "description": "Enter your information to create an account",
+      "first_name": "First name",
+      "first_name_placeholder": "Max",
+      "last_name": "Last name",
+      "last_name_placeholder": "Robinson",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Password",
+      "password_placeholder": "Password",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm Password",
+      "profile_image": "Profile Image (optional)",
+      "profile_preview": "Profile preview",
+      "sign_up_button": "Sign Up",
+      "better_auth_sign_up": "Better Auth Sign Up",
+      "create_account": "Create an account",
+      "fill_required": "Please fill all required fields",
+      "password_mismatch": "Passwords do not match",
+      "register_failed": "Register failed"
+    }
   },
   "checkout": {
     "enter_amount": "Enter payment amount:",

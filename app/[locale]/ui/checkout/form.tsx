@@ -147,7 +147,7 @@ export default function PaymentForm({ value, onChange, onValidChange }: Props) {
                     }}
                   />
                   <InputGroupAddon align="inline-end">
-                    <CardIcon type={cardType} width={32} height={28} />
+                    <CardIcon type={cardType} width={24} height={20} />
                   </InputGroupAddon>
                 </InputGroup>
               </FormControl>

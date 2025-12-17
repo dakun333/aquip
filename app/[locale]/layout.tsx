@@ -6,6 +6,8 @@ import { routing } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import HomeHeader from "./ui/home/header";
+import { Toaster } from "sonner";
 export async function generateMetadata(
   props: Omit<LayoutProps<"/[locale]">, "children">
 ) {
@@ -48,16 +50,11 @@ export default async function LocaleLayout({
         <body
           className={`${inter.className} antialiased bg-white flex justify-center`}
         >
-          <div
-            className=" w-full 
-                  max-w-[420px]
-                  sm:max-w-[480px]
-                  md:max-w-[560px]
-                  lg:max-w-[640px]
-                  xl:max-w-[720px]
-                  h-screen bg-white"
-          >
-            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <div className="w-full  h-screen bg-white">
+            <NextIntlClientProvider>
+              {children}
+              <Toaster position="top-center" richColors />
+            </NextIntlClientProvider>
           </div>
         </body>
       </html>

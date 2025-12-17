@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { formatMoney } from "../../utils/format";
 import HomeHeader from "../../ui/home/header";
 import Amount from "../../ui/checkout/amount";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const t = useTranslations("checkout");
@@ -28,25 +29,18 @@ export default function CheckoutPage() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState("mount");
-  const [amount, setAmount] = useState<number | undefined>(100);
+  const [amount, setAmount] = useState<number | undefined>(undefined);
   // console.log("id:", id);
   if (!id) {
     notFound();
   }
   const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
-    name: "张三",
-    id: "1234567890",
-    expireDate: "09/23",
-    cvv: "123",
+    name: "",
+    id: "",
+    expireDate: "",
+    cvv: "",
   });
   const [isValid, setIsValid] = useState<boolean>(false);
-  const amountChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(e.target.value));
-  };
-  const stepChangeHandle = (v: string) => {
-    console.log("stepChangeHandle:", v);
-    setStep(v);
-  };
   const validChange = (v: boolean) => {
     console.log("validChange:", v);
     setIsValid(v);
@@ -57,6 +51,7 @@ export default function CheckoutPage() {
   const submitHandle = () => {
     setLoading(true);
     setOpen(true);
+
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -67,17 +62,24 @@ export default function CheckoutPage() {
       setLoading(false);
     }, 2000);
   };
+  const amountValid = amount != undefined && amount > 0;
 
   return (
     <>
       <div className="relative flex flex-col h-full ">
-        {/* <BackHeader title="支付" /> */}
-        <HomeHeader />
         <div className="flex-1 overflow-y-auto ">
-          <div className="flex flex-col justify-center items-center p-2 max-w-[460px] w-[80%] mx-auto">
+          <div className="flex flex-col justify-center items-center p-2 w-[92%] sm:w-[85%] md:w-[80%] max-w-[460px] mx-auto">
             {step == "mount" ? (
               <>
-                <Amount onChange={() => setStep("pay")} value={amount} />
+                <Amount onChange={setAmount} value={amount} />
+                <AQButton
+                  className="w-full h-12 text-lg mt-8 "
+                  disabled={!amountValid || loading}
+                  loading={loading}
+                  onClick={() => setStep("pay")}
+                >
+                  {t("submit_amount", { amount: formatMoney(amount) })}
+                </AQButton>
               </>
             ) : (
               <>

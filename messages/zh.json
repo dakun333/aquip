@@ -32,7 +32,54 @@
     "pay_voucher": "领券结算({num})"
   },
   "my": {
-    "title": "个人中心"
+    "title": "个人中心",
+    "id": "ID",
+    "name": "姓名",
+    "email": "邮箱",
+    "logout": "退出登录",
+    "register": "注册",
+    "login": "登录",
+    "all_users": "所有用户",
+    "loading": "加载中...",
+    "load_failed": "加载失败",
+    "no_users": "暂无用户"
+  },
+  "sign": {
+    "sign_in": {
+      "title": "登录",
+      "description": "请输入您的邮箱登录账户",
+      "email": "邮箱",
+      "email_placeholder": "m@example.com",
+      "password": "密码",
+      "password_placeholder": "password",
+      "forgot_password": "忘记密码？",
+      "remember_me": "记住我",
+      "login_button": "登录",
+      "better_auth_login": "Better Auth 登录",
+      "login_failed": "登录失败"
+    },
+    "sign_up": {
+      "title": "注册",
+      "description": "请输入您的信息创建账户",
+      "first_name": "名",
+      "first_name_placeholder": "Max",
+      "last_name": "姓",
+      "last_name_placeholder": "Robinson",
+      "email": "邮箱",
+      "email_placeholder": "m@example.com",
+      "password": "密码",
+      "password_placeholder": "密码",
+      "confirm_password": "确认密码",
+      "confirm_password_placeholder": "确认密码",
+      "profile_image": "头像（可选）",
+      "profile_preview": "头像预览",
+      "sign_up_button": "注册",
+      "better_auth_sign_up": "Better Auth 注册",
+      "create_account": "创建账户",
+      "fill_required": "请填写所有必填项",
+      "password_mismatch": "密码不匹配",
+      "register_failed": "注册失败"
+    }
   },
   "checkout": {
     "enter_amount": "请输入支付金额：",

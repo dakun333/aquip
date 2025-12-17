@@ -43,10 +43,10 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
       if (data.code === 0) {
         setUsers(data.data || []);
       } else {
-        setError(data.message || "加载失败");
+        setError(data.message || t("load_failed"));
       }
     } catch (e) {
-      setError("加载失败");
+      setError(t("load_failed"));
     } finally {
       setLoading(false);
     }
@@ -60,24 +60,43 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
   return (
     <>
       <div className="h-full w-full flex flex-col">
-        <div className="shrink-0 h-16 flex justify-center items-center text-2xl font-bold border-b">
-          {t("title")}
-        </div>
         <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-2">
-          <div>ID: {user?.id}</div>
-          <div>名: {user?.name}</div>
-          <div>邮: {user?.email}</div>
+          <div>
+            {t("id")}: {user?.id}
+          </div>
+          <div>
+            {t("name")}: {user?.name}
+          </div>
+          <div>
+            {t("email")}: {user?.email}
+          </div>
 
-          <Link href="/sign-up">
-            <AQButton>注册</AQButton>
-          </Link>
-          <Link href="/sign-in">
-            <AQButton>登录</AQButton>
-          </Link>
+          {user ? (
+            <>
+              <AQButton onClick={() => authClient.signOut()}>
+                {t("logout")}
+              </AQButton>
+            </>
+          ) : (
+            <>
+              <Link href="/sign-up">
+                <AQButton>{t("register")}</AQButton>
+              </Link>
+              <Link href="/sign-in">
+                <AQButton>{t("login")}</AQButton>
+              </Link>
+            </>
+          )}
           <div className="w-full max-w-md mt-4 px-4">
-            <div className="text-lg font-semibold mb-2">所有用户</div>
-            {loading && <div className="text-sm text-gray-500">加载中...</div>}
-            {error && <div className="text-sm text-red-500">{error}</div>}
+            <div className="text-lg font-semibold mb-2">{t("all_users")}</div>
+            {loading && (
+              <div className="text-sm text-gray-500">{t("loading")}</div>
+            )}
+            {error && (
+              <div className="text-sm text-red-500">
+                {error || t("load_failed")}
+              </div>
+            )}
             {!loading && !error && (
               <div className="space-y-2">
                 {users.map((u) => (
@@ -87,11 +106,13 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
                   >
                     <div className="font-medium">{u.name}</div>
                     <div className="text-gray-600">{u.email}</div>
-                    <div className="text-gray-400 text-xs">ID: {u.id}</div>
+                    <div className="text-gray-400 text-xs">
+                      {t("id")}: {u.id}
+                    </div>
                   </div>
                 ))}
                 {users.length === 0 && (
-                  <div className="text-sm text-gray-500">暂无用户</div>
+                  <div className="text-sm text-gray-500">{t("no_users")}</div>
                 )}
               </div>
             )}

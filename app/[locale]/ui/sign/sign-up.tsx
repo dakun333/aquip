@@ -19,8 +19,10 @@ import { useRouter } from "next/navigation";
 import { registerByEmail } from "@/lib/api.client";
 import { saveToken } from "@/lib/utils";
 import { signUp } from "@/lib/auth-client";
+import { useTranslations } from "next-intl";
 
 export default function SignUp() {
+  const t = useTranslations("sign.sign_up");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,12 +46,12 @@ export default function SignUp() {
   };
   const signUpHandle = async () => {
     if (!email || !password || !firstName || !lastName) {
-      toast.error("Please fill all required fields");
+      toast.error(t("fill_required"));
       return;
     }
 
     if (password !== passwordConfirmation) {
-      toast.error("Passwords do not match");
+      toast.error(t("password_mismatch"));
       return;
     }
 
@@ -66,7 +68,7 @@ export default function SignUp() {
       router.push("/");
     } catch (e: any) {
       console.error(e);
-      toast.error(e?.message || "Register failed");
+      toast.error(e?.message || t("register_failed"));
     } finally {
       setLoading(false);
     }
@@ -80,27 +82,28 @@ export default function SignUp() {
 
     if (res.error) {
       console.error(res.error.message || "Something went wrong.");
+      toast.error(res.error.message || t("register_failed"));
     } else {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
   return (
     <Card className="z-50 rounded-md rounded-t-none max-w-md">
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
+        <CardTitle className="text-lg md:text-xl">{t("title")}</CardTitle>
         <CardDescription className="text-xs md:text-sm">
-          Enter your information to create an account
+          {t("description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
+              <Label htmlFor="first-name">{t("first_name")}</Label>
               <Input
                 id="first-name"
-                placeholder="Max"
+                placeholder={t("first_name_placeholder")}
                 required
                 onChange={(e) => {
                   setFirstName(e.target.value);
@@ -109,10 +112,10 @@ export default function SignUp() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
+              <Label htmlFor="last-name">{t("last_name")}</Label>
               <Input
                 id="last-name"
-                placeholder="Robinson"
+                placeholder={t("last_name_placeholder")}
                 required
                 onChange={(e) => {
                   setLastName(e.target.value);
@@ -122,11 +125,11 @@ export default function SignUp() {
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder={t("email_placeholder")}
               required
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -135,35 +138,35 @@ export default function SignUp() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
-              placeholder="Password"
+              placeholder={t("password_placeholder")}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Confirm Password</Label>
+            <Label htmlFor="password">{t("confirm_password")}</Label>
             <Input
               id="password_confirmation"
               type="password"
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               autoComplete="new-password"
-              placeholder="Confirm Password"
+              placeholder={t("confirm_password_placeholder")}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="image">Profile Image (optional)</Label>
+            <Label htmlFor="image">{t("profile_image")}</Label>
             <div className="flex items-end gap-4">
               {imagePreview && (
                 <div className="relative w-16 h-16 rounded-sm overflow-hidden">
                   <Image
                     src={imagePreview}
-                    alt="Profile preview"
+                    alt={t("profile_preview")}
                     layout="fill"
                     objectFit="cover"
                   />
@@ -198,7 +201,7 @@ export default function SignUp() {
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
-              <p> Better Auth Sign Up </p>
+              <p>{t("better_auth_sign_up")}</p>
             )}
           </Button>
           {/* <Button

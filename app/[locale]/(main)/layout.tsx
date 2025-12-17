@@ -4,6 +4,7 @@ import { hasLocale, Locale, useTranslations } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { use } from "react";
 import { notFound } from "next/navigation";
+import HomeHeader from "../ui/home/header";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -27,6 +28,7 @@ export default async function MainLayout({
 
   return (
     <div className="h-full flex flex-col justify-between">
+      <HomeHeader />
       <div className="flex-1 overflow-auto">{children}</div>
       <HomeFooter />
     </div>

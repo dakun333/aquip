@@ -12,7 +12,7 @@ const tabs: FooterTab[] = [
 export default function HomeFooter() {
   return (
     <>
-      <div className="border-t rounded-t-xl h-20 flex bg-white overflow-hidden">
+      <div className="border-t rounded-t-xl h-20 flex bg-white overflow-hidden md:hidden">
         {tabs.map((tab, index) => {
           return (
             <Suspense key={tab.name}>

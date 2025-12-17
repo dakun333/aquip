@@ -22,8 +22,12 @@ import { useRouter } from "next/navigation";
 import { saveToken } from "@/lib/utils";
 import { loginByEmail } from "@/lib/api.client";
 import { signIn } from "@/lib/auth-client";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { AQButton } from "../button";
 
 export default function SignIn() {
+  const t = useTranslations("sign.sign_in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,15 +43,16 @@ export default function SignIn() {
         saveToken(token);
       }
       router.push("/");
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      // TODO: 可以加 toast 提示
+      toast.error(e?.message || t("login_failed"));
     } finally {
       setLoading(false);
     }
   };
   const betterAuthLoginHandle = async () => {
     try {
+      setLoading(true);
       const { data, error } = await signIn.email({
         email,
         password,
@@ -55,30 +60,35 @@ export default function SignIn() {
       });
       if (error) {
         console.error(error.message);
+        toast.error(error.message);
       } else {
         console.log(data);
+        router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error?.message || t("login_failed"));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Card className="w-[80%] max-w-md">
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
+        <CardTitle className="text-lg md:text-xl">{t("title")}</CardTitle>
         <CardDescription className="text-xs md:text-sm">
-          Enter your email below to login to your account
+          {t("description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder={t("email_placeholder")}
               required
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -89,16 +99,16 @@ export default function SignIn() {
 
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
+                {t("forgot_password")}
               </Link>
             </div>
 
             <Input
               id="password"
               type="password"
-              placeholder="password"
+              placeholder={t("password_placeholder")}
               autoComplete="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -112,7 +122,7 @@ export default function SignIn() {
                 setRememberMe(!rememberMe);
               }}
             />
-            <Label htmlFor="remember">Remember me</Label>
+            <Label htmlFor="remember">{t("remember_me")}</Label>
           </div>
 
           {/* <Button
@@ -127,7 +137,8 @@ export default function SignIn() {
               <p> Login </p>
             )}
           </Button> */}
-          <Button
+          <AQButton
+            loading={loading}
             type="submit"
             className="w-full"
             disabled={loading}
@@ -136,9 +147,9 @@ export default function SignIn() {
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
-              <p> Better Auth Login </p>
+              <p>{t("better_auth_login")}</p>
             )}
-          </Button>
+          </AQButton>
 
           {/* 社交登录按钮暂时移除，如果后续需要可改为调用新的后端接口 */}
         </div>
