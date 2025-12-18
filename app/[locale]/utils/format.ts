@@ -35,7 +35,7 @@ export function formatMoney(
 
   // 处理 undefined 或 null 的情况
   if (money === null || money === undefined) {
-    return `${unit}0.${"0".repeat(finalDecimal)}`;
+    return `${unit} 0.${"0".repeat(finalDecimal)}`;
   }
 
   // ... (其余代码保持不变) ...
@@ -46,7 +46,7 @@ export function formatMoney(
     // 去除空格并尝试转换
     const trimmed = money.trim();
     if (trimmed === "") {
-      return `${unit}0.${"0".repeat(finalDecimal)}`;
+      return `${unit} 0.${"0".repeat(finalDecimal)}`;
     }
     // 注意：parseFloat 会忽略非数字字符，这可能不是期望的行为，但保留您的逻辑。
     numValue = parseFloat(trimmed);
@@ -56,7 +56,7 @@ export function formatMoney(
 
   // 处理 NaN 和 Infinity
   if (!isFinite(numValue)) {
-    return `${unit}0.${"0".repeat(finalDecimal)}`;
+    return `${unit} 0.${"0".repeat(finalDecimal)}`;
   }
 
   // 格式化为指定小数位数的字符串
@@ -65,9 +65,9 @@ export function formatMoney(
 
   // 添加货币符号，并根据 position 决定其位置
   if (position === "left") {
-    return `${unit}${formattedNumber}`;
+    return `${unit} ${formattedNumber}`;
   } else {
-    return `${formattedNumber}${unit}`;
+    return `${formattedNumber} ${unit}`;
   }
 }
 

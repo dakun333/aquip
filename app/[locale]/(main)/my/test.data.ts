@@ -1,0 +1,48 @@
+import { RechargeRecord } from "@/app/types/api.type";
+
+export const TestData: RechargeRecord[] = [
+  {
+    id: "1",
+    userId: "1",
+    amount: 100,
+    currency: "USD",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    status: "success",
+    paymentMethod: "支付宝",
+    paymentStatus: "success",
+  },
+  {
+    id: "2",
+    userId: "2",
+    amount: 200,
+    currency: "USD",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    status: "failed",
+    paymentMethod: "微信",
+    paymentStatus: "success",
+  },
+  {
+    id: "3",
+    userId: "3",
+    amount: 300,
+    currency: "USD",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    status: "pending",
+    paymentMethod: "银行卡",
+    paymentStatus: "success",
+  },
+  {
+    id: "4",
+    userId: "4",
+    amount: 400,
+    currency: "USD",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    status: "success",
+    paymentMethod: "支付宝",
+    paymentStatus: "success",
+  },
+];

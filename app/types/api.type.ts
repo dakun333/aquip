@@ -9,3 +9,14 @@ export interface User {
   email: string;
   password: string;
 }
+export interface RechargeRecord {
+  id: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: string;
+  paymentMethod: string;
+  paymentStatus: string;
+}
