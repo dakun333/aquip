@@ -84,37 +84,36 @@ export default function My({ params }: PageProps<"/[locale]/my">) {
     <>
       <div className="h-full w-full flex flex-col pt-4 px-4">
         <div className="flex-1 overflow-y-auto flex flex-col  items-stretch gap-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("name")}: {user?.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex justify-between">
-              <div className="text-sm text-gray-500">
-                {t("id")}: {user?.id}
-              </div>
-              <div className="text-sm text-gray-500">
-                {t("email")}: {user?.email}
-              </div>
-            </CardContent>
-          </Card>
-
           {user ? (
             <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {t("name")}: {user?.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex justify-between">
+                  <div className="text-sm text-gray-500">
+                    {t("id")}: {user?.id}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {t("email")}: {user?.email}
+                  </div>
+                </CardContent>
+              </Card>
               <AQButton onClick={() => authClient.signOut()}>
                 {t("logout")}
               </AQButton>
             </>
           ) : (
-            <>
+            <div className="w-full flex flex-col item-stretch gap-2 ">
               <Link href="/sign-up">
-                <AQButton>{t("register")}</AQButton>
+                <AQButton className="w-full">{t("register")}</AQButton>
               </Link>
               <Link href="/sign-in">
-                <AQButton>{t("login")}</AQButton>
+                <AQButton className="w-full">{t("login")}</AQButton>
               </Link>
-            </>
+            </div>
           )}
           <Card className="w-full ">
             <CardHeader>

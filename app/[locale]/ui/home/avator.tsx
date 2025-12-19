@@ -33,7 +33,7 @@ export default function Avator() {
           </Link>
         </>
       ) : (
-        <Link href="/sign-in">
+        <Link href="/my">
           <AQButton variant="outline">{t("login_button")}</AQButton>
         </Link>
       )}
