@@ -78,7 +78,11 @@
       "create_account": "Create an account",
       "fill_required": "Please fill all required fields",
       "password_mismatch": "Passwords do not match",
-      "register_failed": "Register failed"
+      "register_failed": "Register failed",
+      "role": "Role",
+      "role_user": "User",
+      "role_editor": "Editor",
+      "role_admin": "Admin"
     }
   },
   "checkout": {
@@ -93,5 +97,18 @@
     "resend_prefix": "Resend code in",
     "verify_button": "Verify",
     "change_phone": "Change phone number?"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "total_users": "Total Users",
+    "total_sessions": "Total Sessions",
+    "admin_users": "Admin Users",
+    "user_list": "User List",
+    "role": "Role",
+    "loading": "Loading...",
+    "load_failed": "Load Failed",
+    "no_users": "No users",
+    "access_denied": "Access Denied",
+    "admin_required": "Admin access required"
   }
 }

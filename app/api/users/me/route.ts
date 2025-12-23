@@ -17,13 +17,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // 2. 使用 Prisma 从数据库查询用户信息（排除敏感字段）
+    // 2. 使用 Prisma 从数据库查询用户信息（排除敏感字段，包含 role）
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
         name: true,
         email: true,
+        role: true,
         emailVerified: true,
         image: true,
         createdAt: true,

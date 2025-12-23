@@ -144,11 +144,7 @@ export default function SignIn() {
             disabled={loading}
             onClick={betterAuthLoginHandle}
           >
-            {loading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <p>{t("better_auth_login")}</p>
-            )}
+            <p>{t("better_auth_login")}</p>
           </AQButton>
 
           {/* 社交登录按钮暂时移除，如果后续需要可改为调用新的后端接口 */}

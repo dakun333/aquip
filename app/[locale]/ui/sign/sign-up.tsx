@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
@@ -20,6 +21,7 @@ import { registerByEmail } from "@/lib/api.client";
 import { saveToken } from "@/lib/utils";
 import { signUp } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
+import { ROLES } from "@/lib/roles";
 
 export default function SignUp() {
   const t = useTranslations("sign.sign_up");
@@ -28,6 +30,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [role, setRole] = useState<string>(ROLES.USER);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
@@ -74,17 +77,25 @@ export default function SignUp() {
     }
   };
   const betterAuthSignUpHandle = async () => {
-    const res = await signUp.email({
-      name: `${firstName} ${lastName}`,
-      email,
-      password,
-    });
+    try {
+      setLoading(true);
+      const res = await signUp.email({
+        name: `${firstName} ${lastName}`,
+        email,
+        password,
+      });
 
-    if (res.error) {
-      console.error(res.error.message || "Something went wrong.");
-      toast.error(res.error.message || t("register_failed"));
-    } else {
-      router.push("/");
+      if (res.error) {
+        console.error(res.error.message || "Something went wrong.");
+        toast.error(res.error.message || t("register_failed"));
+      } else {
+        router.push("/");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || t("register_failed"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,6 +170,7 @@ export default function SignUp() {
               placeholder={t("confirm_password_placeholder")}
             />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="image">{t("profile_image")}</Label>
             <div className="flex items-end gap-4">

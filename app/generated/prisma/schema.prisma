@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+  EDITOR
+}
+
 model User {
   id            String    @id
   name          String
@@ -17,6 +23,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  role          Role      @default(USER)
+  banned        Boolean   @default(false) // Admin 插件需要的字段
 
   @@unique([email])
   @@map("user")

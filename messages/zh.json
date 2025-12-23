@@ -78,7 +78,11 @@
       "create_account": "创建账户",
       "fill_required": "请填写所有必填项",
       "password_mismatch": "密码不匹配",
-      "register_failed": "注册失败"
+      "register_failed": "注册失败",
+      "role": "角色",
+      "role_user": "普通用户",
+      "role_editor": "编辑者",
+      "role_admin": "管理员"
     }
   },
   "checkout": {
@@ -93,5 +97,18 @@
     "resend_prefix": "重新发送验证码倒计时",
     "verify_button": "验证",
     "change_phone": "更换手机号？"
+  },
+  "admin": {
+    "title": "管理后台",
+    "total_users": "总用户数",
+    "total_sessions": "总会话数",
+    "admin_users": "管理员数",
+    "user_list": "用户列表",
+    "role": "角色",
+    "loading": "加载中...",
+    "load_failed": "加载失败",
+    "no_users": "暂无用户",
+    "access_denied": "访问被拒绝",
+    "admin_required": "需要管理员权限"
   }
 }

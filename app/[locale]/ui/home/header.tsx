@@ -10,11 +10,16 @@ export default function HomeHeader() {
   return (
     <>
       <div className="shrink-0 h-20 border-b px-4 flex items-center justify-between md:px-[15%]">
-        <div className="text-2xl font-bold cursor-pointer">Aquipay</div>
+        <Link href="/">
+          <div className="text-2xl font-bold cursor-pointer">Aquipay</div>
+        </Link>
 
         <div className="flex items-center gap-2">
           <Link href="/checkout">
             <AQButton>支付</AQButton>
+          </Link>
+          <Link href="/admin">
+            <AQButton>后台</AQButton>
           </Link>
           <LocaleSwitcher></LocaleSwitcher>
           <Button variant="outline">
