@@ -3,7 +3,7 @@
 import { Form, Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { notFound, useSearchParams } from "next/navigation";
-import { use, useState } from "react";
+import { use, useState, Suspense } from "react";
 import { set } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,7 @@ import VirtualCard from "../ui/checkout/card";
 import PaymentForm from "../ui/checkout/form";
 import VerifyCodeDialog from "../ui/checkout/verify-code";
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const t = useTranslations("checkout");
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || 1;
@@ -129,5 +129,22 @@ export default function CheckoutPage() {
         />
       </div>
     </>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
+            <p className="text-gray-600">加载中...</p>
+          </div>
+        </div>
+      }
+    >
+      <CheckoutPageContent />
+    </Suspense>
   );
 }

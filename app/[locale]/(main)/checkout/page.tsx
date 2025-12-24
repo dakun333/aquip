@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import VirtualCard from "../../ui/checkout/card";
 import PaymentForm from "../../ui/checkout/form";
 import { notFound, useSearchParams } from "next/navigation";
-import { use, useState } from "react";
+import { use, useState, Suspense } from "react";
 import { IPayCardInfo } from "../../../types/checkout.type";
 import { AQButton } from "../../ui/button";
 import { set } from "zod";
@@ -22,7 +22,7 @@ import HomeHeader from "../../ui/home/header";
 import Amount from "../../ui/checkout/amount";
 import { toast } from "sonner";
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const t = useTranslations("checkout");
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || 1;
@@ -134,5 +134,22 @@ export default function CheckoutPage() {
         />
       </div>
     </>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
+            <p className="text-gray-600">加载中...</p>
+          </div>
+        </div>
+      }
+    >
+      <CheckoutPageContent />
+    </Suspense>
   );
 }
