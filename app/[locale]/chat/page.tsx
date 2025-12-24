@@ -118,7 +118,7 @@ export default function ChatPage() {
       <MessageList messages={messages} />
 
       {/* 输入框 */}
-      <ChatInput onSendMessage={handleSendMessage} disabled={isSending} />
+      <ChatInput onSendMessage={handleSendMessage} />
     </div>
   );
 }

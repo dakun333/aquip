@@ -103,10 +103,27 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
         </div>
       )}
 
+      {/* 隐藏的文件输入 */}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+      <input
+        ref={fileInputRef}
+        type="file"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+
       <InputGroup>
         <InputGroupTextarea
           placeholder="输入消息... (Shift+Enter 换行)"
+          value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
         <InputGroupAddon
           align="block-end"
@@ -116,15 +133,20 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
             variant="outline"
             className="rounded-full"
             size="icon-sm"
+            type="button"
+            onClick={() => imageInputRef.current?.click()}
           >
             <Plus />
           </InputGroupButton>
+
+          {/* 发送按钮 */}
           <InputGroupButton
             variant="default"
             className="rounded-full"
-            disabled={!message.trim()}
+            disabled={!message.trim() && !selectedFile}
             onClick={handleSend}
             size="icon-sm"
+            type="button"
           >
             <ArrowUpIcon />
           </InputGroupButton>
