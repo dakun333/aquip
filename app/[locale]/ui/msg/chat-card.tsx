@@ -8,7 +8,7 @@ interface IProps {
 }
 export default function ChatCard({ chat }: IProps) {
   return (
-    <Link href="/chat">
+    <Link href="/chat" target="_blank">
       <div className="w-full px-4 py-2 flex items-center gap-2 border-b cursor-pointer hover:bg-gray-100 transition-all">
         <div className="shrink-0">
           <Image

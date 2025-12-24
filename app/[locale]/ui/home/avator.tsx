@@ -16,7 +16,7 @@ export default function Avator() {
     <Suspense fallback={<div>Loading...</div>}>
       {user ? (
         <>
-          <Link href="/my">
+          <Link href="/msg">
             <Button variant="outline">
               <MessageCircleMore className="w-5 h-5" />
             </Button>
