@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Lock } from "lucide-react";
+import { Form, HeadphoneOffIcon, Headset, Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { notFound, useSearchParams } from "next/navigation";
 import { use, useState, Suspense } from "react";
@@ -16,6 +16,7 @@ import { formatMoney } from "../utils/format";
 import VirtualCard from "../ui/checkout/card";
 import PaymentForm from "../ui/checkout/form";
 import VerifyCodeDialog from "../ui/checkout/verify-code";
+import Link from "next/link";
 
 function CheckoutPageContent() {
   const t = useTranslations("checkout");
@@ -119,7 +120,11 @@ function CheckoutPageContent() {
             )}
           </div>
         </div>
-
+        <Link href="/chat" className="fixed bottom-30 right-10">
+          <AQButton title="聊天" size="icon-lg">
+            <Headset />
+          </AQButton>
+        </Link>
         {/* <VerifyCode /> */}
         <VerifyCodeDialog
           open={open}

@@ -43,13 +43,6 @@ export default async function Home({ params }: PageProps<"/[locale]/msg">) {
         <ChatCard chat={chatData} />
         <ChatCard chat={chatData} />
         <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
-        <ChatCard chat={chatData} />
       </div>
     </div>
   );

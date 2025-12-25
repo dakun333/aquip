@@ -1,10 +1,14 @@
-// app/[locale]/ui/chat/message-item.tsx
-// 聊天消息组件 - 显示单条消息
-
 "use client";
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+
+// 统一的时间格式化函数，避免 Hydration 错误
+function formatTime(date: Date): string {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
 
 export interface Message {
   id: string;
@@ -122,10 +126,7 @@ export default function MessageItem({ message }: MessageItemProps) {
 
         {/* 时间戳 */}
         <div className="text-xs text-gray-400 mt-1 px-2">
-          {new Date(timestamp).toLocaleTimeString("zh-CN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {formatTime(new Date(timestamp))}
         </div>
       </div>
     </div>

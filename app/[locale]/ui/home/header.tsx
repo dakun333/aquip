@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import LocaleSwitcher from "../lang-switch";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { HandCoins, Search, ShoppingCart, User, Wrench } from "lucide-react";
 
 import Avator from "./avator";
 import Link from "next/link";
@@ -16,10 +16,14 @@ export default function HomeHeader() {
 
         <div className="flex items-center gap-2">
           <Link href="/checkout">
-            <AQButton>支付</AQButton>
+            <AQButton title="支付">
+              <HandCoins></HandCoins>
+            </AQButton>
           </Link>
           <Link href="/admin">
-            <AQButton>后台</AQButton>
+            <AQButton title="后台">
+              <Wrench></Wrench>
+            </AQButton>
           </Link>
           <LocaleSwitcher></LocaleSwitcher>
           <Button variant="outline">

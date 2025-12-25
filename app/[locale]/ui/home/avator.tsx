@@ -17,24 +17,26 @@ export default function Avator() {
       {user ? (
         <>
           <Link href="/msg">
-            <Button variant="outline">
+            <Button variant="outline" title="消息">
               <MessageCircleMore className="w-5 h-5" />
             </Button>
           </Link>
           <Link href="/cart">
-            <Button variant="outline">
+            <Button variant="outline" title="购物车">
               <ShoppingCart className="w-5 h-5" />
             </Button>
           </Link>
           <Link href="/my">
-            <Button variant="outline">
+            <Button variant="outline" title="我的">
               <User className="w-5 h-5" />
             </Button>
           </Link>
         </>
       ) : (
         <Link href="/my">
-          <AQButton variant="outline">{t("login_button")}</AQButton>
+          <AQButton variant="outline" title="登录">
+            {t("login_button")}
+          </AQButton>
         </Link>
       )}
     </Suspense>
