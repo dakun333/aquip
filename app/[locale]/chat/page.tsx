@@ -1,27 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MessageList from "../ui/chat/message-list";
 import ChatInput from "../ui/chat/chat-input";
 import type { Message } from "../ui/chat/message-item";
 import { logger } from "@/lib/logger";
 import BackHeader from "../ui/backHeader";
-import Image from "next/image";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
-import { ArrowUpIcon, Plus } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Separator } from "@/components/ui/separator";
+import { sendStreamMessage } from "@/lib/chat-stream";
 // 模拟消息数据
 const initialMessages: Message[] = [
   {
@@ -53,8 +38,12 @@ const initialMessages: Message[] = [
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isSending, setIsSending] = useState(false);
+  const [isReceiving, setIsReceiving] = useState(false);
+  const streamingMessageRef = useRef<string>("");
+  const streamingMessageIdRef = useRef<string>("");
+
   const chatInfo = {
-    userName: "客服小助手",
+    userName: "AI 助手",
     userAvatar: "/avatar.jpg",
   };
 
@@ -64,8 +53,8 @@ export default function ChatPage() {
     setIsSending(true);
 
     try {
-      // 创建新消息
-      const newMessage: Message = {
+      // 1. 创建用户消息
+      const userMessage: Message = {
         id: Date.now().toString(),
         content: content || (file ? `发送了文件: ${file.name}` : ""),
         senderId: "current",
@@ -78,29 +67,80 @@ export default function ChatPage() {
             : "file"
           : "text",
         fileName: file?.name,
-        // 在实际应用中，这里应该上传文件到服务器并获取 URL
         fileUrl: file ? URL.createObjectURL(file) : undefined,
       };
 
-      // 添加到消息列表
-      setMessages((prev) => [...prev, newMessage]);
+      // 添加用户消息
+      setMessages((prev) => [...prev, userMessage]);
+      logger.info("User message sent", { messageId: userMessage.id });
 
-      logger.info("Message sent successfully", { messageId: newMessage.id });
+      // 2. 如果是文件，使用简单回复
+      if (file) {
+        setTimeout(() => {
+          const replyMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            content: "我已收到您的文件，正在处理中...",
+            senderId: "ai",
+            senderName: "AI 助手",
+            timestamp: new Date(),
+            isCurrentUser: false,
+          };
+          setMessages((prev) => [...prev, replyMessage]);
+        }, 500);
+        return;
+      }
 
-      // 模拟对方回复（延迟1秒）
-      setTimeout(() => {
-        const replyMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: file
-            ? "我已收到您的文件，正在处理中..."
-            : "收到您的消息了！",
-          senderId: "other",
-          senderName: "客服小助手",
-          timestamp: new Date(),
-          isCurrentUser: false,
-        };
-        setMessages((prev) => [...prev, replyMessage]);
-      }, 1000);
+      // 3. 文本消息：创建空的 AI 消息用于流式更新
+      const aiMessageId = (Date.now() + 1).toString();
+      streamingMessageIdRef.current = aiMessageId;
+      streamingMessageRef.current = "";
+
+      const aiMessage: Message = {
+        id: aiMessageId,
+        content: "",
+        senderId: "ai",
+        senderName: "AI 助手",
+        timestamp: new Date(),
+        isCurrentUser: false,
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+      setIsReceiving(true);
+
+      // 4. 发送流式请求
+      await sendStreamMessage(content, {
+        onMessage: (chunk: string) => {
+          // 累积内容
+          streamingMessageRef.current += chunk;
+
+          // 更新消息内容
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessageId
+                ? { ...msg, content: streamingMessageRef.current }
+                : msg
+            )
+          );
+        },
+        onComplete: () => {
+          logger.success("Stream completed");
+          setIsReceiving(false);
+          streamingMessageRef.current = "";
+        },
+        onError: (error) => {
+          logger.error("Stream error:", error);
+          setIsReceiving(false);
+
+          // 显示错误消息
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessageId
+                ? { ...msg, content: "抱歉，发生了错误，请重试。" }
+                : msg
+            )
+          );
+        },
+      });
     } catch (error) {
       logger.error("Failed to send message:", error);
       alert("发送失败，请重试");
@@ -116,6 +156,24 @@ export default function ChatPage() {
 
       {/* 消息列表 */}
       <MessageList messages={messages} />
+
+      {/* AI 正在输入提示 */}
+      {isReceiving && (
+        <div className="px-4 py-2 text-sm text-gray-500 flex items-center gap-2">
+          <div className="flex gap-1">
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+            <span
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.1s" }}
+            />
+            <span
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.2s" }}
+            />
+          </div>
+          <span>AI 正在输入中...</span>
+        </div>
+      )}
 
       {/* 输入框 */}
       <ChatInput onSendMessage={handleSendMessage} />
