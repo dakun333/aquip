@@ -1,49 +1,28 @@
 "use client";
 
-import { Form, HeadphoneOffIcon, Headset, Lock } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Headset } from "lucide-react";
 import { notFound, useSearchParams } from "next/navigation";
-import { use, useState, Suspense } from "react";
-import { set } from "zod";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState, Suspense } from "react";
 
-import { toast } from "sonner";
-import { IPayCardInfo } from "@/app/types/checkout.type";
 import { AQButton } from "../ui/button";
-import Amount from "../ui/checkout/amount";
-import { formatMoney } from "../utils/format";
-import VirtualCard from "../ui/checkout/card";
-import PaymentForm from "../ui/checkout/form";
+import AmountSelect from "../ui/checkout/amount-select";
+import CardPayment from "../ui/checkout/card-payment";
+import CryptoPayment from "../ui/checkout/crypto-payment";
 import VerifyCodeDialog from "../ui/checkout/verify-code";
 import Link from "next/link";
 
 function CheckoutPageContent() {
-  const t = useTranslations("checkout");
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || 1;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState("mount");
+  const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
   const [amount, setAmount] = useState<number | undefined>(undefined);
-  // console.log("id:", id);
+
   if (!id) {
     notFound();
   }
-  const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
-    name: "",
-    id: "",
-    expireDate: "",
-    cvv: "",
-  });
-  const [isValid, setIsValid] = useState<boolean>(false);
-  const validChange = (v: boolean) => {
-    console.log("validChange:", v);
-    setIsValid(v);
-  };
-  const formChange = (v: IPayCardInfo) => {
-    setCardInfo(v);
-  };
+
   const submitHandle = () => {
     setLoading(true);
     setOpen(true);
@@ -52,71 +31,41 @@ function CheckoutPageContent() {
       setLoading(false);
     }, 2000);
   };
+
   const verifyHandle = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
-  const amountValid = amount != undefined && amount > 0;
 
   return (
     <>
       <div className="relative flex flex-col h-full mx-2">
         <div className="flex-1 overflow-y-auto ">
           <div className="flex flex-col justify-center items-center p-2 ">
-            {step == "mount" ? (
-              <>
-                <Amount onChange={setAmount} value={amount} />
-                <AQButton
-                  className="w-full h-12 text-lg mt-8 "
-                  disabled={!amountValid || loading}
-                  loading={loading}
-                  onClick={() => setStep("pay")}
-                >
-                  {t("submit_amount", { amount: formatMoney(amount) })}
-                </AQButton>
-              </>
+            {step === "amount" ? (
+              <AmountSelect
+                amount={amount}
+                onAmountChange={setAmount}
+                onCardPay={() => setStep("card")}
+                onCryptoPay={() => setStep("crypto")}
+                loading={loading}
+              />
+            ) : step === "card" ? (
+              <CardPayment
+                amount={amount}
+                onModifyAmount={() => setStep("amount")}
+                onSubmit={submitHandle}
+                loading={loading}
+              />
             ) : (
-              <>
-                <div className="w-[90%] mb-8">
-                  <VirtualCard cardInfo={cardInfo} />
-                </div>
-                <PaymentForm
-                  onChange={formChange}
-                  onValidChange={validChange}
-                ></PaymentForm>
-
-                <div className="w-full mt-10 pt-4 border-t border-gray-200 mx-2">
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="text-base font-medium">{t("total")}</span>
-                    <span className="text-2xl font-bold">
-                      {formatMoney(amount)}
-                    </span>
-                  </div>
-
-                  <AQButton
-                    disabled={!isValid || loading}
-                    loading={loading}
-                    className="w-full h-12 text-lg"
-                    onClick={submitHandle}
-                  >
-                    {t("pay_amount", { amount: formatMoney(amount) })}
-                  </AQButton>
-                  <AQButton
-                    loading={loading}
-                    className="w-full h-12 text-lg mt-4"
-                    onClick={() => setStep("mount")}
-                  >
-                    {t("modify_amount")}
-                  </AQButton>
-
-                  <p className="flex items-center justify-center text-xs text-gray-500 mt-3">
-                    <Lock className="w-3 h-3 mr-1" />
-                    {t("secure_payment")}
-                  </p>
-                </div>
-              </>
+              <CryptoPayment
+                amount={amount}
+                onModifyAmount={() => setStep("amount")}
+                onSubmit={submitHandle}
+                loading={loading}
+              />
             )}
           </div>
         </div>
@@ -125,7 +74,6 @@ function CheckoutPageContent() {
             <Headset />
           </AQButton>
         </Link>
-        {/* <VerifyCode /> */}
         <VerifyCodeDialog
           open={open}
           onOpenChange={setOpen}

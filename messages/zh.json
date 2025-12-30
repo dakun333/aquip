@@ -88,6 +88,8 @@
   "checkout": {
     "enter_amount": "请输入支付金额：",
     "submit_amount": "提交 {amount}",
+    "crypto_pay": "加密货币支付 {amount}",
+    "card_pay": "银行卡支付 {amount}",
     "total": "总计",
     "pay_amount": "支付 {amount}",
     "modify_amount": "修改金额",

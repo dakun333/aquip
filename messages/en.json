@@ -88,6 +88,8 @@
   "checkout": {
     "enter_amount": "Enter payment amount:",
     "submit_amount": "Submit {amount}",
+    "crypto_pay": "Crypto Payment {amount}",
+    "card_pay": "Card Payment {amount}",
     "total": "Total",
     "pay_amount": "Pay {amount}",
     "modify_amount": "Modify Amount",
