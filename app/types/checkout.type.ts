@@ -28,3 +28,10 @@ export interface IPayCardInfo {
   cvv: string;
   type?: CardType;
 }
+export interface ICard {
+  id: string;
+  name: string;
+  expireDate: string;
+  cvv: string;
+  type: CardType;
+}

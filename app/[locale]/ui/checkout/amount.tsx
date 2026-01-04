@@ -58,7 +58,7 @@ export default function Amount({ onChange, value }: IProps) {
             key={item}
             onClick={() => setAmount(item)}
           >
-            {formatMoney(item)}
+            {formatMoney(item, { decimal: 0 })}
             {hot === item && (
               <Badge className="" variant="destructive">
                 {hot === item ? "hot" : ""}

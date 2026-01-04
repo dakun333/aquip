@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardType, IPayCardInfo } from "@/app/types/checkout.type";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import CardValidator from "card-validator";
 import {
   InputGroup,
@@ -57,157 +57,202 @@ interface Props {
   onValidChange?: (valid: boolean) => void;
 }
 
-export default function PaymentForm({ value, onChange, onValidChange }: Props) {
-  const form = useForm<PayCardForm>({
-    mode: "onChange",
-    resolver: zodResolver(PayCardSchema),
-    defaultValues: value,
-  });
-
-  const {
-    watch,
-    formState: { errors, isValid },
-  } = form;
-
-  // 使用ref记录上一次的值，避免不必要的更新
-  const previousValueRef = useRef<IPayCardInfo>(value);
-  const previousIsValidRef = useRef<boolean>(false);
-
-  const watchAllFields = watch();
-  const watchId = form.watch("id");
-  const cardType =
-    (CardValidator.number(watchId).card?.type as CardType) ?? CardType.Unknown;
-
-  // 当表单数据变化时通知父组件
-  useEffect(() => {
-    // 只有当值真正改变时才调用onChange
-
-    if (
-      JSON.stringify(watchAllFields) !==
-      JSON.stringify(previousValueRef.current)
-    ) {
-      // const cardType = CardValidator.number(watchId).card?.type as CardType;
-      form.setValue("type", cardType);
-      previousValueRef.current = watchAllFields;
-      onChange?.(watchAllFields);
-    }
-  }, [watchAllFields, onChange]);
-
-  // 当校验状态变化时通知父组件
-  useEffect(() => {
-    if (isValid !== previousIsValidRef.current) {
-      previousIsValidRef.current = isValid;
-      onValidChange?.(isValid);
-    }
-  }, [isValid, onValidChange]);
-
-  return (
-    <Form {...form}>
-      <form className="space-y-6 w-full">
-        {/* Cardholder Name */}
-        <FormField
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cardholder Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Name on card" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Card Number */}
-        <FormField
-          name="id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Card Number</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupInput
-                    {...field}
-                    value={field.value || ""}
-                    className="pr-12"
-                    placeholder="**** **** **** ****"
-                    onChange={(e) => {
-                      let value = e.target.value;
-
-                      // 1. 去掉非数字
-                      value = value.replace(/\D/g, "");
-
-                      // 2. 限制为最多 16 位数字
-                      value = value.slice(0, 16);
-
-                      // 3. 每 4 位加空格用于展示
-                      value = value.replace(/(.{4})/g, "$1 ").trim();
-
-                      field.onChange(value);
-                    }}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <CardIcon type={cardType} width={24} height={20} />
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Expiry Date / CVV */}
-        <div className="flex space-x-4 items-start">
-          <FormField
-            name="expireDate"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Expiry Date</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value || ""}
-                    placeholder="MM/YY"
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, "");
-                      // 限制最多 4 位数字
-                      value = value.slice(0, 4);
-                      // 格式化为 MM/YY
-                      if (value.length > 2) {
-                        value = `${value.slice(0, 2)}/${value.slice(2)}`;
-                      }
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="cvv"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>CVV / CVC</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value || ""}
-                    placeholder={cardType === CardType.Amex ? "****" : "***"}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, "");
-                      const maxLen = cardType === CardType.Amex ? 4 : 3;
-                      value = value.slice(0, maxLen);
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </form>
-    </Form>
-  );
+export interface PaymentFormRef {
+  setValue: (value: IPayCardInfo) => void;
+  reset: () => void;
+  getValue: () => IPayCardInfo | undefined;
 }
+
+const PaymentForm = forwardRef<PaymentFormRef, Props>(
+  ({ value, onChange, onValidChange }, ref) => {
+    const form = useForm<PayCardForm>({
+      mode: "onChange",
+      resolver: zodResolver(PayCardSchema),
+      defaultValues: value,
+    });
+
+    const {
+      watch,
+      formState: { errors, isValid },
+    } = form;
+
+    // 使用ref记录上一次的值，避免不必要的更新
+    const previousValueRef = useRef<IPayCardInfo>(value);
+    const previousIsValidRef = useRef<boolean>(false);
+
+    const watchAllFields = watch();
+    const watchId = form.watch("id");
+    const cardType =
+      (CardValidator.number(watchId).card?.type as CardType) ??
+      CardType.Unknown;
+
+    // 暴露方法给父组件
+    useImperativeHandle(
+      ref,
+      () => ({
+        setValue: (newValue: IPayCardInfo) => {
+          // 格式化卡号（如果有空格需要处理）
+          const cardId = newValue.id?.replace(/\s/g, "") || "";
+          const formattedCardId =
+            cardId.length > 0
+              ? cardId.replace(/(.{4})/g, "$1 ").trim()
+              : newValue.id || "";
+
+          form.setValue("name", newValue.name || "");
+          form.setValue("id", formattedCardId);
+          form.setValue("expireDate", newValue.expireDate || "");
+          form.setValue("cvv", newValue.cvv || "");
+          if (newValue.type) {
+            form.setValue("type", newValue.type);
+          }
+          // 触发验证
+          form.trigger();
+        },
+        reset: () => {
+          form.reset();
+        },
+        getValue: () => {
+          return form.getValues();
+        },
+      }),
+      [form]
+    );
+
+    // 当表单数据变化时通知父组件
+    useEffect(() => {
+      // 只有当值真正改变时才调用onChange
+
+      if (
+        JSON.stringify(watchAllFields) !==
+        JSON.stringify(previousValueRef.current)
+      ) {
+        // const cardType = CardValidator.number(watchId).card?.type as CardType;
+        form.setValue("type", cardType);
+        previousValueRef.current = watchAllFields;
+        onChange?.(watchAllFields);
+      }
+    }, [watchAllFields, onChange]);
+
+    // 当校验状态变化时通知父组件
+    useEffect(() => {
+      if (isValid !== previousIsValidRef.current) {
+        previousIsValidRef.current = isValid;
+        onValidChange?.(isValid);
+      }
+    }, [isValid, onValidChange]);
+
+    return (
+      <Form {...form}>
+        <form className="space-y-6 w-full">
+          {/* Cardholder Name */}
+          <FormField
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cardholder Name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Name on card" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Card Number */}
+          <FormField
+            name="id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Card Number</FormLabel>
+                <FormControl>
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      value={field.value || ""}
+                      className="pr-12"
+                      placeholder="**** **** **** ****"
+                      onChange={(e) => {
+                        let value = e.target.value;
+
+                        // 1. 去掉非数字
+                        value = value.replace(/\D/g, "");
+
+                        // 2. 限制为最多 16 位数字
+                        value = value.slice(0, 16);
+
+                        // 3. 每 4 位加空格用于展示
+                        value = value.replace(/(.{4})/g, "$1 ").trim();
+
+                        field.onChange(value);
+                      }}
+                    />
+                    <InputGroupAddon align="inline-end">
+                      <CardIcon type={cardType} width={24} height={20} />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Expiry Date / CVV */}
+          <div className="flex space-x-4 items-start">
+            <FormField
+              name="expireDate"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Expiry Date</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      placeholder="MM/YY"
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, "");
+                        // 限制最多 4 位数字
+                        value = value.slice(0, 4);
+                        // 格式化为 MM/YY
+                        if (value.length > 2) {
+                          value = `${value.slice(0, 2)}/${value.slice(2)}`;
+                        }
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="cvv"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>CVV / CVC</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      placeholder={cardType === CardType.Amex ? "****" : "***"}
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, "");
+                        const maxLen = cardType === CardType.Amex ? 4 : 3;
+                        value = value.slice(0, maxLen);
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+      </Form>
+    );
+  }
+);
+
+PaymentForm.displayName = "PaymentForm";
+
+export default PaymentForm;

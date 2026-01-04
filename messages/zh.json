@@ -94,6 +94,8 @@
     "pay_amount": "支付 {amount}",
     "modify_amount": "修改金额",
     "secure_payment": "加密安全支付",
+    "select_card": "选择银行卡",
+    "select_card_title": "选择银行卡",
     "verify_title": "验证码",
     "verify_desc": "请输入发送到您手机的4位验证码",
     "resend_prefix": "重新发送验证码倒计时",
