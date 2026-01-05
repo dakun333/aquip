@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { Lock, Copy, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { AQButton } from "../button";
@@ -13,6 +13,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type CryptoType = "BTC" | "ETH" | "USDT";
 
@@ -20,6 +21,9 @@ interface CryptoOption {
   type: CryptoType;
   name: string;
   nameZh: string;
+  walletAddress: string;
+  chain: string;
+  chainZh: string;
   recommended?: boolean;
 }
 
@@ -28,17 +32,26 @@ const cryptoOptions: CryptoOption[] = [
     type: "BTC",
     name: "Bitcoin (BTC)",
     nameZh: "比特币",
+    walletAddress: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    chain: "Bitcoin Mainnet",
+    chainZh: "比特币主网",
     recommended: true,
   },
   {
     type: "ETH",
     name: "Ethereum (ETH)",
     nameZh: "以太坊",
+    walletAddress: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    chain: "Ethereum Mainnet",
+    chainZh: "以太坊主网",
   },
   {
     type: "USDT",
     name: "USDT",
     nameZh: "泰达币",
+    walletAddress: "TQn9Y2khEsLMWDm3YF8Kj7vK8K8K8K8K8K8",
+    chain: "TRC-20",
+    chainZh: "TRC-20",
   },
 ];
 
@@ -57,6 +70,24 @@ export default function CryptoPayment({
 }: IProps) {
   const t = useTranslations("checkout");
   const [selectedCrypto, setSelectedCrypto] = useState<CryptoType>("BTC");
+  const [copied, setCopied] = useState(false);
+
+  const selectedOption = cryptoOptions.find(
+    (option) => option.type === selectedCrypto
+  );
+
+  const handleCopy = async () => {
+    if (!selectedOption) return;
+
+    try {
+      await navigator.clipboard.writeText(selectedOption.walletAddress);
+      setCopied(true);
+      toast.success(t("address_copied"));
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error(t("copy_failed"));
+    }
+  };
 
   return (
     <>
@@ -84,6 +115,43 @@ export default function CryptoPayment({
             </Item>
           ))}
         </div>
+
+        {/* 钱包地址显示区域 */}
+        {selectedOption && (
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-gray-700">
+                  {t("wallet_address")}
+                </span>
+                <span className="text-xs text-gray-500 mt-1">
+                  {selectedOption.chainZh} ({selectedOption.chain})
+                </span>
+              </div>
+              <AQButton
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="h-8 px-3"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 mr-1" />
+                    {t("address_copied")}
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-1" />
+                    {t("copy_address")}
+                  </>
+                )}
+              </AQButton>
+            </div>
+            <div className="break-all text-sm font-mono text-gray-900 bg-white p-2 rounded border border-gray-200">
+              {selectedOption.walletAddress}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="w-full mt-10 pt-4 border-t border-gray-200 mx-2">

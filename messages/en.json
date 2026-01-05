@@ -100,7 +100,11 @@
     "verify_desc": "Please enter the 4-digit code sent to your phone",
     "resend_prefix": "Resend code in",
     "verify_button": "Verify",
-    "change_phone": "Change phone number?"
+    "change_phone": "Change phone number?",
+    "wallet_address": "Wallet Address",
+    "copy_address": "Copy Address",
+    "address_copied": "Address Copied",
+    "copy_failed": "Copy failed, please try again"
   },
   "admin": {
     "title": "Admin Dashboard",
