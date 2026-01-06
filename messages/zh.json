@@ -44,6 +44,21 @@
     "load_failed": "加载失败",
     "no_users": "暂无用户"
   },
+  "wallet": {
+    "title": "钱包",
+    "balance": "余额",
+    "income": "收入",
+    "expense": "支出",
+    "total_income": "总收入",
+    "total_expense": "总支出",
+    "records": "交易记录",
+    "no_records": "暂无交易记录",
+    "recharge": "充值",
+    "shopping": "购物",
+    "order": "订单",
+    "service": "服务",
+    "refund": "退款"
+  },
   "sign": {
     "sign_in": {
       "title": "登录",
@@ -104,7 +119,12 @@
     "wallet_address": "钱包地址",
     "copy_address": "复制地址",
     "address_copied": "地址已复制",
-    "copy_failed": "复制失败，请重试"
+    "copy_failed": "复制失败，请重试",
+    "amount_range": "支付限制",
+    "min_amount": "最低 {amount}",
+    "max_amount": "最高 {amount}",
+    "wallet_balance": "钱包余额",
+    "balance": "{amount}"
   },
   "admin": {
     "title": "管理后台",

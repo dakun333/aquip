@@ -44,6 +44,21 @@
     "load_failed": "Load Failed",
     "no_users": "No users"
   },
+  "wallet": {
+    "title": "Wallet",
+    "balance": "Balance",
+    "income": "Income",
+    "expense": "Expense",
+    "total_income": "Total Income",
+    "total_expense": "Total Expense",
+    "records": "Transaction Records",
+    "no_records": "No transaction records",
+    "recharge": "Recharge",
+    "shopping": "Shopping",
+    "order": "Order",
+    "service": "Service",
+    "refund": "Refund"
+  },
   "sign": {
     "sign_in": {
       "title": "Sign In",
@@ -104,7 +119,12 @@
     "wallet_address": "Wallet Address",
     "copy_address": "Copy Address",
     "address_copied": "Address Copied",
-    "copy_failed": "Copy failed, please try again"
+    "copy_failed": "Copy failed, please try again",
+    "amount_range": "Payment Limit",
+    "min_amount": "Min {amount}",
+    "max_amount": "Max {amount}",
+    "wallet_balance": "Wallet Balance",
+    "balance": "{amount}"
   },
   "admin": {
     "title": "Admin Dashboard",

@@ -13,12 +13,23 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import Link from "next/link";
+import { Circle, CircleAlert, CircleAlertIcon } from "lucide-react";
 
 interface IProps {
   onChange: (amount: number) => void;
   value: number | undefined;
+  minAmount?: number;
+  maxAmount?: number;
+  walletBalance?: number;
 }
-export default function Amount({ onChange, value }: IProps) {
+export default function Amount({
+  onChange,
+  value,
+  minAmount = 100,
+  maxAmount = 50000,
+  walletBalance,
+}: IProps) {
   const t = useTranslations("checkout");
   const list = [100, 200, 500, 1000, 2000, 5000, 10000];
   const hot = list[2];
@@ -50,6 +61,30 @@ export default function Amount({ onChange, value }: IProps) {
           onChange={amountChangeHandle}
         />
       </InputGroup>
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex flex-col">
+          <span className="text-sm text-gray-700 font-medium">
+            {t("min_amount", {
+              amount: formatMoney(minAmount, { decimal: 0 }),
+            })}
+            {" - "}
+            {t("max_amount", {
+              amount: formatMoney(maxAmount, { decimal: 0 }),
+            })}
+          </span>
+        </div>
+        {walletBalance !== undefined && (
+          <Link href="/wallet" className="flex items-center gap-1">
+            <span className="text-xs text-gray-500">{t("wallet_balance")}</span>
+            <span className="text-sm text-gray-700 font-medium">
+              {t("balance", {
+                amount: formatMoney(walletBalance, { decimal: 0 }),
+              })}
+            </span>
+            <CircleAlertIcon className="w-4 h-4" />
+          </Link>
+        )}
+      </div>
       <div className="grid grid-cols-3   gap-2 mt-4 text-lg ">
         {list.map((item) => (
           <AQButton

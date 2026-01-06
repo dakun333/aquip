@@ -11,6 +11,9 @@ interface IProps {
   onCardPay: () => void;
   onCryptoPay: () => void;
   loading?: boolean;
+  minAmount?: number;
+  maxAmount?: number;
+  walletBalance?: number;
 }
 
 export default function AmountSelect({
@@ -19,13 +22,22 @@ export default function AmountSelect({
   onCardPay,
   onCryptoPay,
   loading = false,
+  minAmount,
+  maxAmount,
+  walletBalance = 888.36,
 }: IProps) {
   const t = useTranslations("checkout");
   const amountValid = amount != undefined && amount > 0;
 
   return (
     <>
-      <Amount onChange={onAmountChange} value={amount} />
+      <Amount
+        onChange={onAmountChange}
+        value={amount}
+        minAmount={minAmount}
+        maxAmount={maxAmount}
+        walletBalance={walletBalance}
+      />
       <AQButton
         className="w-full h-12 text-lg mt-8"
         disabled={!amountValid || loading}
