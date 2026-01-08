@@ -6,7 +6,12 @@ import ChatInput from "../ui/chat/chat-input";
 import type { Message } from "../ui/chat/message-item";
 import { logger } from "@/lib/logger";
 import BackHeader from "../ui/backHeader";
-import { sendStreamMessage } from "@/lib/chat-stream";
+import {
+  ChunkTransfer,
+  sendMessage,
+  sendStreamMessage,
+} from "@/lib/chat-stream";
+import { authClient } from "@/lib/auth-client";
 // 模拟消息数据
 const initialMessages: Message[] = [
   {
@@ -39,8 +44,11 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isSending, setIsSending] = useState(false);
   const [isReceiving, setIsReceiving] = useState(false);
+  const [streamingContent, setStreamingContent] = useState<string>("");
   const streamingMessageRef = useRef<string>("");
   const streamingMessageIdRef = useRef<string>("");
+  // 尝试多种方式获取 session_id
+  const sessionId = 9999;
 
   const chatInfo = {
     userName: "AI 助手",
@@ -104,16 +112,22 @@ export default function ChatPage() {
         isCurrentUser: false,
       };
 
+      // 先添加空消息到列表
       setMessages((prev) => [...prev, aiMessage]);
       setIsReceiving(true);
+      setStreamingContent("");
+      streamingMessageRef.current = "";
 
-      // 4. 发送流式请求
-      await sendStreamMessage(content, {
-        onMessage: (chunk: string) => {
-          // 累积内容
-          streamingMessageRef.current += chunk;
+      // 发送流式请求
+      try {
+        await ChunkTransfer((content: string) => {
+          // logger.info("最新的msg:", content, streamingMessageRef.current);
+          // 累积内容到 ref
+          streamingMessageRef.current += content;
+          // 更新 state 以触发重新渲染
+          setStreamingContent(streamingMessageRef.current);
 
-          // 更新消息内容
+          // 实时更新消息内容
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === aiMessageId
@@ -121,11 +135,35 @@ export default function ChatPage() {
                 : msg
             )
           );
+        });
+        setIsReceiving(false);
+      } catch (error) {
+        logger.error("ChunkTransfer error:", error);
+        setIsReceiving(false);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessageId
+              ? { ...msg, content: "抱歉，发生了错误，请重试。" }
+              : msg
+          )
+        );
+      }
+      return;
+
+      // 4. 发送流式请求，按 token 逐个显示
+      await sendStreamMessage(content, sessionId.toString(), {
+        onMessage: (chunk: string) => {
+          logger.info("最新的msg:", { chunk });
+          // 累积内容
+          streamingMessageRef.current += chunk;
         },
         onComplete: () => {
           logger.success("Stream completed");
           setIsReceiving(false);
-          streamingMessageRef.current = "";
+          aiMessage.content = streamingMessageRef.current;
+          // 更新消息内容，逐个 token 显示
+          setMessages((prev) => [...prev, aiMessage]);
+          // streamingMessageRef.current = "";
         },
         onError: (error) => {
           logger.error("Stream error:", error);
@@ -139,6 +177,7 @@ export default function ChatPage() {
                 : msg
             )
           );
+          streamingMessageRef.current = "";
         },
       });
     } catch (error) {

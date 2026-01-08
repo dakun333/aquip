@@ -4,7 +4,7 @@
 import { logger } from "./logger";
 
 export interface StreamMessage {
-  content?: string;
+  token?: string;
   done?: boolean;
   error?: string;
 }
@@ -14,25 +14,67 @@ export interface StreamOptions {
   onComplete: () => void;
   onError: (error: Error) => void;
 }
+export interface ChatResponse {
+  code: number;
+  data: string;
+  message: string;
+}
 
+export async function sendMessage(
+  message: string,
+  sessionId: string
+): Promise<string> {
+  const aiUrl = process.env.NEXT_PUBLIC_AI_URL;
+  if (!aiUrl) {
+    throw new Error("AI_URL environment variable is not set");
+  }
+  const response = await fetch(`${aiUrl}/ai/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      question: message,
+      session_id: sessionId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data: ChatResponse = await response.json();
+  console.log("sendMessage data", data);
+  return data.code == 1 ? data.data : "抱歉，发生了错误，请重试。";
+}
 /**
  * 发送消息并接收流式响应
  */
 export async function sendStreamMessage(
   message: string,
+  sessionId: string,
   options: StreamOptions
 ) {
   const { onMessage, onComplete, onError } = options;
 
   try {
-    logger.info("Sending stream message:", message);
+    logger.info("Sending stream message:", { message, sessionId });
 
-    const response = await fetch("/api/chat/stream", {
+    // 从环境变量获取 AI_URL，客户端需要使用 NEXT_PUBLIC_ 前缀
+    const aiUrl = process.env.NEXT_PUBLIC_AI_URL;
+    if (!aiUrl) {
+      throw new Error("AI_URL environment variable is not set");
+    }
+
+    const response = await fetch(`${aiUrl}/ai/chat_stream`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({
+        question: message,
+        session_id: sessionId,
+      }),
     });
 
     if (!response.ok) {
@@ -49,6 +91,7 @@ export async function sendStreamMessage(
     // 读取流式数据
     while (true) {
       const { done, value } = await reader.read();
+      logger.info("Stream data:", { done, value });
 
       if (done) {
         logger.info("Stream completed");
@@ -60,10 +103,15 @@ export async function sendStreamMessage(
       const lines = chunk.split("\n");
 
       for (const line of lines) {
+        logger.info("Stream line:", { line });
         if (line.startsWith("data: ")) {
+          if (line.includes("[DONE]")) {
+            onComplete();
+            return;
+          }
           try {
             const data: StreamMessage = JSON.parse(line.slice(6));
-
+            logger.info("Stream data:", { data });
             if (data.error) {
               throw new Error(data.error);
             }
@@ -73,8 +121,8 @@ export async function sendStreamMessage(
               return;
             }
 
-            if (data.content) {
-              onMessage(data.content);
+            if (data.token) {
+              onMessage(data.token);
             }
           } catch (e) {
             logger.error("Failed to parse stream data:", e);
@@ -93,47 +141,55 @@ export async function sendStreamMessage(
 /**
  * 使用 EventSource 接收流式响应（备用方案）
  */
-export function subscribeToStream(
-  messageId: string,
-  options: StreamOptions
-): () => void {
-  const { onMessage, onComplete, onError } = options;
+export async function ChunkTransfer(
+  onMessage: (content: string) => void
+): Promise<void> {
+  const aiUrl = process.env.NEXT_PUBLIC_AI_URL;
+  if (!aiUrl) {
+    throw new Error("AI_URL environment variable is not set");
+  }
 
-  const eventSource = new EventSource(
-    `/api/chat/stream?messageId=${messageId}`
-  );
+  try {
+    const response = await fetch(`${aiUrl}/ai/gemini-style-stream`);
 
-  eventSource.onmessage = (event) => {
-    try {
-      const data: StreamMessage = JSON.parse(event.data);
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      if (data.done) {
-        eventSource.close();
-        onComplete();
-        return;
-      }
-
-      if (data.content) {
-        onMessage(data.content);
-      }
-    } catch (error) {
-      logger.error("EventSource message error:", error);
-      onError(error as Error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
 
-  eventSource.onerror = (error) => {
-    logger.error("EventSource error:", error);
-    eventSource.close();
-    onError(new Error("Connection error"));
-  };
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
 
-  // 返回取消订阅函数
-  return () => {
-    eventSource.close();
-  };
+    if (!reader) {
+      throw new Error("No response body");
+    }
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      // 解码当前拿到的二进制块
+      const rawChunk = decoder.decode(value, { stream: true });
+
+      // 因为一个 Chunk 可能包含多个 JSON 对象（按换行符分割）
+      const lines = rawChunk.split("\n");
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try {
+          const data = JSON.parse(line);
+          console.log("收到单词:", data.text);
+          if (data.text) {
+            onMessage(data.text);
+          }
+          // 这里更新你的 React State 实现打字机效果
+        } catch (e) {
+          // 如果 JSON 不完整，说明这个块被切断了，需要缓存处理（此处简化）
+          console.error("解析失败", e);
+        }
+      }
+    }
+  } catch (error) {
+    logger.error("ChunkTransfer error:", error);
+    throw error;
+  }
 }
