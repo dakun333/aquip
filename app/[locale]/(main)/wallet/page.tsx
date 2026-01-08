@@ -1,19 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatMoney } from "../../utils/format";
 import { ArrowDown, ArrowUp, Wallet as WalletIcon } from "lucide-react";
 import { WalletTestData } from "./testData";
+import { cn } from "@/lib/utils";
+import { AQButton } from "../../ui/button";
+
+type FilterType = "all" | "income" | "expense";
 
 export default function Wallet({ params }: PageProps<"/[locale]/wallet">) {
   const t = useTranslations("wallet");
+  const [filterType, setFilterType] = useState<FilterType>("all");
 
   // 示例数据，实际应该从 API 获取
   const balance = 888.36;
   const totalIncome = 1500.0;
   const totalExpense = 611.64;
-  const records = WalletTestData;
+  const allRecords = WalletTestData;
+
+  // 根据选中的类型过滤记录
+  const filteredRecords =
+    filterType === "all"
+      ? allRecords
+      : allRecords.filter((record) => record.type === filterType);
 
   const formatDate = (date: Date) => {
     const d = new Date(date);
@@ -35,6 +47,7 @@ export default function Wallet({ params }: PageProps<"/[locale]/wallet">) {
     };
     return categoryMap[category] || category;
   };
+  const usdBalance = balance * 0.15;
 
   return (
     <div className="h-full w-full flex flex-col pt-4 px-4">
@@ -51,7 +64,13 @@ export default function Wallet({ params }: PageProps<"/[locale]/wallet">) {
             <div className="text-4xl font-bold mb-2">
               {formatMoney(balance)}
             </div>
-            <div className="text-sm text-white/80">{t("title")}</div>
+            <div className="text-sm text-white/80">
+              {formatMoney(usdBalance, {
+                unit: "USDT",
+                decimal: 2,
+                position: "right",
+              })}
+            </div>
           </CardContent>
         </Card>
 
@@ -97,17 +116,58 @@ export default function Wallet({ params }: PageProps<"/[locale]/wallet">) {
         {/* 交易记录 */}
         <Card>
           <CardHeader>
-            <CardTitle>{t("records")}</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>{t("records")}</CardTitle>
+              {/* 类型切换按钮 */}
+              <div className="flex gap-2">
+                <AQButton
+                  size="sm"
+                  onClick={() => setFilterType("all")}
+                  className={cn(
+                    "transition-colors",
+                    filterType === "all"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  )}
+                >
+                  {t("all")}
+                </AQButton>
+                <AQButton
+                  size="sm"
+                  onClick={() => setFilterType("income")}
+                  className={cn(
+                    "transition-colors",
+                    filterType === "income"
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  )}
+                >
+                  {t("income")}
+                </AQButton>
+                <AQButton
+                  size="sm"
+                  onClick={() => setFilterType("expense")}
+                  className={cn(
+                    "transition-colors",
+                    filterType === "expense"
+                      ? "bg-red-500 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  )}
+                >
+                  {t("expense")}
+                </AQButton>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="max-h-[400px] overflow-y-auto">
-              {records.length === 0 ? (
+          <CardContent className="p-0 ">
+            <div className="overflow-y-auto">
+              {filteredRecords.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 text-sm">
                   {t("no_records")}
                 </div>
               ) : (
                 <div className="divide-y">
-                  {records.map((record) => (
+                  {filteredRecords.map((record) => (
                     <div
                       key={record.id}
                       className="px-6 py-4 hover:bg-gray-50 transition-colors"
