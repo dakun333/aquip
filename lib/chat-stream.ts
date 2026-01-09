@@ -142,6 +142,8 @@ export async function sendStreamMessage(
  * 使用 EventSource 接收流式响应（备用方案）
  */
 export async function ChunkTransfer(
+  message: string,
+  sessionId: string,
   onMessage: (content: string) => void
 ): Promise<void> {
   const aiUrl = process.env.NEXT_PUBLIC_AI_URL;
@@ -150,7 +152,16 @@ export async function ChunkTransfer(
   }
 
   try {
-    const response = await fetch(`${aiUrl}/ai/gemini-style-stream`);
+    const response = await fetch(`${aiUrl}/ai/chat-chunk-stream`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: message,
+        session_id: sessionId,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -165,7 +176,9 @@ export async function ChunkTransfer(
 
     while (true) {
       const { done, value } = await reader.read();
+
       if (done) break;
+      logger.info("ChunkTransfer value", value);
 
       // 解码当前拿到的二进制块
       const rawChunk = decoder.decode(value, { stream: true });
@@ -175,16 +188,42 @@ export async function ChunkTransfer(
 
       for (const line of lines) {
         if (!line.trim()) continue;
-        try {
-          const data = JSON.parse(line);
-          console.log("收到单词:", data.text);
-          if (data.text) {
-            onMessage(data.text);
+
+        // 处理 SSE 格式：data: {"token": "..."}
+        if (line.startsWith("data: ")) {
+          try {
+            // 提取 data: 后面的 JSON 部分
+            const jsonStr = line.slice(6); // 移除 "data: " 前缀
+
+            // 检查是否是结束标记
+            if (jsonStr.trim() === "[DONE]") {
+              logger.info("Stream completed");
+              return;
+            }
+
+            const data = JSON.parse(jsonStr);
+            logger.info("收到token数据:", data);
+
+            // 提取 token 字段
+            if (data.token) {
+              onMessage(data.token);
+            }
+          } catch (e) {
+            // 如果 JSON 不完整，说明这个块被切断了，需要缓存处理（此处简化）
+            logger.error("解析失败", e, { line });
           }
-          // 这里更新你的 React State 实现打字机效果
-        } catch (e) {
-          // 如果 JSON 不完整，说明这个块被切断了，需要缓存处理（此处简化）
-          console.error("解析失败", e);
+        } else {
+          // 如果不是 data: 格式，尝试直接解析 JSON（兼容其他格式）
+          try {
+            const data = JSON.parse(line);
+            if (data.token) {
+              onMessage(data.token);
+            } else if (data.text) {
+              onMessage(data.text);
+            }
+          } catch (e) {
+            logger.error("解析失败", e, { line });
+          }
         }
       }
     }
