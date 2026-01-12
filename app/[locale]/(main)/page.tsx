@@ -47,14 +47,30 @@ function CheckoutPageContent() {
       return;
     }
     try {
-      const response = await PayAllocate({
-        provider: "card",
-        amount: amount || 0,
-        currency: "USD",
-        user_id: getUserId(),
-        payment_id: "1234567890",
-      });
-      logger.info("payHandle response:", response);
+      const formData = new URLSearchParams();
+      formData.append(
+        "params",
+        JSON.stringify({
+          provider: "card",
+          amount: amount || 0,
+          currency: "USD",
+          user_id: getUserId(),
+          payment_id: "1234567890",
+        })
+      );
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/pay/allocate",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3NjgyOTgxOTF9.QBKfABUv3lrYeToxqZG1N35kGejy2Viz_pXJG1Er4RM`,
+          },
+        }
+      );
+      const data = await response.json();
+      logger.info("payHandle response:", data);
     } catch (error) {
       console.error(error);
     }
