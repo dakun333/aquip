@@ -66,7 +66,7 @@ export default function Wallet({ params }: PageProps<"/[locale]/wallet">) {
             </div>
             <div className="text-sm text-white/80">
               {formatMoney(usdBalance, {
-                unit: "USDT",
+                unit: "usdt",
                 decimal: 2,
                 position: "right",
               })}
