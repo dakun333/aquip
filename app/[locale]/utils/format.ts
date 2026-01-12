@@ -1,5 +1,6 @@
+import { uuidv4 } from "zod";
 import { CurrencyUnit, UNIT, CurrencyValue } from "./constant";
-
+import { v4 as uuid } from "uuid";
 interface Config {
   unit?: CurrencyValue; // 可以是 CurrencyUnit 对象或 value 值（从 UNIT 列表推断）
   position?: "left" | "right";
@@ -131,4 +132,8 @@ export function FormatCountdown(seconds: number, format = "mm:ss") {
     .replace(/m/g, String(m))
     .replace(/ss/g, pad(s))
     .replace(/s/g, String(s));
+}
+
+export function getUserId() {
+  return uuid().toString();
 }

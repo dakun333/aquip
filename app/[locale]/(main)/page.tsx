@@ -12,6 +12,7 @@ import VerifyCodeDialog from "../ui/checkout/verify-code";
 import Link from "next/link";
 import { PayAllocate } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
+import { getUserId } from "../utils/format";
 
 function CheckoutPageContent() {
   const searchParams = useSearchParams();
@@ -50,7 +51,7 @@ function CheckoutPageContent() {
         provider: "card",
         amount: amount || 0,
         currency: "USD",
-        user_id: ,
+        user_id: getUserId(),
         payment_id: "1234567890",
       });
       logger.info("payHandle response:", response);

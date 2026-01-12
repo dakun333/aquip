@@ -51,10 +51,8 @@ export async function PayAllocate(params: {
 }) {
   try {
     // 将参数转换为 URL 编码的表单数据格式
-    const formData = new URLSearchParams({
-      params: JSON.stringify(params),
-    });
-
+    const formData = new URLSearchParams();
+    formData.append("params", JSON.stringify(params));
     const response = await serviceFetch("/pay/allocate", {
       method: "POST",
       body: formData,
