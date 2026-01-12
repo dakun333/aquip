@@ -51,9 +51,9 @@ function CheckoutPageContent() {
       formData.append(
         "params",
         JSON.stringify({
-          provider: "card",
+          provider: "YooMoney",
           amount: amount || 0,
-          currency: "USD",
+          currency: "RUB",
           user_id: getUserId(),
           payment_id: "1234567890",
         })
