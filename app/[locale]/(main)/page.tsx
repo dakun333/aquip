@@ -10,6 +10,8 @@ import CardPayment from "../ui/checkout/card-payment";
 import CryptoPayment from "../ui/checkout/crypto-payment";
 import VerifyCodeDialog from "../ui/checkout/verify-code";
 import Link from "next/link";
+import { PayAllocate } from "@/lib/fetch";
+import { logger } from "@/lib/logger";
 
 function CheckoutPageContent() {
   const searchParams = useSearchParams();
@@ -38,6 +40,24 @@ function CheckoutPageContent() {
       setLoading(false);
     }, 2000);
   };
+  const payHandle = async () => {
+    if (!amount || amount <= 0) {
+      logger.error("amount is invalid");
+      return;
+    }
+    try {
+      const response = await PayAllocate({
+        provider: "card",
+        amount: amount || 0,
+        currency: "USD",
+        user_id: ,
+        payment_id: "1234567890",
+      });
+      logger.info("payHandle response:", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -48,7 +68,7 @@ function CheckoutPageContent() {
               <AmountSelect
                 amount={amount}
                 onAmountChange={setAmount}
-                onCardPay={() => setStep("card")}
+                onCardPay={payHandle}
                 onCryptoPay={() => setStep("crypto")}
                 loading={loading}
               />
