@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/input-group";
 import Link from "next/link";
 import { Circle, CircleAlert, CircleAlertIcon } from "lucide-react";
+import { DEFAULT_CURRENCY, UNIT } from "../../utils/constant";
 
 interface IProps {
   onChange: (amount: number) => void;
@@ -38,6 +39,7 @@ export default function Amount({
   const amountChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(e.target.value));
   };
+  const currency = UNIT.find((u) => u.value === DEFAULT_CURRENCY.value);
 
   useEffect(() => {
     onChange(amount);
@@ -49,7 +51,7 @@ export default function Amount({
       </Label>
       <InputGroup className="w-full hide-arrow border-2 h-16 text-2xl md:text-3xl">
         <InputGroupAddon>
-          <span>RMB</span>
+          <span>{currency?.fullName}</span>
         </InputGroupAddon>
         <InputGroupInput
           id="amount"
@@ -65,11 +67,17 @@ export default function Amount({
         <div className="flex flex-col">
           <span className="text-sm text-gray-700 font-medium">
             {t("min_amount", {
-              amount: formatMoney(minAmount, { decimal: 0 }),
+              amount: formatMoney(minAmount, {
+                decimal: 0,
+                unit: currency?.value,
+              }),
             })}
             {" - "}
             {t("max_amount", {
-              amount: formatMoney(maxAmount, { decimal: 0 }),
+              amount: formatMoney(maxAmount, {
+                decimal: 0,
+                unit: currency?.value,
+              }),
             })}
           </span>
         </div>
@@ -78,7 +86,10 @@ export default function Amount({
             <span className="text-xs text-gray-500">{t("wallet_balance")}</span>
             <span className="text-sm text-gray-700 font-medium">
               {t("balance", {
-                amount: formatMoney(walletBalance, { decimal: 0 }),
+                amount: formatMoney(walletBalance, {
+                  decimal: 0,
+                  unit: currency?.value,
+                }),
               })}
             </span>
             <CircleAlertIcon className="w-4 h-4" />
@@ -93,7 +104,7 @@ export default function Amount({
             key={item}
             onClick={() => setAmount(item)}
           >
-            {formatMoney(item, { decimal: 0 })}
+            {formatMoney(item, { decimal: 0, unit: currency?.value })}
             {hot === item && (
               <Badge className="" variant="destructive">
                 {hot === item ? "hot" : ""}

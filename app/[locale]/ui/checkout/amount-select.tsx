@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { AQButton } from "../button";
 import Amount from "./amount";
 import { formatMoney } from "../../utils/format";
+import { DEFAULT_CURRENCY } from "../../utils/constant";
 
 interface IProps {
   amount: number | undefined;
@@ -44,7 +45,11 @@ export default function AmountSelect({
         loading={loading}
         onClick={onCardPay}
       >
-        {t("card_pay", { amount: formatMoney(amount) })}
+        {t("card_pay", {
+          amount: formatMoney(amount, {
+            unit: DEFAULT_CURRENCY.value,
+          }),
+        })}
       </AQButton>
       {/* 加密货币支付 */}
       <AQButton
@@ -55,7 +60,7 @@ export default function AmountSelect({
       >
         {t("crypto_pay", {
           amount: formatMoney(amount, {
-            unit: "USDT",
+            unit: "usdt",
             position: "right",
             decimal: 0,
           }),

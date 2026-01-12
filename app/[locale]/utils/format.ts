@@ -1,10 +1,18 @@
+import { CurrencyUnit, UNIT, CurrencyValue } from "./constant";
+
 interface Config {
-  unit?: string;
+  unit?: CurrencyValue; // 可以是 CurrencyUnit 对象或 value 值（从 UNIT 列表推断）
   position?: "left" | "right";
   decimal?: number;
 }
 
-const defaultConfig = { unit: "￥", decimal: 2, position: "left" };
+// 默认使用 UNIT 列表中的 rmb
+const defaultCurrency = UNIT.find((u) => u.value === "rmb") || UNIT[0];
+const defaultConfig = {
+  unit: defaultCurrency,
+  decimal: 2,
+  position: "left" as const,
+};
 
 /**
  * 金额格式化
@@ -23,7 +31,23 @@ export function formatMoney(
   const mergedConfig = { ...defaultConfig, ...config };
 
   // 直接从合并后的对象中解构，无需再设置默认值
-  const { unit, decimal, position } = mergedConfig;
+  const { unit: unitConfig, decimal, position } = mergedConfig;
+
+  // 从 UNIT 列表中找到对应的币种
+  let currency: CurrencyUnit;
+  if (typeof unitConfig === "string") {
+    // 如果是字符串，从列表中查找
+    currency = UNIT.find((u) => u.value === unitConfig) || defaultCurrency;
+  } else if (unitConfig && typeof unitConfig === "object") {
+    // 如果已经是 CurrencyUnit 对象，直接使用
+    currency = unitConfig;
+  } else {
+    // 否则使用默认币种
+    currency = defaultCurrency;
+  }
+
+  // 使用币种的 sign 属性作为显示符号
+  const unit = currency.sign;
 
   // TypeScript 提示：这里的 decimal 已经是 number 类型 (2) 或用户传入的值
 
@@ -61,7 +85,21 @@ export function formatMoney(
 
   // 格式化为指定小数位数的字符串
   // 注意：这里使用 finalDecimal
-  const formattedNumber = numValue.toFixed(finalDecimal);
+  const numberString = numValue.toFixed(finalDecimal);
+
+  // 添加千分位分隔符
+  const parts = numberString.split(".");
+  const integerPart = parts[0];
+  const decimalPart = parts[1];
+
+  // 对整数部分添加千分位分隔符
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  // 合并整数部分和小数部分
+  const formattedNumber =
+    decimalPart !== undefined
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
 
   // 添加货币符号，并根据 position 决定其位置
   if (position === "left") {
