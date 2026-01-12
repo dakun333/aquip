@@ -36,7 +36,7 @@ export default function RechargeCard({ record }: IProps) {
       <ItemContent>
         <ItemTitle>{record.id}</ItemTitle>
         <ItemDescription className="flex  gap-2">
-          <span>{formatMoney(record.amount, { unit: record.currency })}</span>
+          <span>{formatMoney(record.amount, { unit: "rub" })}</span>
 
           <span>{record.createdAt.toLocaleDateString()}</span>
         </ItemDescription>

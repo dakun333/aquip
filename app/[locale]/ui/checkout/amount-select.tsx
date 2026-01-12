@@ -5,7 +5,6 @@ import { AQButton } from "../button";
 import Amount from "./amount";
 import { formatMoney } from "../../utils/format";
 import { DEFAULT_CURRENCY } from "../../utils/constant";
-import { serviceFetch } from "@/lib/token";
 
 interface IProps {
   amount: number | undefined;
