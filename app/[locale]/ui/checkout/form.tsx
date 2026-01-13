@@ -14,7 +14,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardType, IPayCardInfo } from "@/app/types/checkout.type";
-import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import CardValidator from "card-validator";
 import {
   InputGroup,
@@ -78,7 +84,8 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
 
     // 使用ref记录上一次的值，避免不必要的更新
     const previousValueRef = useRef<IPayCardInfo>(value);
-    const previousIsValidRef = useRef<boolean>(false);
+    // 初始化时设置为当前的 isValid 值，确保初始化时能正确判断
+    const previousIsValidRef = useRef<boolean>(isValid);
 
     const watchAllFields = watch();
     const watchId = form.watch("id");
@@ -133,8 +140,20 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
       }
     }, [watchAllFields, onChange]);
 
+    // 初始化时检查表单有效性
+    useLayoutEffect(() => {
+      // 在 DOM 更新后立即检查表单有效性
+      // 手动触发验证以确保 isValid 是最新的
+      form.trigger().then(() => {
+        const currentIsValid = form.formState.isValid;
+        previousIsValidRef.current = currentIsValid;
+        onValidChange?.(currentIsValid);
+      });
+    }, []); // 空依赖数组，只在组件挂载时执行一次
+
     // 当校验状态变化时通知父组件
     useEffect(() => {
+      // 跳过初始化时的调用（已经在上面的 useEffect 中处理）
       if (isValid !== previousIsValidRef.current) {
         previousIsValidRef.current = isValid;
         onValidChange?.(isValid);

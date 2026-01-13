@@ -21,7 +21,8 @@ function CheckoutPageContent() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
   const [amount, setAmount] = useState<number | undefined>(undefined);
-
+  const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
+  const [orderId, setOrderId] = useState<string | undefined>(undefined);
   if (!id) {
     notFound();
   }
@@ -36,43 +37,35 @@ function CheckoutPageContent() {
   };
 
   const verifyHandle = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    setStep("amount");
   };
   const payHandle = async () => {
     if (!amount || amount <= 0) {
       logger.error("amount is invalid");
       return;
     }
+    const id = getUserId().toString();
     try {
-      const formData = new URLSearchParams();
-      formData.append(
-        "params",
-        JSON.stringify({
-          provider: "YooMoney",
-          amount: amount || 0,
-          currency: "RUB",
-          user_id: getUserId(),
-          payment_id: "1234567890",
-        })
-      );
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_API_URL + "/pay/allocate",
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3NjgyOTgxOTF9.QBKfABUv3lrYeToxqZG1N35kGejy2Viz_pXJG1Er4RM`,
-          },
-        }
-      );
-      const data = await response.json();
-      logger.info("payHandle response:", data);
+      setLoading(true);
+      const response = await PayAllocate({
+        provider: "YooMoney",
+        amount: amount || 0,
+        currency: "RUB",
+        user_id: id,
+        payment_id: id,
+      });
+      if (response.success) {
+        logger.info("payHandle response success:", response);
+        setPaymentId(id);
+        setOrderId(response.data.order_id);
+        setStep("card");
+      } else {
+        logger.error("payHandle response:", response.error);
+      }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,7 +87,7 @@ function CheckoutPageContent() {
                 amount={amount}
                 onModifyAmount={() => setStep("amount")}
                 onSubmit={submitHandle}
-                loading={loading}
+                paymentId={paymentId || ""}
               />
             ) : (
               <CryptoPayment
@@ -112,6 +105,7 @@ function CheckoutPageContent() {
           </AQButton>
         </Link>
         <VerifyCodeDialog
+          orderId={orderId || ""}
           open={open}
           onOpenChange={setOpen}
           phone="+1 234 **** 89"

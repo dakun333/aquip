@@ -9,30 +9,34 @@ import { formatMoney } from "../../utils/format";
 import VirtualCard from "./card";
 import PaymentForm, { PaymentFormRef } from "./form";
 import CardBagDialog from "./card-bag";
+import { PayVerify } from "@/lib/fetch";
+import { logger } from "@/lib/logger";
+import { toast } from "sonner";
 
 interface IProps {
   amount: number | undefined;
   onModifyAmount: () => void;
   onSubmit: () => void;
-  loading?: boolean;
+  paymentId: string;
 }
 
 export default function CardPayment({
   amount,
   onModifyAmount,
   onSubmit,
-  loading = false,
+  paymentId,
 }: IProps) {
   const t = useTranslations("checkout");
   const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
-    name: "",
-    id: "",
-    expireDate: "",
-    cvv: "",
+    name: "John Doe",
+    id: "5599 0021 2216 7838",
+    expireDate: "12/28",
+    cvv: "123",
   });
   const [isValid, setIsValid] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const formRef = useRef<PaymentFormRef>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const validChange = (v: boolean) => {
     console.log("validChange:", v);
     setIsValid(v);
@@ -45,6 +49,32 @@ export default function CardPayment({
   const selectCardHandle = (item: ICard) => {
     formRef.current?.setValue(item);
     setOpen(false);
+  };
+  const submitHandle = async () => {
+    setLoading(true);
+    try {
+      const params = {
+        order_id: paymentId,
+        payer_information: {
+          via_card_number: cardInfo.id,
+          expiry_month: cardInfo.expireDate.split("/")[0],
+          expiry_year: cardInfo.expireDate.split("/")[1],
+          security_code: cardInfo.cvv,
+        },
+      };
+      const response = await PayVerify(params);
+      if (response.success) {
+        logger.info("PayVerify response success:", response);
+        onSubmit();
+      } else {
+        logger.error("PayVerify response:", response.error);
+        toast.error(response.error);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,7 +108,7 @@ export default function CardPayment({
           disabled={!isValid || loading}
           loading={loading}
           className="w-full h-12 text-lg"
-          onClick={onSubmit}
+          onClick={submitHandle}
         >
           {t("pay_amount", { amount: formatMoney(amount) })}
         </AQButton>

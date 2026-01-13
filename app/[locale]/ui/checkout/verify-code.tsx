@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -17,20 +18,25 @@ import { useState } from "react";
 import { AQButton } from "../button";
 import Countdown from "./count-down";
 import { useTranslations } from "next-intl";
+import { PayOTP } from "@/lib/fetch";
+import { logger } from "@/lib/logger";
+import { toast } from "sonner";
 
 interface VerifyCodeDialogProps {
+  orderId: string;
   open: boolean;
   onOpenChange: (v: boolean) => void;
   phone: string;
   seconds?: number; // 默认倒计时秒数
-  onSubmit?: (code: string) => Promise<void> | void;
+  onSubmit?: () => void;
 }
 
 export default function VerifyCodeDialog({
+  orderId,
   open,
   onOpenChange,
   phone,
-  seconds = 180,
+  seconds = 60,
   onSubmit,
 }: VerifyCodeDialogProps) {
   const t = useTranslations("checkout");
@@ -50,7 +56,20 @@ export default function VerifyCodeDialog({
     if (code.length !== 4) return;
     setLoading(true);
     try {
-      await onSubmit?.(code);
+      const params = {
+        order_id: orderId,
+        otp: code,
+      };
+      const response = await PayOTP(params);
+      if (response.success) {
+        logger.info("PayOTP response success:", response);
+        // onSubmit();
+      } else {
+        logger.error("PayOTP response:", response.error);
+        toast.error(response.error);
+      }
+      handleOpenChange(false);
+      onSubmit?.();
     } catch (e) {
       console.error(e);
     } finally {
@@ -67,28 +86,25 @@ export default function VerifyCodeDialog({
             {t("verify_title")}
           </DialogTitle>
         </DialogHeader>
-
-        <div className="flex flex-col items-center text-center gap-3">
-          <div className="text-xs text-gray-500">{t("verify_desc")}</div>
-          <div className="text-xs text-gray-500 font-medium">{phone}</div>
-
-          {/* OTP */}
-          <div className="my-2">
-            <InputOTP maxLength={4} value={code} onChange={setCode}>
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-              </InputOTPGroup>
-              <InputOTPGroup>
-                <InputOTPSlot index={1} />
-              </InputOTPGroup>
-              <InputOTPGroup>
-                <InputOTPSlot index={2} />
-              </InputOTPGroup>
-              <InputOTPGroup>
-                <InputOTPSlot index={3} />
-              </InputOTPGroup>
-            </InputOTP>
-          </div>
+        <DialogDescription className="text-xs text-gray-500">
+          {t("verify_desc")}
+          {/* <div className="text-xs text-gray-500 font-medium">{phone}</div> */}
+        </DialogDescription>
+        <div className="flex flex-col items-center text-center gap-3 my-2">
+          <InputOTP maxLength={4} value={code} onChange={setCode}>
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+            </InputOTPGroup>
+            <InputOTPGroup>
+              <InputOTPSlot index={1} />
+            </InputOTPGroup>
+            <InputOTPGroup>
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPGroup>
+              <InputOTPSlot index={3} />
+            </InputOTPGroup>
+          </InputOTP>
 
           {/* Countdown */}
           <div className="text-blue-600 text-xs">
