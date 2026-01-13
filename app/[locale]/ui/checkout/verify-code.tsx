@@ -23,7 +23,7 @@ import { logger } from "@/lib/logger";
 import { toast } from "sonner";
 
 interface VerifyCodeDialogProps {
-  orderId: string;
+  orderId?: string | undefined;
   open: boolean;
   onOpenChange: (v: boolean) => void;
   phone: string;
@@ -53,7 +53,7 @@ export default function VerifyCodeDialog({
   };
 
   const submitHandler = async () => {
-    if (code.length !== 4) return;
+    if (code.length !== 4 || !orderId) return;
     setLoading(true);
     try {
       const params = {
