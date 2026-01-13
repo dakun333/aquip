@@ -21,9 +21,9 @@ import { useTranslations } from "next-intl";
 import { PayOTP } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 interface VerifyCodeDialogProps {
-  orderId?: string | undefined;
   open: boolean;
   onOpenChange: (v: boolean) => void;
   phone: string;
@@ -32,13 +32,14 @@ interface VerifyCodeDialogProps {
 }
 
 export default function VerifyCodeDialog({
-  orderId,
   open,
   onOpenChange,
   phone,
   seconds = 60,
   onSubmit,
 }: VerifyCodeDialogProps) {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const t = useTranslations("checkout");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,11 +54,11 @@ export default function VerifyCodeDialog({
   };
 
   const submitHandler = async () => {
-    if (code.length !== 4 || !orderId) return;
+    if (code.length !== 4 || !id) return;
     setLoading(true);
     try {
       const params = {
-        order_id: orderId,
+        order_id: id || "",
         otp: code,
       };
       const response = await PayOTP(params);

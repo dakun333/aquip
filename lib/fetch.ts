@@ -16,6 +16,7 @@ export async function serviceFetch(
   // 2. 拼接完整的 URL (假设你有基础地址)
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = `${baseUrl}${endpoint}`;
+  logger.debug("请求", endpoint, options.body);
 
   // 3. 注入 Authorization Header
   const headers = new Headers(options.headers);
@@ -95,6 +96,7 @@ export async function PayVerify(params: {
       method: "POST",
       body: formData,
     });
+    // logger.debug('路径/pay/payer_info', response);
     return response;
   } catch (error) {
     console.error("PayVerify Error:", error);

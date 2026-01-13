@@ -125,7 +125,19 @@
     "min_amount": "最低 {amount}",
     "max_amount": "最高 {amount}",
     "wallet_balance": "钱包余额",
-    "balance": "{amount}"
+    "balance": "{amount}",
+    "payment_status": {
+      "processing": "正在处理支付...",
+      "verifying": "正在验证信息...",
+      "confirming": "正在确认交易...",
+      "completing": "正在完成支付...",
+      "error": "支付失败",
+      "completed": "支付完成",
+      "success": "支付成功",
+      "failed": "支付失败，请重试",
+      "close": "关闭",
+      "confirm": "确认"
+    }
   },
   "admin": {
     "title": "管理后台",

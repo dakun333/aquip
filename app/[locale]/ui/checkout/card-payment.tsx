@@ -12,21 +12,21 @@ import CardBagDialog from "./card-bag";
 import { PayVerify } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
-
+import { useSearchParams } from "next/navigation";
 interface IProps {
   amount: number | undefined;
   onModifyAmount: () => void;
   onSubmit: () => void;
-  paymentId: string;
 }
 
 export default function CardPayment({
   amount,
   onModifyAmount,
   onSubmit,
-  paymentId,
 }: IProps) {
   const t = useTranslations("checkout");
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
     name: "John Doe",
     id: "5599 0021 2216 7838",
@@ -51,10 +51,11 @@ export default function CardPayment({
     setOpen(false);
   };
   const submitHandle = async () => {
+    if (!id) return;
     setLoading(true);
     try {
       const params = {
-        order_id: paymentId,
+        order_id: id || "",
         payer_information: {
           via_card_number: cardInfo.id,
           expiry_month: cardInfo.expireDate.split("/")[0],

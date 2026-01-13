@@ -125,7 +125,17 @@
     "min_amount": "Min {amount}",
     "max_amount": "Max {amount}",
     "wallet_balance": "Wallet Balance",
-    "balance": "{amount}"
+    "balance": "{amount}",
+    "payment_status": {
+      "processing": "Processing payment...",
+      "verifying": "Verifying information...",
+      "confirming": "Confirming transaction...",
+      "completing": "Completing payment...",
+      "error": "Payment failed",
+      "completed": "Payment completed",
+      "success": "Payment successful",
+      "failed": "Payment failed, please try again"
+    }
   },
   "admin": {
     "title": "Admin Dashboard",
