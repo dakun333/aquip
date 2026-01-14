@@ -72,7 +72,9 @@ export default function PaymentOverlay({
     };
 
     ws.onclose = () => {};
-    ws.onerror = (event) => {};
+    ws.onerror = (event) => {
+      setCurrentStatus("failed");
+    };
     return () => {
       ws.close();
     };
