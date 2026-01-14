@@ -56,7 +56,7 @@ export default function PaymentOverlay({
       return;
     }
     const host = process.env.NEXT_PUBLIC_API_URL.split("://")[1];
-    const protocol = location.protocol === "https:" ? "wss" : "ws";
+    const protocol = location.protocol === "https:" ? "wss" : "wss";
     const url = `${protocol}://${host}/task/progress/${id}`;
     // 创建 WebSocket 连接
     const ws = new WebSocket(url);
