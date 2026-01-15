@@ -64,7 +64,7 @@ function CheckoutPageContent() {
         setPaymentId(id);
         setOrderId(response.data.order_id);
         // setStep("card");
-        router.push(`/?step=card&id=${id}`);
+        router.push(`/?step=card&id=${response.data.order_id}`);
       } else {
         logger.error("payHandle response:", response.error);
       }
@@ -91,13 +91,13 @@ function CheckoutPageContent() {
             ) : step === "card" ? (
               <CardPayment
                 amount={amount}
-                onModifyAmount={() => router.push(`/?step=amount&id=${id}`)}
+                onModifyAmount={() => router.replace(`/?step=amount`)}
                 onSubmit={submitHandle}
               />
             ) : (
               <CryptoPayment
                 amount={amount}
-                onModifyAmount={() => router.push(`/?step=amount&id=${id}`)}
+                onModifyAmount={() => router.push(`/?step=amount`)}
                 onSubmit={submitHandle}
                 loading={loading}
               />
