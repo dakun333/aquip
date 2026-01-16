@@ -2,7 +2,7 @@
 
 import { Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ICard, IPayCardInfo } from "@/app/types/checkout.type";
 import { AQButton } from "../button";
 import { formatMoney } from "../../utils/format";
@@ -28,20 +28,69 @@ export default function CardPayment({
   const t = useTranslations("checkout");
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
-    name: "",
-    id: "",
-    expireDate: "",
-    cvv: "",
-    // name: "John Doe",
-    // id: "5599 0021 2216 7838",
-    // expireDate: "12/28",
-    // cvv: "123",
-  });
+  const STORAGE_KEY = "card_payment_info";
+
+  // 从 sessionStorage 读取保存的数据
+  const getStoredCardInfo = (): IPayCardInfo | null => {
+    if (typeof window === "undefined") return null;
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored) as IPayCardInfo;
+      }
+    } catch (error) {
+      console.error("Failed to read from sessionStorage:", error);
+    }
+    return null;
+  };
+
+  // 保存数据到 sessionStorage
+  const saveCardInfo = (info: IPayCardInfo) => {
+    if (typeof window === "undefined") return;
+    try {
+      // 只有当所有字段都有值时才保存
+      if (info.name && info.id && info.expireDate && info.cvv) {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(info));
+      }
+    } catch (error) {
+      console.error("Failed to save to sessionStorage:", error);
+    }
+  };
+
+  // 初始化时从 sessionStorage 读取数据
+  const getInitialCardInfo = (): IPayCardInfo => {
+    const storedInfo = getStoredCardInfo();
+    return (
+      storedInfo || {
+        name: "",
+        id: "",
+        expireDate: "",
+        cvv: "",
+      }
+    );
+  };
+
+  const [cardInfo, setCardInfo] = useState<IPayCardInfo>(getInitialCardInfo);
   const [isValid, setIsValid] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const formRef = useRef<PaymentFormRef>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // 组件挂载后，如果有保存的数据，触发表单验证
+  useEffect(() => {
+    const storedInfo = getStoredCardInfo();
+    if (storedInfo && formRef.current) {
+      // 延迟执行，确保表单已经渲染完成
+      const timer = setTimeout(() => {
+        if (formRef.current) {
+          // setValue 会自动触发验证
+          formRef.current.setValue(storedInfo);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   const validChange = (v: boolean) => {
     console.log("validChange:", v);
     setIsValid(v);
@@ -49,6 +98,8 @@ export default function CardPayment({
 
   const formChange = (v: IPayCardInfo) => {
     setCardInfo(v);
+    // 保存到 sessionStorage
+    saveCardInfo(v);
   };
 
   const selectCardHandle = (item: ICard) => {

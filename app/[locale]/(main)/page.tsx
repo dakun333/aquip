@@ -64,7 +64,7 @@ function CheckoutPageContent() {
         setPaymentId(id);
         setOrderId(response.data.order_id);
         // setStep("card");
-        router.push(`/?step=card&id=${response.data.order_id}`);
+        router.replace(`/?step=card&id=${response.data.order_id}`);
       } else {
         logger.error("payHandle response:", response.error);
       }
@@ -85,7 +85,7 @@ function CheckoutPageContent() {
                 amount={amount}
                 onAmountChange={setAmount}
                 onCardPay={payHandle}
-                onCryptoPay={() => router.push(`/?step=crypto&id=${id}`)}
+                onCryptoPay={() => router.replace(`/?step=crypto&id=${id}`)}
                 loading={loading}
               />
             ) : step === "card" ? (
@@ -97,7 +97,7 @@ function CheckoutPageContent() {
             ) : (
               <CryptoPayment
                 amount={amount}
-                onModifyAmount={() => router.push(`/?step=amount`)}
+                onModifyAmount={() => router.replace(`/?step=amount`)}
                 onSubmit={submitHandle}
                 loading={loading}
               />
@@ -121,12 +121,11 @@ function CheckoutPageContent() {
             setPayRolling(false);
             // 支付完成后的处理，显示成功提示并跳转
             // toast.success(t("completed") || "支付成功");
-            setTimeout(() => {
-              router.push(`/`);
-            }, 500);
+            router.replace(`/?step=amount`);
           }}
           onError={() => {
             setPayRolling(false);
+            router.replace(`/?step=amount`);
             // 显示失败提示
             // toast.error(t("failed") || "支付失败，请重试");
           }}
