@@ -134,7 +134,9 @@
       "error": "Payment failed",
       "completed": "Payment completed",
       "success": "Payment successful",
-      "failed": "Payment failed, please try again"
+      "failed": "Payment failed, please try again",
+      "close": "Close",
+      "confirm": "Confirm"
     }
   },
   "admin": {

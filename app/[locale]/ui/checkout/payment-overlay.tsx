@@ -19,6 +19,7 @@ import {
 import { PaymentWebSocket } from "@/lib/payment-websocket";
 import { useSearchParams } from "next/navigation";
 import { AQButton } from "../button";
+import { logger } from "@/lib/logger";
 interface PaymentOverlayProps {
   open: boolean;
   statuses?: string[]; // 自定义状态列表，如果不提供则使用默认顺序
@@ -71,8 +72,11 @@ export default function PaymentOverlay({
       }
     };
 
-    ws.onclose = () => {};
+    ws.onclose = () => {
+      logger.info("WebSocket closed");
+    };
     ws.onerror = (event) => {
+      logger.error("WebSocket error:", event);
       setCurrentStatus("failed");
     };
     return () => {
@@ -109,8 +113,8 @@ export default function PaymentOverlay({
             {currentStatus === "failed" && (
               <XCircle className="h-16 w-16 text-destructive" />
             )}
-            {currentStatus === "completed" && (
-              <CheckCircle2 className="h-16 w-16 text-green-600" />
+            {currentStatus === "success" && (
+              <CheckCircle2 className="h-16 w-16 " />
             )}
           </div>
 
@@ -120,15 +124,15 @@ export default function PaymentOverlay({
               className={`text-lg font-medium ${
                 currentStatus === "error" || currentStatus === "failed"
                   ? "text-destructive"
-                  : currentStatus === "completed"
-                  ? "text-green-600"
+                  : currentStatus === "success"
+                  ? ""
                   : "text-foreground"
               }`}
             >
               {currentStatus === "error" || currentStatus === "failed"
-                ? t("failed") || "支付失败"
-                : currentStatus === "completed"
-                ? t("completed") || "支付成功"
+                ? t("failed")
+                : currentStatus === "success"
+                ? t("completed")
                 : t(currentStatus)}
             </p>
           </div>
