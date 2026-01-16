@@ -141,15 +141,15 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
     }, [watchAllFields, onChange]);
 
     // 初始化时检查表单有效性
-    useLayoutEffect(() => {
-      // 在 DOM 更新后立即检查表单有效性
-      // 手动触发验证以确保 isValid 是最新的
-      form.trigger().then(() => {
-        const currentIsValid = form.formState.isValid;
-        previousIsValidRef.current = currentIsValid;
-        onValidChange?.(currentIsValid);
-      });
-    }, []); // 空依赖数组，只在组件挂载时执行一次
+    // useLayoutEffect(() => {
+    //   // 在 DOM 更新后立即检查表单有效性
+    //   // 手动触发验证以确保 isValid 是最新的
+    //   form.trigger().then(() => {
+    //     const currentIsValid = form.formState.isValid;
+    //     previousIsValidRef.current = currentIsValid;
+    //     onValidChange?.(currentIsValid);
+    //   });
+    // }, []); // 空依赖数组，只在组件挂载时执行一次
 
     // 当校验状态变化时通知父组件
     useEffect(() => {

@@ -29,10 +29,14 @@ export default function CardPayment({
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [cardInfo, setCardInfo] = useState<IPayCardInfo>({
-    name: "John Doe",
-    id: "5599 0021 2216 7838",
-    expireDate: "12/28",
-    cvv: "123",
+    name: "",
+    id: "",
+    expireDate: "",
+    cvv: "",
+    // name: "John Doe",
+    // id: "5599 0021 2216 7838",
+    // expireDate: "12/28",
+    // cvv: "123",
   });
   const [isValid, setIsValid] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
