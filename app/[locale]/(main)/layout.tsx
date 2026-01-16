@@ -29,7 +29,7 @@ export default async function MainLayout({
   return (
     <div className="h-full flex flex-col justify-between">
       <HomeHeader />
-      <div className="flex-1 overflow-auto w-full max-w-[640px] mx-auto">
+      <div className="flex-1 overflow-auto w-full max-w-[480px] mx-auto">
         {children}
       </div>
       <HomeFooter />
