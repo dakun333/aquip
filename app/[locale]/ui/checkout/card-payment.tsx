@@ -13,6 +13,7 @@ import { PayVerify } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { DEFAULT_CURRENCY } from "../../utils/constant";
 interface IProps {
   amount: number | undefined;
   onModifyAmount: () => void;
@@ -57,7 +58,7 @@ export default function CardPayment({
       const params = {
         order_id: id || "",
         payer_information: {
-          via_card_number: cardInfo.id,
+          via_card_number: cardInfo.id.replace(/\s/g, ""),
           expiry_month: cardInfo.expireDate.split("/")[0],
           expiry_year: cardInfo.expireDate.split("/")[1],
           security_code: cardInfo.cvv,
@@ -111,7 +112,9 @@ export default function CardPayment({
           className="w-full h-12 text-lg"
           onClick={submitHandle}
         >
-          {t("pay_amount", { amount: formatMoney(amount) })}
+          {t("pay_amount", {
+            amount: formatMoney(amount),
+          })}
         </AQButton>
         <AQButton
           loading={loading}

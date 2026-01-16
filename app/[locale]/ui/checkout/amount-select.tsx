@@ -46,9 +46,7 @@ export default function AmountSelect({
         onClick={onCardPay}
       >
         {t("card_pay", {
-          amount: formatMoney(amount, {
-            unit: DEFAULT_CURRENCY.value,
-          }),
+          amount: formatMoney(amount),
         })}
       </AQButton>
       {/* 加密货币支付 */}

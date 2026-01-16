@@ -8,7 +8,7 @@ interface Config {
 }
 
 // 默认使用 UNIT 列表中的 rmb
-const defaultCurrency = UNIT.find((u) => u.value === "rmb") || UNIT[0];
+const defaultCurrency = UNIT[0];
 const defaultConfig = {
   unit: defaultCurrency,
   decimal: 2,
