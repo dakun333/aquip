@@ -22,6 +22,7 @@ import { PayOTP } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 interface VerifyCodeDialogProps {
   open: boolean;
@@ -54,7 +55,8 @@ export default function VerifyCodeDialog({
   };
 
   const submitHandler = async () => {
-    if (code.length !== 4 || !id) return;
+    // 验证：非空且最多10位数字
+    if (code.length === 0 || code.length > 10 || !id) return;
     setLoading(true);
     try {
       const params = {
@@ -80,7 +82,7 @@ export default function VerifyCodeDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="rounded-xl w-[340px]  flex flex-col items-center gap-2 aspect-48/56">
+      <DialogContent className="rounded-xl w-[85vw] max-w-[300px] sm:w-[340px] flex flex-col items-center justify-center gap-4 aspect-45/48">
         <Image src="/safe.svg" alt="safe" width={64} height={64} />
         <DialogHeader className="w-full">
           <DialogTitle className="text-center text-base font-semibold">
@@ -92,39 +94,34 @@ export default function VerifyCodeDialog({
           {/* <div className="text-xs text-gray-500 font-medium">{phone}</div> */}
         </DialogDescription>
         <div className="flex flex-col items-center text-center gap-3 my-2">
-          <InputOTP maxLength={4} value={code} onChange={setCode}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-            </InputOTPGroup>
-            <InputOTPGroup>
-              <InputOTPSlot index={1} />
-            </InputOTPGroup>
-            <InputOTPGroup>
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-            </InputOTPGroup>
-          </InputOTP>
+        <Input 
+          type="text" 
+          inputMode="numeric"
+          maxLength={10} 
+          value={code} 
+          onChange={(e) => {
+            // 只允许数字
+            const value = e.target.value.replace(/\D/g, "");
+            setCode(value);
+          }}
+          placeholder={t("verify_code_placeholder") }
+        />
 
-          {/* Countdown */}
-          <div className="text-blue-600 text-xs">
-            {t("resend_prefix")} <Countdown seconds={seconds} />
-          </div>
+         
 
           {/* Confirm */}
           <AQButton
             className="bg-blue-600 w-[80%] mt-2"
-            disabled={code.length !== 4}
+            disabled={code.length === 0 || code.length > 10}
             loading={loading}
             onClick={submitHandler}
           >
             {t("verify_button")}
           </AQButton>
+           {/* Countdown */}
+          <Countdown seconds={seconds} />
 
-          <p className="text-xs text-gray-500 cursor-pointer">
-            {t("change_phone")}
-          </p>
+          
         </div>
       </DialogContent>
     </Dialog>
