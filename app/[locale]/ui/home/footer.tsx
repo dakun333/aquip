@@ -3,10 +3,10 @@ import ActiveLink from "./footer-link";
 import { Suspense } from "react";
 
 const tabs: FooterTab[] = [
-  { label: "pay", href: "/", name: "pay" },
-  { label: "home", href: "/home", name: "home" },
+  { label: "home", href: "/", name: "home" },
+  // { label: "home", href: "/home", name: "home" },
   { label: "msg", href: "/msg", name: "msg" },
-  { label: "cart", href: "/cart", name: "cart" },
+  // { label: "cart", href: "/cart", name: "cart" },
   { label: "my", href: "/my", name: "my" },
 ];
 export default function HomeFooter() {
