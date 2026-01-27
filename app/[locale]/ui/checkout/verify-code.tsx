@@ -90,7 +90,7 @@ export default function VerifyCodeDialog({
             {t("verify_title")}
           </DialogTitle>
         </DialogHeader>
-        <DialogDescription className="text-xs text-gray-500">
+        <DialogDescription className="text-xs text-gray-500 text-center">
           {t("verify_desc")}
           {/* <div className="text-xs text-gray-500 font-medium">{phone}</div> */}
         </DialogDescription>
