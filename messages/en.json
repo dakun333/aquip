@@ -141,7 +141,7 @@
     "wallet_balance": "Wallet Balance",
     "balance": "{amount}",
     "payment_status": {
-      "processing": "Processing payment...",
+      "processing": "Payment processing, please wait 3-5 minutes...",
       "verifying": "Verifying information...",
       "confirming": "Confirming transaction...",
       "completing": "Completing payment...",

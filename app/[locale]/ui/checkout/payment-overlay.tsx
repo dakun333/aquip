@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { PaymentWebSocket } from "@/lib/payment-websocket";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { AQButton } from "../button";
 import { logger } from "@/lib/logger";
 interface PaymentOverlayProps {
@@ -36,31 +37,56 @@ export default function PaymentOverlay({
   onError,
 }: PaymentOverlayProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = searchParams.get("id");
   const t = useTranslations("checkout.payment_status");
   const [currentStatus, setCurrentStatus] = useState<string>("processing");
+  const wsRef = useRef<WebSocket | null>(null);
 
   const closeHandle = () => {
+    // 重置状态
+    setCurrentStatus("processing");
+    
+    // 关闭 WebSocket 连接
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    // 调用回调
     if (currentStatus === "processing" || currentStatus === "success") {
       onComplete?.();
     } else if (currentStatus === "failed") {
       onError?.();
     }
+
+    // 跳转回首页
+    router.push("/");
   };
 
   // WebSocket 连接管理
   useEffect(() => {
     if (!open || !id) {
+      // 如果对话框关闭，重置状态并关闭 WebSocket
+      if (!open) {
+        setCurrentStatus("processing");
+        if (wsRef.current) {
+          wsRef.current.close();
+          wsRef.current = null;
+        }
+      }
       return;
     }
     if (!process.env.NEXT_PUBLIC_API_URL) {
       return;
     }
+    setCurrentStatus("processing");
     const host = process.env.NEXT_PUBLIC_API_URL.split("://")[1];
     const protocol = location.protocol === "https:" ? "wss" : "wss";
     const url = `${protocol}://${host}/task/progress/${id}`;
     // 创建 WebSocket 连接
     const ws = new WebSocket(url);
+    wsRef.current = ws;
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
@@ -74,23 +100,26 @@ export default function PaymentOverlay({
 
     ws.onclose = () => {
       logger.info("WebSocket closed");
+      wsRef.current = null;
     };
     ws.onerror = (event) => {
       logger.error("WebSocket error:", event);
       setCurrentStatus("failed");
     };
     return () => {
-      ws.close();
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
     };
   }, [open, id]);
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
+    <Dialog open={open} onOpenChange={closeHandle}>
       <DialogTitle></DialogTitle>
       <DialogDescription></DialogDescription>
       <DialogContent
-        showCloseButton={false}
-        className="pointer-events-auto select-none"
+        className="select-none"
         onPointerDownOutside={(e) => {
           e.preventDefault();
           e.stopPropagation();

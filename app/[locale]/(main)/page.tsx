@@ -21,15 +21,26 @@ function CheckoutPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const t = useTranslations("checkout.payment_status");
-  const id = searchParams.get("id");
-  const step = searchParams.get("step") || "amount";
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [payRolling, setPayRolling] = useState<boolean>(false);
+  
+  // 使用 state 管理 step 和 id，避免 hydration 错误
+  const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
+  const [id, setId] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 在客户端挂载后读取 searchParams，避免 hydration 错误
+  useEffect(() => {
+    setIsMounted(true);
+    const urlId = searchParams.get("id");
+    const urlStep = searchParams.get("step") || "amount";
+    setId(urlId);
+    setStep(urlStep as "amount" | "card" | "crypto");
+  }, [searchParams]);
 
   const submitHandle = () => {
     setLoading(true);
@@ -70,10 +81,29 @@ function CheckoutPageContent() {
       }
     } catch (error) {
       console.error(error);
+      toast.error('操作失败，请联系客服');
     } finally {
       setLoading(false);
     }
   };
+
+  // 在客户端挂载前显示加载状态，避免 hydration 错误
+  if (!isMounted) {
+    return (
+      <div className="relative flex flex-col h-full mx-2">
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex flex-col justify-center items-center p-2">
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
+                <p className="text-gray-600">加载中...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -85,7 +115,7 @@ function CheckoutPageContent() {
                 amount={amount}
                 onAmountChange={setAmount}
                 onCardPay={payHandle}
-                onCryptoPay={() => router.replace(`/?step=crypto&id=${id}`)}
+                onCryptoPay={() => router.replace(`/?step=crypto&id=${id || ""}`)}
                 loading={loading}
               />
             ) : step === "card" ? (

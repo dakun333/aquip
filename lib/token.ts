@@ -68,6 +68,7 @@ export async function getGlobalServiceToken() {
         return await refreshToken();
       } catch (error) {
         logger.error("刷新全局 Token 失败:", error);
+
         throw error;
       } finally {
         refreshPromise = null;

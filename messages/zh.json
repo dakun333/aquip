@@ -141,7 +141,7 @@
     "wallet_balance": "钱包余额",
     "balance": "{amount}",
     "payment_status": {
-      "processing": "正在处理支付...",
+      "processing": "支付处理中, 请等待3-5分钟...",
       "verifying": "正在验证信息...",
       "confirming": "正在确认交易...",
       "completing": "正在完成支付...",
