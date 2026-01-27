@@ -12,22 +12,22 @@ import CardBagDialog from "./card-bag";
 import { PayVerify } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { DEFAULT_CURRENCY } from "../../utils/constant";
 interface IProps {
   amount: number | undefined;
+  orderId?: string;
   onModifyAmount: () => void;
   onSubmit: () => void;
 }
 
 export default function CardPayment({
   amount,
+  orderId,
   onModifyAmount,
   onSubmit,
 }: IProps) {
   const t = useTranslations("checkout");
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = orderId;
   const STORAGE_KEY = "card_payment_info";
 
   // 从 sessionStorage 读取保存的数据

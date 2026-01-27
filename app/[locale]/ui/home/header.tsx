@@ -10,9 +10,9 @@ export default function HomeHeader() {
   return (
     <>
       <div className="shrink-0 h-20 border-b px-4 flex items-center justify-between md:px-[15%]">
-        <Link href="/">
+        <a href="/">
           <div className="text-2xl font-bold cursor-pointer">Aquipay</div>
-        </Link>
+        </a>
 
         <div className="flex items-center gap-2">
           <Link href="/checkout">
@@ -20,11 +20,11 @@ export default function HomeHeader() {
               <HandCoins></HandCoins>
             </AQButton>
           </Link>
-          <Link href="/admin">
+          {/* <Link href="/admin">
             <AQButton title="后台">
               <Wrench></Wrench>
             </AQButton>
-          </Link>
+          </Link> */}
           <LocaleSwitcher></LocaleSwitcher>
           <Button variant="outline">
             <Search className="w-5 h-5" />

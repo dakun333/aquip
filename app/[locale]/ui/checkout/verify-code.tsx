@@ -21,13 +21,13 @@ import { useTranslations } from "next-intl";
 import { PayOTP } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 interface VerifyCodeDialogProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   phone: string;
+  orderId?: string; // 订单 ID，从 props 传入而不是从 URL 读取
   seconds?: number; // 默认倒计时秒数
   onSubmit?: () => void;
 }
@@ -36,11 +36,11 @@ export default function VerifyCodeDialog({
   open,
   onOpenChange,
   phone,
+  orderId,
   seconds = 60,
   onSubmit,
 }: VerifyCodeDialogProps) {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = orderId;
   const t = useTranslations("checkout");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -71,6 +71,7 @@ export default function VerifyCodeDialog({
         logger.error("PayOTP response:", response.error);
         toast.error(response.error);
       }
+
       handleOpenChange(false);
       onSubmit?.();
     } catch (e) {

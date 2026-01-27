@@ -1,0 +1,206 @@
+{
+  "manifest": {
+    "name": "Aquipay"
+  },
+  "metadata": {
+    "default_title": "Aquipay",
+    "description": "Aquipay - Торговый центр",
+    "keywords": "Aquipay,Торговый центр,Aquipay Торговый центр",
+    "template": "Aquipay"
+  },
+  "common": {
+    "select_all": "Выбрать все",
+    "cancel_select_all": "Снять выделение"
+  },
+  "home": {
+    "tabs": {
+      "home": "Главная",
+      "msg": "Сообщения",
+      "cart": "Корзина",
+      "my": "Профиль",
+      "pay": "Оплата"
+    }
+  },
+  "msg": {
+    "title": "Сообщения",
+    "header": "Сообщения{num, plural, =0 {} other { ({num})}}"
+  },
+  "cart": {
+    "title": "Корзина",
+    "total": "Итого",
+    "discount": "Скидка",
+    "pay_voucher": "Оплата ваучером ({num})"
+  },
+  "my": {
+    "title": "Личный кабинет",
+    "id": "ID",
+    "name": "Имя",
+    "email": "Email",
+    "logout": "Выйти",
+    "register": "Регистрация",
+    "login": "Вход",
+    "all_users": "Все пользователи",
+    "loading": "Загрузка...",
+    "load_failed": "Ошибка загрузки",
+    "no_users": "Пользователей нет"
+  },
+  "wallet": {
+    "title": "Кошелек",
+    "balance": "Баланс",
+    "income": "Доход",
+    "expense": "Расход",
+    "total_income": "Общий доход",
+    "total_expense": "Общий расход",
+    "records": "История транзакций",
+    "no_records": "Нет записей",
+    "all": "Все",
+    "recharge": "Пополнение",
+    "shopping": "Покупки",
+    "order": "Заказ",
+    "service": "Сервис",
+    "refund": "Возврат"
+  },
+  "sign": {
+    "sign_in": {
+      "title": "Вход",
+      "description": "Введите свой email ниже, чтобы войти в аккаунт",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Пароль",
+      "password_placeholder": "пароль",
+      "forgot_password": "Забыли пароль?",
+      "remember_me": "Запомнить меня",
+      "login_button": "Войти",
+      "better_auth_login": "Вход через Better Auth",
+      "login_failed": "Ошибка входа"
+    },
+    "sign_up": {
+      "title": "Регистрация",
+      "description": "Введите свои данные для создания аккаунта",
+      "first_name": "Имя",
+      "first_name_placeholder": "Макс",
+      "last_name": "Фамилия",
+      "last_name_placeholder": "Робинсон",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Пароль",
+      "password_placeholder": "Пароль",
+      "confirm_password": "Подтвердите пароль",
+      "confirm_password_placeholder": "Подтвердите пароль",
+      "profile_image": "Фото профиля (опционально)",
+      "profile_preview": "Предпросмотр фото",
+      "sign_up_button": "Зарегистрироваться",
+      "better_auth_sign_up": "Регистрация через Better Auth",
+      "create_account": "Создать аккаунт",
+      "fill_required": "Пожалуйста, заполните все обязательные поля",
+      "password_mismatch": "Пароли не совпадают",
+      "register_failed": "Ошибка регистрации",
+      "role": "Роль",
+      "role_user": "Пользователь",
+      "role_editor": "Редактор",
+      "role_admin": "Админ"
+    }
+  },
+  "checkout": {
+    "enter_amount": "Введите сумму оплаты:",
+    "submit_amount": "Отправить {amount}",
+    "crypto_pay": "Крипто-платеж {amount}",
+    "card_pay": "Оплата картой {amount}",
+    "total": "Итого",
+    "pay_amount": "Оплатить {amount}",
+    "modify_amount": "Изменить сумму",
+    "secure_payment": "Зашифрованный и безопасный платеж",
+    "select_card": "Выбрать карту",
+    "select_card_title": "Выбор карты",
+    "verify_title": "Код подтверждения",
+    "verify_desc": "Введите код подтверждения, отправленный на ваш телефон",
+    "verify_code_placeholder": "Введите код",
+    "resend_prefix": "Повторная отправка через",
+    "resend_code": "Отправить еще раз",
+    "verify_button": "Подтвердить",
+    "change_phone": "Изменить номер телефона?",
+    "wallet_address": "Адрес кошелька",
+    "copy_address": "Копировать адрес",
+    "address_copied": "Адрес скопирован",
+    "copy_failed": "Ошибка копирования, попробуйте еще раз",
+    "supported_token": "Поддерживаемый токен",
+    "supported_chain": "Поддерживаемая сеть",
+    "min_deposit": "Мин. {amount}",
+    "deposit_address": "Ваш адрес для депозита",
+    "terms_apply": "Применяются условия",
+    "price_impact": "Влияние на цену",
+    "max_slippage": "Макс. проскальзывание",
+    "processing_time": "Время обработки",
+    "have_questions": "Есть вопросы?",
+    "get_help": "Получить помощь",
+    "auto": "Авто",
+    "less_than_min": "< {min} мин",
+    "amount_range": "Лимит оплаты",
+    "min_amount": "Мин. {amount}",
+    "max_amount": "Макс. {amount}",
+    "wallet_balance": "Баланс кошелька",
+    "balance": "{amount}",
+    "payment_status": {
+      "processing": "Платеж обрабатывается, пожалуйста, подождите 3-5 минут...",
+      "verifying": "Проверка информации...",
+      "confirming": "Подтверждение транзакции...",
+      "completing": "Завершение платежа...",
+      "error": "Ошибка платежа",
+      "completed": "Платеж завершен",
+      "success": "Платеж прошел успешно",
+      "failed": "Ошибка платежа, попробуйте еще раз",
+      "close": "Закрыть",
+      "confirm": "Подтвердить"
+    },
+    "form": {
+      "cardholder_name": "Имя держателя карты",
+      "cardholder_name_placeholder": "Имя на карте",
+      "card_number": "Номер карты",
+      "card_number_placeholder": "**** **** **** ****",
+      "expiry_date": "Срок действия",
+      "expiry_date_placeholder": "ММ/ГГ",
+      "cvv": "CVV / CVC",
+      "cvv_placeholder_amex": "****",
+      "cvv_placeholder": "***",
+      "errors": {
+        "card_number_required": "Номер карты должен содержать 16 цифр",
+        "cardholder_name_required": "Введите имя держателя карты",
+        "invalid_date": "Неверный формат даты",
+        "invalid_cvv": "Неверный CVV",
+        "invalid_cvv_length": "Неверная длина CVV"
+      }
+    }
+  },
+  "admin": {
+    "title": "Панель администратора",
+    "total_users": "Всего пользователей",
+    "total_sessions": "Всего сессий",
+    "admin_users": "Администраторы",
+    "user_list": "Список пользователей",
+    "role": "Роль",
+    "loading": "Загрузка...",
+    "load_failed": "Ошибка загрузки",
+    "no_users": "Пользователей нет",
+    "access_denied": "Доступ запрещен",
+    "admin_required": "Требуются права администратора"
+  },
+  "chat": {
+    "title": "Чат",
+    "online": "В сети",
+    "offline": "Не в сети",
+    "typing": "Печатает...",
+    "send": "Отправить",
+    "input_placeholder": "Введите сообщение... (Shift+Enter для переноса)",
+    "upload_image": "Загрузить фото",
+    "upload_file": "Загрузить файл",
+    "file_size_limit": "Размер файла не должен превышать 10 МБ",
+    "no_messages": "Нет сообщений, начните общение",
+    "send_failed": "Ошибка отправки, попробуйте еще раз",
+    "file_sent": "отправил файл",
+    "image_sent": "отправил фото",
+    "input_hint": "Enter для отправки, Shift+Enter для переноса • Поддержка фото и файлов (до 10 МБ)"
+  },
+  "api": {
+    "end_error": "Операция не удалась, пожалуйста, свяжитесь с поддержкой"
+  }
+}

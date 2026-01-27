@@ -16,10 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CardType, IPayCardInfo } from "@/app/types/checkout.type";
 import {
   useEffect,
-  useLayoutEffect,
   useRef,
   forwardRef,
   useImperativeHandle,
+  useMemo,
 } from "react";
 import CardValidator from "card-validator";
 import {
@@ -28,34 +28,36 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import CardIcon from "./card-icon";
-const PayCardSchema = z
-  .object({
-    id: z.string().trim().length(19, "Card number must be 16 digits"),
-    name: z.string().trim().min(1, "Cardholder name required"),
-    expireDate: z
-      .string()
-      .trim()
-      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Invalid date"),
-    cvv: z
-      .string()
-      .trim()
-      .regex(/^\d{3,4}$/, "Invalid CVV"),
-    type: z.enum(CardType).optional(),
-  })
+import { useTranslations } from "next-intl";
 
-  .refine(
-    (data) => {
-      // CVV 长度根据卡类型判断，默认 3 位
-      const targetLength = data.type === CardType.Amex ? 4 : 3;
-      return data.cvv.length === targetLength;
-    },
-    {
-      message: "Invalid CVV length",
-      path: ["cvv"],
-    }
-  );
+type PayCardForm = z.infer<ReturnType<typeof createPayCardSchema>>;
 
-type PayCardForm = z.infer<typeof PayCardSchema>;
+const createPayCardSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      id: z.string().trim().length(19, t("form.errors.card_number_required")),
+      name: z.string().trim().min(1, t("form.errors.cardholder_name_required")),
+      expireDate: z
+        .string()
+        .trim()
+        .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, t("form.errors.invalid_date")),
+      cvv: z
+        .string()
+        .trim()
+        .regex(/^\d{3,4}$/, t("form.errors.invalid_cvv")),
+      type: z.enum(CardType).optional(),
+    })
+    .refine(
+      (data) => {
+        // CVV 长度根据卡类型判断，默认 3 位
+        const targetLength = data.type === CardType.Amex ? 4 : 3;
+        return data.cvv.length === targetLength;
+      },
+      {
+        message: t("form.errors.invalid_cvv_length"),
+        path: ["cvv"],
+      }
+    );
 
 interface Props {
   value?: IPayCardInfo;
@@ -71,6 +73,9 @@ export interface PaymentFormRef {
 
 const PaymentForm = forwardRef<PaymentFormRef, Props>(
   ({ value, onChange, onValidChange }, ref) => {
+    const t = useTranslations("checkout");
+    const PayCardSchema = useMemo(() => createPayCardSchema(t), [t]);
+    
     const form = useForm<PayCardForm>({
       mode: "onChange",
       resolver: zodResolver(PayCardSchema),
@@ -168,9 +173,9 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cardholder Name</FormLabel>
+                <FormLabel>{t("form.cardholder_name")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Name on card" />
+                  <Input {...field} placeholder={t("form.cardholder_name_placeholder")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -182,14 +187,14 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
             name="id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Card Number</FormLabel>
+                <FormLabel>{t("form.card_number")}</FormLabel>
                 <FormControl>
                   <InputGroup>
                     <InputGroupInput
                       {...field}
                       value={field.value || ""}
                       className="pr-12"
-                      placeholder="**** **** **** ****"
+                      placeholder={t("form.card_number_placeholder")}
                       onChange={(e) => {
                         let value = e.target.value;
 
@@ -221,12 +226,12 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
               name="expireDate"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Expiry Date</FormLabel>
+                  <FormLabel>{t("form.expiry_date")}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       value={field.value || ""}
-                      placeholder="MM/YY"
+                      placeholder={t("form.expiry_date_placeholder")}
                       onChange={(e) => {
                         let value = e.target.value.replace(/\D/g, "");
                         // 限制最多 4 位数字
@@ -247,12 +252,16 @@ const PaymentForm = forwardRef<PaymentFormRef, Props>(
               name="cvv"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>CVV / CVC</FormLabel>
+                  <FormLabel>{t("form.cvv")}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       value={field.value || ""}
-                      placeholder={cardType === CardType.Amex ? "****" : "***"}
+                      placeholder={
+                        cardType === CardType.Amex
+                          ? t("form.cvv_placeholder_amex")
+                          : t("form.cvv_placeholder")
+                      }
                       onChange={(e) => {
                         let value = e.target.value.replace(/\D/g, "");
                         const maxLen = cardType === CardType.Amex ? 4 : 3;

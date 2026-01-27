@@ -151,6 +151,24 @@
       "failed": "Payment failed, please try again",
       "close": "Close",
       "confirm": "Confirm"
+    },
+    "form": {
+      "cardholder_name": "Cardholder Name",
+      "cardholder_name_placeholder": "Name on card",
+      "card_number": "Card Number",
+      "card_number_placeholder": "**** **** **** ****",
+      "expiry_date": "Expiry Date",
+      "expiry_date_placeholder": "MM/YY",
+      "cvv": "CVV / CVC",
+      "cvv_placeholder_amex": "****",
+      "cvv_placeholder": "***",
+      "errors": {
+        "card_number_required": "Card number must be 16 digits",
+        "cardholder_name_required": "Cardholder name required",
+        "invalid_date": "Invalid date",
+        "invalid_cvv": "Invalid CVV",
+        "invalid_cvv_length": "Invalid CVV length"
+      }
     }
   },
   "admin": {
@@ -165,5 +183,8 @@
     "no_users": "No users",
     "access_denied": "Access Denied",
     "admin_required": "Admin access required"
+  },
+  "api":{
+    "end_error": "Operation failed, please contact customer service"
   }
 }

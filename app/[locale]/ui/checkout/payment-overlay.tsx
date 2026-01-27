@@ -17,12 +17,12 @@ import {
   XCircle,
 } from "lucide-react";
 import { PaymentWebSocket } from "@/lib/payment-websocket";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { AQButton } from "../button";
 import { logger } from "@/lib/logger";
 interface PaymentOverlayProps {
   open: boolean;
+  orderId?: string; // 订单 ID，从 props 传入而不是从 URL 读取
   statuses?: string[]; // 自定义状态列表，如果不提供则使用默认顺序
   interval?: number; // 每个状态显示的时长（毫秒），默认 2000ms
   onComplete?: () => void; // 支付完成回调
@@ -31,14 +31,14 @@ interface PaymentOverlayProps {
 
 export default function PaymentOverlay({
   open,
+  orderId,
   statuses,
   interval = 2000,
   onComplete,
   onError,
 }: PaymentOverlayProps) {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get("id");
+  const id = orderId;
   const t = useTranslations("checkout.payment_status");
   const [currentStatus, setCurrentStatus] = useState<string>("processing");
   const wsRef = useRef<WebSocket | null>(null);
