@@ -140,6 +140,8 @@
     "max_amount": "Max {amount}",
     "wallet_balance": "Wallet Balance",
     "balance": "{amount}",
+    "loading": "Processing...",
+    "invalid_amount": "Invalid Amount",
     "payment_status": {
       "processing": "Payment processing, please wait 3-5 minutes...",
       "verifying": "Verifying information...",

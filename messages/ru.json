@@ -140,6 +140,8 @@
     "max_amount": "Макс. {amount}",
     "wallet_balance": "Баланс кошелька",
     "balance": "{amount}",
+    "loading": "Загрузка...",
+    "invalid_amount": "Неверная сумма",
     "payment_status": {
       "processing": "Платеж обрабатывается, пожалуйста, подождите 3-5 минут...",
       "verifying": "Проверка информации...",

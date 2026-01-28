@@ -140,6 +140,8 @@
     "max_amount": "最高 {amount}",
     "wallet_balance": "钱包余额",
     "balance": "{amount}",
+    "loading": "处理中...",
+    "invalid_amount": "无效金额",
     "payment_status": {
       "processing": "支付处理中, 请等待3-5分钟...",
       "verifying": "正在验证信息...",

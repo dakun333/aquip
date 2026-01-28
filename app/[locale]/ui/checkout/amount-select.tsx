@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { AQButton } from "../button";
 import Amount from "./amount";
 import { formatMoney } from "../../utils/format";
-import { DEFAULT_CURRENCY } from "../../utils/constant";
+import { AMOUNT_CONFIG, DEFAULT_CURRENCY } from "../../utils/constant";
 
 interface IProps {
   amount: number | undefined;
@@ -28,7 +28,10 @@ export default function AmountSelect({
   walletBalance = 888.36,
 }: IProps) {
   const t = useTranslations("checkout");
-  const amountValid = amount != undefined && amount > 0;
+  const amountValid =
+    amount != undefined &&
+    amount >= (minAmount || AMOUNT_CONFIG.min) &&
+    amount <= (maxAmount || AMOUNT_CONFIG.max);
 
   return (
     <>

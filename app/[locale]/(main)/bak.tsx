@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import { AQButton } from "../ui/button";
+import AmountSelect from "../ui/checkout/amount-select";
 import CardPayment from "../ui/checkout/card-payment";
 import CryptoPayment from "../ui/checkout/crypto-payment";
 import VerifyCodeDialog from "../ui/checkout/verify-code";
@@ -20,35 +21,28 @@ import { AMOUNT_CONFIG } from "../utils/constant";
 export default function CheckoutPage() {
   const router = useRouter();
   const t = useTranslations("api");
-  const tc = useTranslations("checkout");
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [payRolling, setPayRolling] = useState<boolean>(false);
-  const [isInvalid, setIsInvalid] = useState(false);
 
-  const [step, setStep] = useState<"card" | "crypto">("card");
+  const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const amountParam = searchParams.get("amount");
-    if (amountParam && !orderId) {
+    if (amountParam && step === "amount" && !orderId && amount === undefined) {
       const val = parseInt(amountParam);
       if (val >= AMOUNT_CONFIG.min && val <= AMOUNT_CONFIG.max) {
+        logger.info("amountParam:", val);
         setAmount(val);
         payHandle(val);
-      } else {
-        setLoading(false);
-        setIsInvalid(true);
       }
-    } else if (!amountParam) {
-      setLoading(false);
-      setIsInvalid(true);
     }
-  }, [searchParams, orderId]);
+  }, [searchParams, step, orderId, amount]);
 
   const submitHandle = () => {
     setLoading(true);
@@ -62,8 +56,8 @@ export default function CheckoutPage() {
   const verifyHandle = () => {
     logger.info("verifyHandle");
     setPayRolling(true);
+    // router.push(`/`);
   };
-
   const payHandle = async (val?: number) => {
     const targetAmount = val || amount;
     if (
@@ -71,8 +65,7 @@ export default function CheckoutPage() {
       targetAmount < AMOUNT_CONFIG.min ||
       targetAmount > AMOUNT_CONFIG.max
     ) {
-      setIsInvalid(true);
-      setLoading(false);
+      logger.error("amount is invalid");
       return;
     }
     const id = getUserId().toString();
@@ -86,16 +79,16 @@ export default function CheckoutPage() {
         payment_id: id,
       });
       if (response.success) {
+        logger.info("payHandle response success:", response);
         setPaymentId(id);
         setOrderId(response.data.order_id);
+        setStep("card");
       } else {
         logger.error("payHandle response:", response.error);
         toast.error(t("end_error"));
-        setIsInvalid(true);
       }
     } catch (error) {
       console.error(error);
-      setIsInvalid(true);
     } finally {
       setLoading(false);
     }
@@ -105,45 +98,35 @@ export default function CheckoutPage() {
     <>
       <div className="relative flex flex-col h-full mx-2">
         <div className="flex-1 overflow-y-auto ">
-          <div className="flex flex-col justify-center items-center p-2 min-h-[400px]">
-            {loading ? (
-              <div className="flex flex-col items-center gap-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                <p className="text-gray-500">
-                  {tc("loading") || "Processing..."}
-                </p>
-              </div>
-            ) : isInvalid ? (
-              <div className="text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-                <p className="text-xl font-medium text-gray-400">
-                  {tc("invalid_amount") || "Invalid Amount"}
-                </p>
-                <p className="text-sm text-gray-400 mt-2">
-                  {AMOUNT_CONFIG.min} - {AMOUNT_CONFIG.max} RUB
-                </p>
-              </div>
-            ) : orderId && step === "card" ? (
+          <div className="flex flex-col justify-center items-center p-2 ">
+            {step === "amount" || !orderId ? (
+              <AmountSelect
+                amount={amount}
+                onAmountChange={setAmount}
+                onCardPay={payHandle}
+                onCryptoPay={() => setStep("crypto")}
+                loading={loading}
+              />
+            ) : step === "card" ? (
               <CardPayment
                 amount={amount}
                 orderId={orderId}
                 onModifyAmount={() => {
-                  setIsInvalid(true);
+                  setStep("amount");
                   setOrderId(undefined);
                 }}
                 onSubmit={submitHandle}
               />
             ) : (
-              orderId && (
-                <CryptoPayment
-                  amount={amount}
-                  onModifyAmount={() => {
-                    setIsInvalid(true);
-                    setOrderId(undefined);
-                  }}
-                  onSubmit={submitHandle}
-                  loading={loading}
-                />
-              )
+              <CryptoPayment
+                amount={amount}
+                onModifyAmount={() => {
+                  setStep("amount");
+                  setOrderId(undefined);
+                }}
+                onSubmit={submitHandle}
+                loading={loading}
+              />
             )}
           </div>
         </div>
@@ -164,13 +147,17 @@ export default function CheckoutPage() {
           orderId={orderId}
           onComplete={() => {
             setPayRolling(false);
+            setStep("amount");
             setOrderId(undefined);
-            setIsInvalid(true);
+            // 支付完成后的处理，显示成功提示并跳转
+            // toast.success(t("completed") || "支付成功");
           }}
           onError={() => {
             setPayRolling(false);
+            setStep("amount");
             setOrderId(undefined);
-            setIsInvalid(true);
+            // 显示失败提示
+            // toast.error(t("failed") || "支付失败，请重试");
           }}
         />
       </div>

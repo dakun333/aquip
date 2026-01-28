@@ -171,13 +171,13 @@ export default function CardPayment({
             amount: formatMoney(amount),
           })}
         </AQButton>
-        <AQButton
+        {/* <AQButton
           loading={loading}
           className="w-full h-12 text-lg mt-4"
           onClick={onModifyAmount}
         >
           {t("modify_amount")}
-        </AQButton>
+        </AQButton> */}
 
         <p className="flex items-center justify-center text-xs text-gray-500 mt-3">
           <Lock className="w-3 h-3 mr-1" />
