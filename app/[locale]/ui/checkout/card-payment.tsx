@@ -12,7 +12,6 @@ import CardBagDialog from "./card-bag";
 import { PayVerify } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { toast } from "sonner";
-import { DEFAULT_CURRENCY } from "../../utils/constant";
 interface IProps {
   amount: number | undefined;
   orderId?: string;

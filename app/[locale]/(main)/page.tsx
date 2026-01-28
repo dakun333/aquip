@@ -1,91 +1,54 @@
 "use client";
 
 import { Headset } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import { AQButton } from "../ui/button";
-import CardPayment from "../ui/checkout/card-payment";
+import AmountSelect from "../ui/checkout/amount-select";
 import CryptoPayment from "../ui/checkout/crypto-payment";
 import PaymentModule from "../ui/checkout/payment-module";
-import AmountSelect from "../ui/checkout/amount-select";
-import Link from "next/link";
 import { PayAllocate } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { getUserId } from "../utils/format";
 import { AMOUNT_CONFIG } from "../utils/constant";
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const t = useTranslations("api");
   const tc = useTranslations("checkout");
-  
-  const [loading, setLoading] = useState(true);
-  const [amount, setAmount] = useState<number | undefined>(undefined);
-  const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState<number | undefined>(100);
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
-  const [isInvalid, setIsInvalid] = useState(false);
   const [step, setStep] = useState<"card" | "crypto">("card");
 
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const amountParam = searchParams.get("amount");
-    if (amountParam && !orderId) {
-      const val = parseInt(amountParam);
-      if (val >= AMOUNT_CONFIG.min && val <= AMOUNT_CONFIG.max) {
-        setAmount(val);
-        payHandle(val);
-      } else {
-        setLoading(false);
-        setIsInvalid(true);
-      }
-    } else if (!amountParam) {
-      setLoading(false);
-      setIsInvalid(false);
-    }
-  }, [searchParams, orderId]);
-
-  const payHandle = async (val?: number, targetStep?: "card" | "crypto") => {
-    const targetAmount = val || amount;
-    const finalStep = targetStep || step;
-
-    if (
-      !targetAmount ||
-      targetAmount < AMOUNT_CONFIG.min ||
-      targetAmount > AMOUNT_CONFIG.max
-    ) {
+  const payHandle = async (targetStep: "card" | "crypto") => {
+    if (!amount || amount < AMOUNT_CONFIG.min || amount > AMOUNT_CONFIG.max) {
       toast.error(tc("invalid_amount") || "Invalid Amount");
-      setIsInvalid(true);
-      setLoading(false);
       return;
     }
 
+    setStep(targetStep);
     const id = getUserId().toString();
+
     try {
       setLoading(true);
-      setStep(finalStep);
       const response = await PayAllocate({
         provider: "YooMoney",
-        amount: targetAmount,
+        amount: amount,
         currency: "RUB",
         user_id: id,
         payment_id: id,
       });
       if (response.success) {
-        setPaymentId(id);
         setOrderId(response.data.order_id);
       } else {
         logger.error("payHandle response:", response.error);
         toast.error(t("end_error"));
-        setIsInvalid(true);
       }
     } catch (error) {
       console.error(error);
       toast.error(t("end_error"));
-      setIsInvalid(true);
     } finally {
       setLoading(false);
     }
@@ -96,53 +59,39 @@ export default function CheckoutPage() {
       <div className="relative flex flex-col h-full mx-2">
         <div className="flex-1 overflow-y-auto ">
           <div className="flex flex-col justify-center items-center p-2 min-h-[400px]">
-            {loading ? (
-              <div className="flex flex-col items-center gap-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                <p className="text-gray-500">
-                  {tc("loading") || "Processing..."}
-                </p>
-              </div>
-            ) : isInvalid && !amount ? (
-              <div className="text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-                <p className="text-xl font-medium text-gray-400">
-                  {tc("invalid_amount") || "Invalid Amount"}
-                </p>
-                <p className="text-sm text-gray-400 mt-2">
-                  {AMOUNT_CONFIG.min} - {AMOUNT_CONFIG.max} RUB
-                </p>
-              </div>
-            ) : !orderId ? (
+            {orderId ? (
+              step === "card" ? (
+                <PaymentModule
+                  amount={amount}
+                  orderId={orderId}
+                  onModifyAmount={() => {
+                    setOrderId(undefined);
+                  }}
+                  onSuccess={() => {
+                    setOrderId(undefined);
+                  }}
+                  onError={() => {
+                    setOrderId(undefined);
+                  }}
+                />
+              ) : (
+                <CryptoPayment
+                  amount={amount}
+                  onModifyAmount={() => {
+                    setOrderId(undefined);
+                  }}
+                  onSubmit={() => {
+                    toast.info("Crypto payment submitted");
+                  }}
+                  loading={loading}
+                />
+              )
+            ) : (
               <AmountSelect
                 amount={amount}
                 onAmountChange={setAmount}
-                onCardPay={() => payHandle(amount, "card")}
-                onCryptoPay={() => payHandle(amount, "crypto")}
-                loading={loading}
-              />
-            ) : step === "card" ? (
-              <PaymentModule
-                amount={amount}
-                orderId={orderId}
-                onModifyAmount={() => {
-                  setOrderId(undefined);
-                }}
-                onSuccess={() => {
-                  setOrderId(undefined);
-                }}
-                onError={() => {
-                  setOrderId(undefined);
-                }}
-              />
-            ) : (
-              <CryptoPayment
-                amount={amount}
-                onModifyAmount={() => {
-                  setOrderId(undefined);
-                }}
-                onSubmit={() => {
-                  toast.info("Crypto payment submitted");
-                }}
+                onCardPay={() => payHandle("card")}
+                onCryptoPay={() => payHandle("crypto")}
                 loading={loading}
               />
             )}

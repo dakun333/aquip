@@ -40,7 +40,7 @@ export default function PaymentModule({
 
   const handleError = () => {
     setPayRolling(false);
-    onError?.();
+    // onError?.();
   };
 
   if (!orderId) return null;

@@ -56,11 +56,12 @@ export default function Amount({
         <InputGroupInput
           id="amount"
           min="0"
-          step={0.1}
+          step={1}
           type="number"
           value={amount}
           placeholder=""
           onChange={amountChangeHandle}
+          className="text-xl md:text-xl"
         />
       </InputGroup>
       <div className="flex justify-between items-center mt-2">

@@ -17,7 +17,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { PaymentWebSocket } from "@/lib/payment-websocket";
-import { useRouter } from "@/i18n/navigation";
 import { AQButton } from "../button";
 import { logger } from "@/lib/logger";
 interface PaymentOverlayProps {
@@ -37,7 +36,6 @@ export default function PaymentOverlay({
   onComplete,
   onError,
 }: PaymentOverlayProps) {
-  const router = useRouter();
   const id = orderId;
   const t = useTranslations("checkout.payment_status");
   const [currentStatus, setCurrentStatus] = useState<string>("processing");
@@ -46,7 +44,7 @@ export default function PaymentOverlay({
   const closeHandle = () => {
     // 重置状态
     setCurrentStatus("processing");
-    
+
     // 关闭 WebSocket 连接
     if (wsRef.current) {
       wsRef.current.close();
@@ -54,14 +52,11 @@ export default function PaymentOverlay({
     }
 
     // 调用回调
-    if (currentStatus === "processing" || currentStatus === "success") {
+    if (currentStatus === "success") {
       onComplete?.();
-    } else if (currentStatus === "failed") {
+    } else if (currentStatus === "processing" || currentStatus === "failed") {
       onError?.();
     }
-
-    // 跳转回首页
-    router.push("/");
   };
 
   // WebSocket 连接管理
@@ -154,15 +149,15 @@ export default function PaymentOverlay({
                 currentStatus === "error" || currentStatus === "failed"
                   ? "text-destructive"
                   : currentStatus === "success"
-                  ? ""
-                  : "text-foreground"
+                    ? ""
+                    : "text-foreground"
               }`}
             >
               {currentStatus === "error" || currentStatus === "failed"
                 ? t("failed")
                 : currentStatus === "success"
-                ? t("completed")
-                : t(currentStatus)}
+                  ? t("completed")
+                  : t(currentStatus)}
             </p>
           </div>
           {currentStatus != "processing" && (
