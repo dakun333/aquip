@@ -15,11 +15,11 @@ export default function HomeHeader() {
         </a>
 
         <div className="flex items-center gap-2">
-          <Link href="/checkout">
+          {/* <Link href="/checkout">
             <AQButton title="支付">
               <HandCoins></HandCoins>
             </AQButton>
-          </Link>
+          </Link> */}
           {/* <Link href="/admin">
             <AQButton title="后台">
               <Wrench></Wrench>

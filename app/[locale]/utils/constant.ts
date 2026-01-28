@@ -25,3 +25,9 @@ export const UNIT = [
 export const DEFAULT_CURRENCY = UNIT[0];
 // 从 UNIT 列表中推断出所有的 value 值类型
 export type CurrencyValue = (typeof UNIT)[number]["value"];
+
+// 金额配置
+export const AMOUNT_CONFIG = {
+  min: 1,
+  max: 15000,
+};

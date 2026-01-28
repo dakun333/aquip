@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/input-group";
 import Link from "next/link";
 import { Circle, CircleAlert, CircleAlertIcon } from "lucide-react";
-import { DEFAULT_CURRENCY, UNIT } from "../../utils/constant";
+import { AMOUNT_CONFIG, DEFAULT_CURRENCY, UNIT } from "../../utils/constant";
 
 interface IProps {
   onChange: (amount: number) => void;
@@ -27,8 +27,8 @@ interface IProps {
 export default function Amount({
   onChange,
   value,
-  minAmount = 1,
-  maxAmount = 15000,
+  minAmount = AMOUNT_CONFIG.min,
+  maxAmount = AMOUNT_CONFIG.max,
   walletBalance,
 }: IProps) {
   const t = useTranslations("checkout");
