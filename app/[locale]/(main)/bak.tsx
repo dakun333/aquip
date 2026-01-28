@@ -7,10 +7,11 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import { AQButton } from "../ui/button";
+import AmountSelect from "../ui/checkout/amount-select";
 import CardPayment from "../ui/checkout/card-payment";
 import CryptoPayment from "../ui/checkout/crypto-payment";
-import PaymentModule from "../ui/checkout/payment-module";
-import AmountSelect from "../ui/checkout/amount-select";
+import VerifyCodeDialog from "../ui/checkout/verify-code";
+import PaymentOverlay from "../ui/checkout/payment-overlay";
 import Link from "next/link";
 import { PayAllocate } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
@@ -20,53 +21,56 @@ import { AMOUNT_CONFIG } from "../utils/constant";
 export default function CheckoutPage() {
   const router = useRouter();
   const t = useTranslations("api");
-  const tc = useTranslations("checkout");
-  
-  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
-  const [isInvalid, setIsInvalid] = useState(false);
-  const [step, setStep] = useState<"card" | "crypto">("card");
+  const [payRolling, setPayRolling] = useState<boolean>(false);
+
+  const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const amountParam = searchParams.get("amount");
-    if (amountParam && !orderId) {
+    if (amountParam && step === "amount" && !orderId && amount === undefined) {
       const val = parseInt(amountParam);
       if (val >= AMOUNT_CONFIG.min && val <= AMOUNT_CONFIG.max) {
+        logger.info("amountParam:", val);
         setAmount(val);
         payHandle(val);
-      } else {
-        setLoading(false);
-        setIsInvalid(true);
       }
-    } else if (!amountParam) {
-      setLoading(false);
-      setIsInvalid(false);
     }
-  }, [searchParams, orderId]);
+  }, [searchParams, step, orderId, amount]);
 
-  const payHandle = async (val?: number, targetStep?: "card" | "crypto") => {
+  const submitHandle = () => {
+    setLoading(true);
+    setOpen(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+
+  const verifyHandle = () => {
+    logger.info("verifyHandle");
+    setPayRolling(true);
+    // router.push(`/`);
+  };
+  const payHandle = async (val?: number) => {
     const targetAmount = val || amount;
-    const finalStep = targetStep || step;
-
     if (
       !targetAmount ||
       targetAmount < AMOUNT_CONFIG.min ||
       targetAmount > AMOUNT_CONFIG.max
     ) {
-      toast.error(tc("invalid_amount") || "Invalid Amount");
-      setIsInvalid(true);
-      setLoading(false);
+      logger.error("amount is invalid");
       return;
     }
-
     const id = getUserId().toString();
     try {
       setLoading(true);
-      setStep(finalStep);
       const response = await PayAllocate({
         provider: "YooMoney",
         amount: targetAmount,
@@ -75,17 +79,16 @@ export default function CheckoutPage() {
         payment_id: id,
       });
       if (response.success) {
+        logger.info("payHandle response success:", response);
         setPaymentId(id);
         setOrderId(response.data.order_id);
+        setStep("card");
       } else {
         logger.error("payHandle response:", response.error);
         toast.error(t("end_error"));
-        setIsInvalid(true);
       }
     } catch (error) {
       console.error(error);
-      toast.error(t("end_error"));
-      setIsInvalid(true);
     } finally {
       setLoading(false);
     }
@@ -95,54 +98,33 @@ export default function CheckoutPage() {
     <>
       <div className="relative flex flex-col h-full mx-2">
         <div className="flex-1 overflow-y-auto ">
-          <div className="flex flex-col justify-center items-center p-2 min-h-[400px]">
-            {loading ? (
-              <div className="flex flex-col items-center gap-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                <p className="text-gray-500">
-                  {tc("loading") || "Processing..."}
-                </p>
-              </div>
-            ) : isInvalid && !amount ? (
-              <div className="text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-                <p className="text-xl font-medium text-gray-400">
-                  {tc("invalid_amount") || "Invalid Amount"}
-                </p>
-                <p className="text-sm text-gray-400 mt-2">
-                  {AMOUNT_CONFIG.min} - {AMOUNT_CONFIG.max} RUB
-                </p>
-              </div>
-            ) : !orderId ? (
+          <div className="flex flex-col justify-center items-center p-2 ">
+            {step === "amount" || !orderId ? (
               <AmountSelect
                 amount={amount}
                 onAmountChange={setAmount}
-                onCardPay={() => payHandle(amount, "card")}
-                onCryptoPay={() => payHandle(amount, "crypto")}
+                onCardPay={payHandle}
+                onCryptoPay={() => setStep("crypto")}
                 loading={loading}
               />
             ) : step === "card" ? (
-              <PaymentModule
+              <CardPayment
                 amount={amount}
                 orderId={orderId}
                 onModifyAmount={() => {
+                  setStep("amount");
                   setOrderId(undefined);
                 }}
-                onSuccess={() => {
-                  setOrderId(undefined);
-                }}
-                onError={() => {
-                  setOrderId(undefined);
-                }}
+                onSubmit={submitHandle}
               />
             ) : (
               <CryptoPayment
                 amount={amount}
                 onModifyAmount={() => {
+                  setStep("amount");
                   setOrderId(undefined);
                 }}
-                onSubmit={() => {
-                  toast.info("Crypto payment submitted");
-                }}
+                onSubmit={submitHandle}
                 loading={loading}
               />
             )}
@@ -153,6 +135,31 @@ export default function CheckoutPage() {
             <Headset />
           </AQButton>
         </div>
+        <VerifyCodeDialog
+          open={open}
+          onOpenChange={setOpen}
+          phone="+1 234 **** 89"
+          orderId={orderId}
+          onSubmit={verifyHandle}
+        />
+        <PaymentOverlay
+          open={payRolling}
+          orderId={orderId}
+          onComplete={() => {
+            setPayRolling(false);
+            setStep("amount");
+            setOrderId(undefined);
+            // 支付完成后的处理，显示成功提示并跳转
+            // toast.success(t("completed") || "支付成功");
+          }}
+          onError={() => {
+            setPayRolling(false);
+            setStep("amount");
+            setOrderId(undefined);
+            // 显示失败提示
+            // toast.error(t("failed") || "支付失败，请重试");
+          }}
+        />
       </div>
     </>
   );
