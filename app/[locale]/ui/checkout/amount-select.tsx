@@ -52,7 +52,8 @@ export default function AmountSelect({
       {/* 加密货币支付 */}
       <AQButton
         className="w-full h-12 text-lg mt-4"
-        disabled={!amountValid || loading}
+        disabled={true}
+        // disabled={!amountValid || loading}
         loading={loading}
         onClick={onCryptoPay}
       >

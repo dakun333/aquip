@@ -145,7 +145,7 @@ export default function CardPayment({
         onChange={formChange}
         onValidChange={validChange}
       ></PaymentForm>
-      <div className="w-full flex justify-end my-2">
+      {/* <div className="w-full flex justify-end my-2">
         <AQButton
           // variant="link"
           size="sm"
@@ -154,7 +154,7 @@ export default function CardPayment({
         >
           {t("select_card")}
         </AQButton>
-      </div>
+      </div> */}
       <div className="w-full pt-4 border-t border-gray-200 mx-2">
         <div className="flex justify-between items-center mb-6">
           <span className="text-base font-medium">{t("total")}</span>

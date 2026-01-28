@@ -26,7 +26,7 @@ export default function CheckoutPage() {
   const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [payRolling, setPayRolling] = useState<boolean>(false);
-  
+
   // 使用 state 管理 step，不再使用 URL 参数
   const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
 
@@ -70,7 +70,6 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error(error);
-      
     } finally {
       setLoading(false);
     }
@@ -112,11 +111,11 @@ export default function CheckoutPage() {
             )}
           </div>
         </div>
-        <Link href="/chat" className="fixed bottom-30 right-10">
+        <div className="fixed bottom-30 right-10">
           <AQButton title="service" size="icon-lg">
             <Headset />
           </AQButton>
-        </Link>
+        </div>
         <VerifyCodeDialog
           open={open}
           onOpenChange={setOpen}

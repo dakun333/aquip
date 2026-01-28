@@ -27,12 +27,12 @@ interface IProps {
 export default function Amount({
   onChange,
   value,
-  minAmount = 100,
-  maxAmount = 50000,
+  minAmount = 1,
+  maxAmount = 15000,
   walletBalance,
 }: IProps) {
   const t = useTranslations("checkout");
-  const list = [100, 200, 500, 1000, 2000, 5000, 10000];
+  const list = [100, 200, 500, 1000, 2000, 5000];
   const hot = list[2];
   const [amount, setAmount] = useState<number>(value || list[0]);
 
@@ -81,7 +81,7 @@ export default function Amount({
             })}
           </span>
         </div>
-        {walletBalance !== undefined && (
+        {/* {walletBalance !== undefined && (
           <Link href="/wallet" className="flex items-center gap-1">
             <span className="text-xs text-gray-500">{t("wallet_balance")}</span>
             <span className="text-sm text-gray-700 font-medium">
@@ -94,7 +94,7 @@ export default function Amount({
             </span>
             <CircleAlertIcon className="w-4 h-4" />
           </Link>
-        )}
+        )} */}
       </div>
       <div className="grid grid-cols-3   gap-2 mt-4 text-lg ">
         {list.map((item) => (

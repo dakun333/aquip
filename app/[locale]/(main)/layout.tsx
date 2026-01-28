@@ -32,7 +32,7 @@ export default async function MainLayout({
       <div className="flex-1 overflow-auto w-full max-w-[480px] 2xl:max-w-[640px] mx-auto">
         {children}
       </div>
-      <HomeFooter />
+      {/* <HomeFooter /> */}
     </div>
   );
 }

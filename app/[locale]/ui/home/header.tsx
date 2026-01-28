@@ -26,10 +26,10 @@ export default function HomeHeader() {
             </AQButton>
           </Link> */}
           <LocaleSwitcher></LocaleSwitcher>
-          <Button variant="outline">
+          {/* <Button variant="outline">
             <Search className="w-5 h-5" />
           </Button>
-          <Avator />
+          <Avator /> */}
         </div>
       </div>
     </>
