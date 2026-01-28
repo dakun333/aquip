@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import HomeHeader from "./ui/home/header";
 import { Toaster } from "sonner";
 export async function generateMetadata(
-  props: Omit<LayoutProps<"/[locale]">, "children">
+  props: Omit<LayoutProps<"/[locale]">, "children">,
 ) {
   const { locale } = await props.params;
 
@@ -23,7 +23,7 @@ export async function generateMetadata(
       template: `%s | ${t("template")}`,
       default: t("default_title"),
     },
-    description: "Aquipay 测试demo.",
+    description: t("description"),
     metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
   };
 }

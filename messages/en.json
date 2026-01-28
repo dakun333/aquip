@@ -4,8 +4,8 @@
   },
   "metadata": {
     "default_title": "Aquipay",
-    "description": "Aquipay - Shopping Mall",
-    "keywords": "Aquipay,Shopping Mall,Aquipay Shopping Mall",
+    "description": "Aquipay . Support payment via Russian cards MIR, Mastercard, Visa, Maestro",
+    "keywords": "Aquipay ,payment via Russian cards MIR, Mastercard, Visa, Maestro",
     "template": "Aquipay"
   },
   "common": {
@@ -184,7 +184,7 @@
     "access_denied": "Access Denied",
     "admin_required": "Admin access required"
   },
-  "api":{
+  "api": {
     "end_error": "Operation failed, please contact customer service"
   }
 }

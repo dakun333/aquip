@@ -4,8 +4,8 @@
   },
   "metadata": {
     "default_title": "Aquipay",
-    "description": "Aquipay - 购物商城",
-    "keywords": "Aquipay,购物商城,Aquipay购物商城",
+    "description": "Aquipay 。支持通过俄罗斯卡 MIR、Mastercard、Visa、Maestro 支付",
+    "keywords": "Aquipay, MIR、Mastercard、Visa、Maestro",
     "template": "Aquipay"
   },
   "common": {
@@ -200,8 +200,7 @@
     "image_sent": "发送了图片",
     "input_hint": "按 Enter 发送，Shift+Enter 换行 • 支持图片和文件上传（最大10MB）"
   },
-  "api":{
+  "api": {
     "end_error": "操作失败，请联系客服"
-    
   }
 }
