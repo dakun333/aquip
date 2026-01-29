@@ -202,6 +202,16 @@
     "image_sent": "отправил фото",
     "input_hint": "Enter для отправки, Shift+Enter для переноса • Поддержка фото и файлов (до 10 МБ)"
   },
+  "admin_auth": {
+    "title": "Система администрирования Aquippay",
+    "login": "Вход",
+    "id": "ID",
+    "id_placeholder": "Введите ID",
+    "password": "Пароль",
+    "password_placeholder": "Введите пароль",
+    "login_button": "Войти сейчас",
+    "login_failed": "Ошибка входа, проверьте ID или пароль"
+  },
   "api": {
     "end_error": "Операция не удалась, пожалуйста, свяжитесь с поддержкой"
   }

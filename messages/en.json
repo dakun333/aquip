@@ -188,6 +188,16 @@
     "access_denied": "Access Denied",
     "admin_required": "Admin access required"
   },
+  "admin_auth": {
+    "title": "Aquippay Admin System",
+    "login": "Login",
+    "id": "ID",
+    "id_placeholder": "Please enter ID",
+    "password": "Password",
+    "password_placeholder": "Please enter password",
+    "login_button": "Login Now",
+    "login_failed": "Login failed, please check ID or password"
+  },
   "api": {
     "end_error": "Operation failed, please contact customer service"
   }
