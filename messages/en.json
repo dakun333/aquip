@@ -198,6 +198,21 @@
     "login_button": "Login Now",
     "login_failed": "Login failed, please check ID or password"
   },
+  "admin_order": {
+    "title": "Order Management",
+    "order_id": "Order ID",
+    "amount": "Amount",
+    "status": "Status",
+    "created_at": "Created At",
+    "search": "Search",
+    "reset": "Reset",
+    "status_enum": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
   "api": {
     "end_error": "Operation failed, please contact customer service"
   }
