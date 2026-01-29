@@ -32,7 +32,7 @@ export default function AmountSelect({
     amount != undefined &&
     amount >= (minAmount || AMOUNT_CONFIG.min) &&
     amount <= (maxAmount || AMOUNT_CONFIG.max);
-
+  // console.log("amountValid:", loading);
   return (
     <>
       <Amount
