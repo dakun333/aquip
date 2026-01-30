@@ -205,13 +205,14 @@
     "input_hint": "按 Enter 发送，Shift+Enter 换行 • 支持图片和文件上传（最大10MB）"
   },
   "admin_auth": {
-    "title": "aquippay后台系统",
+    "title": "Aquippay",
     "login": "登录",
     "id": "ID",
     "id_placeholder": "请输入ID",
     "password": "密码",
     "password_placeholder": "请输入密码",
     "login_button": "立即登录",
+    "login_success": "登录成功",
     "login_failed": "登录失败，请检查ID或密码"
   },
   "admin_order": {

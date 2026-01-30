@@ -189,13 +189,14 @@
     "admin_required": "Admin access required"
   },
   "admin_auth": {
-    "title": "Aquippay Admin System",
+    "title": "Aquippay",
     "login": "Login",
     "id": "ID",
     "id_placeholder": "Please enter ID",
     "password": "Password",
     "password_placeholder": "Please enter password",
     "login_button": "Login Now",
+    "login_success": "Login successful",
     "login_failed": "Login failed, please check ID or password"
   },
   "admin_order": {

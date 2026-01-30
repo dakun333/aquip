@@ -203,13 +203,14 @@
     "input_hint": "Enter для отправки, Shift+Enter для переноса • Поддержка фото и файлов (до 10 МБ)"
   },
   "admin_auth": {
-    "title": "Система администрирования Aquippay",
+    "title": "Aquippay",
     "login": "Вход",
     "id": "ID",
     "id_placeholder": "Введите ID",
     "password": "Пароль",
     "password_placeholder": "Введите пароль",
     "login_button": "Войти сейчас",
+    "login_success": "Вход выполнен успешно",
     "login_failed": "Ошибка входа, проверьте ID или пароль"
   },
   "admin_order": {
