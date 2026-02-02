@@ -1,5 +1,6 @@
 "use client";
 
+import { formatMoney } from "@/app/[locale]/utils/format";
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -47,82 +49,44 @@ const data = [
 ];
 
 export default function DashboardPage() {
+  const t = useTranslations("admin");
+  const statisitc = {
+    orderCount: 100,
+    orderAmount: 1000,
+    successCount: 100,
+    successRate: 100,
+  };
   return (
     <div className="flex flex-col gap-6">
       {/* 顶部四个卡片 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <div className="flex items-center gap-1 text-xs font-medium text-green-500 bg-green-50 px-1.5 py-0.5 rounded-full">
-              <TrendingUp className="h-3 w-3" />
-              +12.5%
-            </div>
+            <CardTitle className="text-sm font-medium">订单数</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$1,250.00</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              Trending up this month <TrendingUp className="h-3 w-3" />
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              Visitors for the last 6 months
-            </p>
+            <div className="text-2xl font-bold">
+              {statisitc.orderCount.toLocaleString()}
+            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
-            <div className="flex items-center gap-1 text-xs font-medium text-red-500 bg-red-50 px-1.5 py-0.5 rounded-full">
-              <TrendingUp className="h-3 w-3 rotate-180" />
-              -20%
-            </div>
+            <CardTitle className="text-sm font-medium">订单金额</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              Down 20% this period <TrendingUp className="h-3 w-3 rotate-180" />
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              Acquisition needs attention
-            </p>
+            <div className="text-2xl font-bold">
+              {formatMoney(statisitc.orderAmount)}
+            </div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Accounts
-            </CardTitle>
-            <div className="flex items-center gap-1 text-xs font-medium text-green-500 bg-green-50 px-1.5 py-0.5 rounded-full">
-              <TrendingUp className="h-3 w-3" />
-              +12.5%
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">45,678</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              Strong user retention <TrendingUp className="h-3 w-3" />
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              Engagement exceed targets
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
-            <div className="flex items-center gap-1 text-xs font-medium text-green-500 bg-green-50 px-1.5 py-0.5 rounded-full">
-              <TrendingUp className="h-3 w-3" />
-              +4.5%
-            </div>
+            <CardTitle className="text-sm font-medium">异常订单</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.5%</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              Steady performance increase <TrendingUp className="h-3 w-3" />
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              Meets growth projections
-            </p>
           </CardContent>
         </Card>
       </div>

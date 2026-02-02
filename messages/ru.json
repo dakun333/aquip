@@ -184,7 +184,16 @@
     "load_failed": "Ошибка загрузки",
     "no_users": "Пользователей нет",
     "access_denied": "Доступ запрещен",
-    "admin_required": "Требуются права администратора"
+    "admin_required": "Требуются права администратора",
+    "pagination": {
+      "rows_per_page": "Строк на странице",
+      "page_of": "Стр. {page} из {totalPages}",
+      "go_to_page": "Перейти",
+      "first_page": "Первая страница",
+      "prev_page": "Предыдущая",
+      "next_page": "Следующая",
+      "last_page": "Последняя страница"
+    }
   },
   "chat": {
     "title": "Чат",

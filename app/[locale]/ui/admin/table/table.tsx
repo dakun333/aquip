@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination } from "./pagination";
 
 export interface Column<T> {
   title: string;
@@ -20,11 +21,20 @@ export interface Column<T> {
   valueEnum?: Record<string | number, { text: string; status?: string }>;
 }
 
+export interface PaginationConfig {
+  total: number;
+  pageSize: number;
+  pageIndex: number;
+  onChange: (pageIndex: number, pageSize?: number) => void;
+}
+
 interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   loading?: boolean;
   rowKey?: keyof T | ((record: T) => string);
+  /** 分页配置，传入则显示分页栏；查询/重置时应将 pageIndex 置为 1 以联动 */
+  pagination?: PaginationConfig;
 }
 
 export function DataTable<T>({
@@ -32,6 +42,7 @@ export function DataTable<T>({
   data,
   loading,
   rowKey = "id" as keyof T,
+  pagination,
 }: DataTableProps<T>) {
   const getRowKey = (record: T) => {
     if (typeof rowKey === "function") return rowKey(record);
@@ -69,8 +80,8 @@ export function DataTable<T>({
                       {column.render
                         ? column.render(value, record)
                         : column.valueEnum
-                          ? column.valueEnum[value]?.text || value
-                          : value}
+                        ? column.valueEnum[value]?.text || value
+                        : value}
                     </TableCell>
                   );
                 })}
@@ -88,6 +99,16 @@ export function DataTable<T>({
           )}
         </TableBody>
       </Table>
+      {/* 分页：与表单查询/重置联动，查询或重置时由父组件将 pageIndex 置为 1 */}
+      {pagination && pagination.total > 0 && (
+        <Pagination
+          total={pagination.total}
+          pageSize={pagination.pageSize}
+          pageIndex={pagination.pageIndex}
+          onChange={pagination.onChange}
+          loading={loading}
+        />
+      )}
     </div>
   );
 }

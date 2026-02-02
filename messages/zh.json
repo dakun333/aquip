@@ -186,7 +186,16 @@
     "load_failed": "加载失败",
     "no_users": "暂无用户",
     "access_denied": "访问被拒绝",
-    "admin_required": "需要管理员权限"
+    "admin_required": "需要管理员权限",
+    "pagination": {
+      "rows_per_page": "每页条数",
+      "page_of": "第 {page} 页 / 共 {totalPages} 页",
+      "go_to_page": "跳转",
+      "first_page": "第一页",
+      "prev_page": "上一页",
+      "next_page": "下一页",
+      "last_page": "最后一页"
+    }
   },
   "chat": {
     "title": "聊天",

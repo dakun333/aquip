@@ -186,7 +186,16 @@
     "load_failed": "Load Failed",
     "no_users": "No users",
     "access_denied": "Access Denied",
-    "admin_required": "Admin access required"
+    "admin_required": "Admin access required",
+    "pagination": {
+      "rows_per_page": "Rows per page",
+      "page_of": "Page {page} of {totalPages}",
+      "go_to_page": "Go to page",
+      "first_page": "First page",
+      "prev_page": "Previous page",
+      "next_page": "Next page",
+      "last_page": "Last page"
+    }
   },
   "admin_auth": {
     "title": "Aquippay",
