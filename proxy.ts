@@ -9,26 +9,34 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isProduction = process.env.NODE_ENV === "production";
 
-  // 仅在生产环境下执行域名路由分发
+  // 先让 next-intl 处理语言逻辑，获取 response
+  const response = intlMiddleware(request);
+
   if (isProduction) {
-    // 判断是否为 admin 域名
+    // 1. 识别二级域名
     const isAdminDomain = hostname.split(".")[0] === "admin-aquip";
 
     if (isAdminDomain) {
-      // admin 域名：根路径定位到 dashboard
-      if (pathname === "/") {
-        return NextResponse.rewrite(new URL("/dashboard", request.url));
+      // 2. 【核心点】无论访问哪个路径，都在内部重写到 /admin 文件夹下
+      // 比如：/ -> /admin,  /config -> /admin/config
+      if (!pathname.startsWith("/admin")) {
+        // 获取当前请求的语言（从 URL 或 Cookie）
+        const locale = request.nextUrl.locale || "zh";
+
+        // 拼接内部真实路径：/zh/admin/xxx
+        const internalPath = `/${locale}/admin${pathname === "/" ? "" : pathname}`;
+
+        return NextResponse.rewrite(new URL(internalPath, request.url));
       }
     } else {
-      // 非 admin 域名：禁止访问 admin 群组特有的路径
-      const adminPaths = ["/dashboard", "/order"];
-      if (adminPaths.some((path) => pathname.startsWith(path))) {
+      // 3. 非 admin 域名，禁止通过路径直接访问后台
+      if (pathname.startsWith("/admin") || pathname.includes("/admin/")) {
         return NextResponse.rewrite(new URL("/404", request.url));
       }
     }
   }
 
-  return intlMiddleware(request);
+  return response;
 }
 
 export const config = {
