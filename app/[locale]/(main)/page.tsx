@@ -24,9 +24,7 @@ function CheckoutContent() {
 
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState<number | undefined>(
-    urlAmount && !isNaN(parseInt(urlAmount, 10))
-      ? parseInt(urlAmount, 10)
-      : 100,
+    urlAmount && !isNaN(parseInt(urlAmount, 10)) ? parseInt(urlAmount, 10) : 100
   );
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [step, setStep] = useState<"card" | "crypto">("card");
@@ -63,6 +61,7 @@ function CheckoutContent() {
           user_id: id,
           payment_id: urlPaymentId || id,
         });
+        console.log("response", response);
         if (response.success) {
           setOrderId(response.data.order_id);
         } else {
@@ -76,7 +75,7 @@ function CheckoutContent() {
         setLoading(false);
       }
     },
-    [amount, orderId, t, tc, urlPaymentId],
+    [amount, orderId, t, tc, urlPaymentId]
   );
   useEffect(() => {
     if (urlAmount) {

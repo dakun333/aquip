@@ -12,7 +12,7 @@ export default function middleware(request: NextRequest) {
   // 仅在生产环境下执行域名路由分发
   if (isProduction) {
     // 判断是否为 admin 域名
-    const isAdminDomain = hostname.split(".")[0] === "admin";
+    const isAdminDomain = hostname.split(".")[0] === "admin-aquip";
 
     if (isAdminDomain) {
       // admin 域名：根路径定位到 dashboard
