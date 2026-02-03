@@ -19,15 +19,15 @@ export default function middleware(request: NextRequest) {
     if (isAdminDomain) {
       // 2. 【核心点】无论访问哪个路径，都在内部重写到 /admin 文件夹下
       // 比如：/ -> /admin,  /config -> /admin/config
-      if (!pathname.startsWith("/admin")) {
-        // 获取当前请求的语言（从 URL 或 Cookie）
-        const locale = request.nextUrl.locale || "zh";
+      // if (!pathname.startsWith("/admin")) {
+      // 获取当前请求的语言（从 URL 或 Cookie）
+      const locale = request.nextUrl.locale || "zh";
 
-        // 拼接内部真实路径：/zh/admin/xxx
-        const internalPath = `/${locale}/admin${pathname === "/" ? "" : pathname}`;
+      // 拼接内部真实路径：/zh/admin/xxx
+      const internalPath = `/${locale}/admin${pathname === "/" ? "" : pathname}`;
 
-        return NextResponse.rewrite(new URL(internalPath, request.url));
-      }
+      return NextResponse.rewrite(new URL(internalPath, request.url));
+      // }
     } else {
       // 3. 非 admin 域名，禁止通过路径直接访问后台
       if (pathname.startsWith("/admin") || pathname.includes("/admin/")) {
