@@ -1,4 +1,4 @@
-export function AdminPage() {
+export default function AdminPage() {
   return (
     <main className="flex items-center justify-center h-screen">
       <div className="text-center">
