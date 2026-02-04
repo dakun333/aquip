@@ -25,3 +25,12 @@ export function clearToken() {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(TOKEN_KEY);
 }
+
+export class AppError extends Error {
+  description: string;
+  constructor(message: string, description: string = '') {
+    super(message);
+    this.description = description;
+    this.name = "AppError";
+  }
+} 

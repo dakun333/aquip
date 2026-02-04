@@ -7,13 +7,13 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 import { AQButton } from "../ui/button";
-import AmountSelect from "../ui/checkout/amount-select";
 import CryptoPayment from "../ui/checkout/crypto-payment";
 import PaymentModule from "../ui/checkout/payment-module";
 import { PayAllocate } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
-import { getUserId } from "../utils/format";
+import { formatMoney, getUserId } from "../utils/format";
 import { AMOUNT_CONFIG } from "../utils/constant";
+import { AppError } from "@/lib/utils";
 
 function CheckoutContent() {
   const t = useTranslations("api");
@@ -21,36 +21,42 @@ function CheckoutContent() {
   const searchParams = useSearchParams();
   const urlAmount = searchParams.get("amount");
   const urlPaymentId = searchParams.get("payment_id");
-
+  const amount_error_msg = `${tc("min_amount", {
+    amount: formatMoney(AMOUNT_CONFIG.min, { decimal: 0 }),
+  })} - ${tc("max_amount", {
+    amount: formatMoney(AMOUNT_CONFIG.max, { decimal: 0 }),
+  })}`;
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState<number | undefined>(
     urlAmount && !isNaN(parseInt(urlAmount, 10)) ? parseInt(urlAmount, 10) : 100
   );
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [step, setStep] = useState<"card" | "crypto">("card");
-  const [hasAutoPaid, setHasAutoPaid] = useState(false);
-
-  // 初始化检查：如果没有参数，则取消加载状态
-  useEffect(() => {
-    if (!urlPaymentId && !urlAmount) {
-      setLoading(false);
-    }
-  }, [urlPaymentId, urlAmount]);
+  const [error, setError] = useState<string | null>(null);
+  if (!urlPaymentId) {
+    throw new AppError("No payment ID");
+  }
+  if (!amount || amount < AMOUNT_CONFIG.min || amount > AMOUNT_CONFIG.max) {
+    throw new AppError(tc("amount_range"), amount_error_msg);
+  }
 
   const payHandle = useCallback(
     async (targetStep: "card" | "crypto") => {
-      if (orderId) return;
+      if (!urlPaymentId) {
+        return false;
+      }
+      if (orderId) return true;
       if (!amount || amount < AMOUNT_CONFIG.min || amount > AMOUNT_CONFIG.max) {
-        toast.error(tc("invalid_amount") || "Invalid Amount");
-        setLoading(false);
-        return;
+        throw new AppError(tc("amount_range"), amount_error_msg);
       }
 
       setStep(targetStep);
-      const id = getUserId().toString();
+      // const id = getUserId().toString();
+      const id = urlPaymentId;
 
       try {
         setLoading(true);
+        setError(null);
         // 延迟 1s 以防止请求过快
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -59,24 +65,34 @@ function CheckoutContent() {
           amount: amount,
           currency: "RUB",
           user_id: id,
-          payment_id: urlPaymentId || id,
+          payment_id: id,
         });
         console.log("response", response);
         if (response.success) {
           setOrderId(response.data.order_id);
+          return true;
         } else {
+          throw new AppError(response.error);
+          const msg = response.error || t("end_error");
           logger.error("payHandle response:", response.error);
-          toast.error(t("end_error"));
+          toast.error(msg);
+          setError(msg);
+          return false;
         }
-      } catch (error) {
-        console.error(error);
-        toast.error(t("end_error"));
+      } catch (err: any) {
+        console.error(err);
+        throw err;
+        const msg = err?.message || t("end_error");
+        toast.error(msg);
+        setError(msg);
+        return false;
       } finally {
         setLoading(false);
       }
     },
     [amount, orderId, t, tc, urlPaymentId]
   );
+
   useEffect(() => {
     if (urlAmount) {
       const parsed = parseInt(urlAmount, 10);
@@ -87,15 +103,14 @@ function CheckoutContent() {
   }, [urlAmount]);
 
   useEffect(() => {
-    // 自动支付逻辑：如果有 payment_id 且还没付过，则触发
-    if (urlPaymentId && amount && !orderId && !hasAutoPaid) {
-      setHasAutoPaid(true);
-      payHandle("card");
-    } else if (!urlPaymentId || !amount) {
-      // 如果不满足自动支付条件（缺少必要参数），确保 loading 为 false
-      setLoading(false);
-    }
-  }, [urlPaymentId, amount, orderId, hasAutoPaid, payHandle]);
+    // 进页面直接调用支付逻辑
+    const initPay = async () => {
+      if (!orderId && !error && amount && urlPaymentId) {
+        await payHandle("card");
+      }
+    };
+    initPay();
+  }, [payHandle, orderId, error, amount, urlPaymentId]);
 
   return (
     <>
@@ -130,13 +145,11 @@ function CheckoutContent() {
                 />
               )
             ) : (
-              <AmountSelect
-                amount={amount}
-                onAmountChange={setAmount}
-                onCardPay={() => payHandle("card")}
-                onCryptoPay={() => payHandle("crypto")}
-                loading={loading}
-              />
+              // 正在获取 orderId 时显示加载状态
+              <div className="flex flex-col items-center gap-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <p className="text-sm text-gray-500">Initializing payment...</p>
+              </div>
             )}
           </div>
         </div>

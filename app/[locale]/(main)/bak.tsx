@@ -1,130 +1,140 @@
 "use client";
 
 import { Headset } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, Suspense, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 import { AQButton } from "../ui/button";
 import AmountSelect from "../ui/checkout/amount-select";
-import CardPayment from "../ui/checkout/card-payment";
 import CryptoPayment from "../ui/checkout/crypto-payment";
-import VerifyCodeDialog from "../ui/checkout/verify-code";
-import PaymentOverlay from "../ui/checkout/payment-overlay";
-import Link from "next/link";
+import PaymentModule from "../ui/checkout/payment-module";
 import { PayAllocate } from "@/lib/fetch";
 import { logger } from "@/lib/logger";
 import { getUserId } from "../utils/format";
 import { AMOUNT_CONFIG } from "../utils/constant";
 
-export default function CheckoutPage() {
-  const router = useRouter();
+function CheckoutContent() {
   const t = useTranslations("api");
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState<number | undefined>(undefined);
-  const [paymentId, setPaymentId] = useState<string | undefined>(undefined);
-  const [orderId, setOrderId] = useState<string | undefined>(undefined);
-  const [payRolling, setPayRolling] = useState<boolean>(false);
-
-  const [step, setStep] = useState<"amount" | "card" | "crypto">("amount");
-
+  const tc = useTranslations("checkout");
   const searchParams = useSearchParams();
+  const urlAmount = searchParams.get("amount");
+  const urlPaymentId = searchParams.get("payment_id");
+
+  const [loading, setLoading] = useState(true);
+  const [amount, setAmount] = useState<number | undefined>(
+    urlAmount && !isNaN(parseInt(urlAmount, 10)) ? parseInt(urlAmount, 10) : 100
+  );
+  const [orderId, setOrderId] = useState<string | undefined>(undefined);
+  const [step, setStep] = useState<"card" | "crypto">("card");
+  const [hasAutoPaid, setHasAutoPaid] = useState(false);
+
+  // 初始化检查：如果没有参数，则取消加载状态
+  useEffect(() => {
+    if (!urlPaymentId && !urlAmount) {
+      setLoading(false);
+    }
+  }, [urlPaymentId, urlAmount]);
+
+  const payHandle = useCallback(
+    async (targetStep: "card" | "crypto") => {
+      if (orderId) return;
+      if (!amount || amount < AMOUNT_CONFIG.min || amount > AMOUNT_CONFIG.max) {
+        toast.error(tc("invalid_amount") || "Invalid Amount");
+        setLoading(false);
+        return;
+      }
+
+      setStep(targetStep);
+      const id = getUserId().toString();
+
+      try {
+        setLoading(true);
+        // 延迟 1s 以防止请求过快
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const response = await PayAllocate({
+          provider: "YooMoney",
+          amount: amount,
+          currency: "RUB",
+          user_id: id,
+          payment_id: urlPaymentId || id,
+        });
+        console.log("response", response);
+        if (response.success) {
+          setOrderId(response.data.order_id);
+        } else {
+          logger.error("payHandle response:", response.error);
+          toast.error(t("end_error"));
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(t("end_error"));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [amount, orderId, t, tc, urlPaymentId]
+  );
+  useEffect(() => {
+    if (urlAmount) {
+      const parsed = parseInt(urlAmount, 10);
+      if (!isNaN(parsed)) {
+        setAmount(parsed);
+      }
+    }
+  }, [urlAmount]);
 
   useEffect(() => {
-    const amountParam = searchParams.get("amount");
-    if (amountParam && step === "amount" && !orderId && amount === undefined) {
-      const val = parseInt(amountParam);
-      if (val >= AMOUNT_CONFIG.min && val <= AMOUNT_CONFIG.max) {
-        logger.info("amountParam:", val);
-        setAmount(val);
-        payHandle(val);
-      }
-    }
-  }, [searchParams, step, orderId, amount]);
-
-  const submitHandle = () => {
-    setLoading(true);
-    setOpen(true);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  };
-
-  const verifyHandle = () => {
-    logger.info("verifyHandle");
-    setPayRolling(true);
-    // router.push(`/`);
-  };
-  const payHandle = async (val?: number) => {
-    const targetAmount = val || amount;
-    if (
-      !targetAmount ||
-      targetAmount < AMOUNT_CONFIG.min ||
-      targetAmount > AMOUNT_CONFIG.max
-    ) {
-      logger.error("amount is invalid");
-      return;
-    }
-    const id = getUserId().toString();
-    try {
-      setLoading(true);
-      const response = await PayAllocate({
-        provider: "YooMoney",
-        amount: targetAmount,
-        currency: "RUB",
-        user_id: id,
-        payment_id: id,
-      });
-      if (response.success) {
-        logger.info("payHandle response success:", response);
-        setPaymentId(id);
-        setOrderId(response.data.order_id);
-        setStep("card");
-      } else {
-        logger.error("payHandle response:", response.error);
-        toast.error(t("end_error"));
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
+    // 自动支付逻辑：如果有 payment_id 且还没付过，则触发
+    if (urlPaymentId && amount && !orderId && !hasAutoPaid) {
+      setHasAutoPaid(true);
+      payHandle("card");
+    } else if (!urlPaymentId || !amount) {
+      // 如果不满足自动支付条件（缺少必要参数），确保 loading 为 false
       setLoading(false);
     }
-  };
+  }, [urlPaymentId, amount, orderId, hasAutoPaid, payHandle]);
 
   return (
     <>
       <div className="relative flex flex-col h-full mx-2">
         <div className="flex-1 overflow-y-auto ">
-          <div className="flex flex-col justify-center items-center p-2 ">
-            {step === "amount" || !orderId ? (
+          <div className="flex flex-col justify-center items-center p-2 min-h-[400px]">
+            {orderId ? (
+              step === "card" ? (
+                <PaymentModule
+                  amount={amount}
+                  orderId={orderId}
+                  onModifyAmount={() => {
+                    setOrderId(undefined);
+                  }}
+                  onSuccess={() => {
+                    setOrderId(undefined);
+                  }}
+                  onError={() => {
+                    setOrderId(undefined);
+                  }}
+                />
+              ) : (
+                <CryptoPayment
+                  amount={amount}
+                  onModifyAmount={() => {
+                    setOrderId(undefined);
+                  }}
+                  onSubmit={() => {
+                    toast.info("Crypto payment submitted");
+                  }}
+                  loading={loading}
+                />
+              )
+            ) : (
               <AmountSelect
                 amount={amount}
                 onAmountChange={setAmount}
-                onCardPay={payHandle}
-                onCryptoPay={() => setStep("crypto")}
-                loading={loading}
-              />
-            ) : step === "card" ? (
-              <CardPayment
-                amount={amount}
-                orderId={orderId}
-                onModifyAmount={() => {
-                  setStep("amount");
-                  setOrderId(undefined);
-                }}
-                onSubmit={submitHandle}
-              />
-            ) : (
-              <CryptoPayment
-                amount={amount}
-                onModifyAmount={() => {
-                  setStep("amount");
-                  setOrderId(undefined);
-                }}
-                onSubmit={submitHandle}
+                onCardPay={() => payHandle("card")}
+                onCryptoPay={() => payHandle("crypto")}
                 loading={loading}
               />
             )}
@@ -135,32 +145,15 @@ export default function CheckoutPage() {
             <Headset />
           </AQButton>
         </div>
-        <VerifyCodeDialog
-          open={open}
-          onOpenChange={setOpen}
-          phone="+1 234 **** 89"
-          orderId={orderId}
-          onSubmit={verifyHandle}
-        />
-        <PaymentOverlay
-          open={payRolling}
-          orderId={orderId}
-          onComplete={() => {
-            setPayRolling(false);
-            setStep("amount");
-            setOrderId(undefined);
-            // 支付完成后的处理，显示成功提示并跳转
-            // toast.success(t("completed") || "支付成功");
-          }}
-          onError={() => {
-            setPayRolling(false);
-            setStep("amount");
-            setOrderId(undefined);
-            // 显示失败提示
-            // toast.error(t("failed") || "支付失败，请重试");
-          }}
-        />
       </div>
     </>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense>
+      <CheckoutContent />
+    </Suspense>
   );
 }
