@@ -60,7 +60,7 @@ export async function PayAllocate(params: {
   currency: string;
   user_id: string;
   payment_id: string;
-}, source: string = "72f1c532-01a0-11f1-a24d-829bd51290ad") {
+}, source: string = 'test') {
   try {
     // 将参数转换为 URL 编码的表单数据格式
     const formData = new URLSearchParams();

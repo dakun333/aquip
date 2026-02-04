@@ -21,6 +21,11 @@ function CheckoutContent() {
   const searchParams = useSearchParams();
   const urlAmount = searchParams.get("amount");
   const urlPaymentId = searchParams.get("payment_id");
+  const urlApiKey = searchParams.get("api_key");
+  if (!urlApiKey) {
+    throw new AppError(tc("no_api_key"), tc("check_order_info"));
+  }
+  const apiKey = urlApiKey;
   const amount_error_msg = `${tc("min_amount", {
     amount: formatMoney(AMOUNT_CONFIG.min, { decimal: 0 }),
   })} - ${tc("max_amount", {
@@ -42,9 +47,6 @@ function CheckoutContent() {
 
   const payHandle = useCallback(
     async (targetStep: "card" | "crypto") => {
-      if (!urlPaymentId) {
-        return false;
-      }
       if (orderId) return true;
       if (!amount || amount < AMOUNT_CONFIG.min || amount > AMOUNT_CONFIG.max) {
         throw new AppError(tc("amount_range"), amount_error_msg);
@@ -60,13 +62,16 @@ function CheckoutContent() {
         // 延迟 1s 以防止请求过快
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const response = await PayAllocate({
-          provider: "YooMoney",
-          amount: amount,
-          currency: "RUB",
-          user_id: id,
-          payment_id: id,
-        });
+        const response = await PayAllocate(
+          {
+            provider: "YooMoney",
+            amount: amount,
+            currency: "RUB",
+            user_id: id,
+            payment_id: id,
+          },
+          apiKey
+        );
         console.log("response", response);
         if (response.success) {
           setOrderId(response.data.order_id);
@@ -146,9 +151,11 @@ function CheckoutContent() {
               )
             ) : (
               // 正在获取 orderId 时显示加载状态
-              <div className="flex flex-col items-center gap-2">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                <p className="text-sm text-gray-500">Initializing payment...</p>
+              <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-24 w-24 border-b-2 border-primary"></div>
+                <p className="text-lg text-gray-500 font-medium">
+                  {tc("initializing_payment")}
+                </p>
               </div>
             )}
           </div>

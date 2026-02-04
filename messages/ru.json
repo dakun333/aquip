@@ -141,6 +141,11 @@
     "wallet_balance": "Баланс кошелька",
     "balance": "{amount}",
     "loading": "Загрузка...",
+    "initializing_payment": "Инициализация платежа...",
+    "retry": "Повторить",
+    "back_home": "На главную",
+    "no_api_key": "Нет API ключа",
+    "check_order_info": "Пожалуйста, проверьте информацию о вашем заказе",
     "invalid_amount": "Неверная сумма",
     "payment_status": {
       "processing": "Платеж обрабатывается, пожалуйста, подождите 3-5 минут...",
