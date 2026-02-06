@@ -180,6 +180,7 @@
   },
   "admin": {
     "title": "Панель администратора",
+    "description": "Aquipay Admin Dashboard",
     "total_users": "Всего пользователей",
     "total_sessions": "Всего сессий",
     "admin_users": "Администраторы",

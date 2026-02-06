@@ -182,6 +182,7 @@
   },
   "admin": {
     "title": "管理后台",
+    "description": "Aquipay后台管理系统",
     "total_users": "总用户数",
     "total_sessions": "总会话数",
     "admin_users": "管理员数",

@@ -59,7 +59,7 @@ export function LoginForm({
             </div>
           </div>
           <CardTitle className="text-xl">{t("title")}</CardTitle>
-          <CardDescription>{t("login")}</CardDescription>
+          {/* <CardDescription>{t("login")}</CardDescription> */}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>

@@ -182,6 +182,7 @@
   },
   "admin": {
     "title": "Admin Dashboard",
+    "description": "Aquipay Admin Dashboard",
     "total_users": "Total Users",
     "total_sessions": "Total Sessions",
     "admin_users": "Admin Users",
