@@ -5,6 +5,9 @@ import {
   FormTable,
   FormTableColumn,
 } from "@/app/[locale]/ui/admin/table/formTable";
+import { Copy } from "lucide-react";
+import { AQButton } from "@/app/[locale]/ui/button";
+import { CopyButton } from "@/app/[locale]/ui/admin/copy";
 
 interface OrderItem {
   id: string;
@@ -22,6 +25,12 @@ export default function OrderPage() {
       title: t("order_id"),
       dataIndex: "orderId",
       key: "orderId",
+      render: (value: string) => (
+        <div className="flex items-center gap-2">
+          {value}
+          <CopyButton value={value} />
+        </div>
+      ),
     },
     {
       title: t("amount"),

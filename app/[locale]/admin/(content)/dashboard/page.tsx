@@ -55,11 +55,32 @@ export default function DashboardPage() {
     orderAmount: 1000,
     successCount: 100,
     successRate: 100,
+    totalAmount: 10000,
   };
   return (
     <div className="flex flex-col gap-6">
       {/* 顶部四个卡片 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">金额</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex item-center justify-between text-2xl font-bold">
+              {formatMoney(statisitc.orderAmount)}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">总金额</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex item-center justify-between text-2xl font-bold">
+              {formatMoney(statisitc.totalAmount)}
+            </div>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">订单数</CardTitle>
@@ -70,17 +91,6 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">订单金额</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatMoney(statisitc.orderAmount)}
-            </div>
-          </CardContent>
-        </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">异常订单</CardTitle>
