@@ -1,3 +1,4 @@
+# 全量同步脚本 - 自动将代码推送到 GitHub
 stages:
   - sync
 
@@ -6,9 +7,17 @@ sync_to_github:
   image: alpine:latest
   before_script:
     - apk add git
+    # 配置基础 Git 用户信息（防止报错）
+    - git config --global user.email "sync@gitlab.com"
+    - git config --global user.name "GitLab Sync Bot"
   script:
-    # 这里的 URL 格式会自动使用你设置的变量进行认证
-    - git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_USER}/你的项目名.git
-    - git push github HEAD:main --force
-  only:
-    - main
+    # 1. 构造带 Token 的远程地址
+    - GITHUB_REPO_URL="https://dakun333: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@github.com/dakun333/aquip.git"
+    
+    # 2. 检查并清理可能存在的旧远程分支
+    - git remote remove github || true
+    - git remote add github ${GITHUB_REPO_URL}
+    
+    # 3. 推送当前分支到 GitHub (强制覆盖确保同步)
+    # CI_COMMIT_REF_NAME 是 GitLab 内置变量，代表当前提交的分支名
+    - git push github HEAD:${CI_COMMIT_REF_NAME} --force
