@@ -1,0 +1,14 @@
+stages:
+  - sync
+
+sync_to_github:
+  stage: sync
+  image: alpine:latest
+  before_script:
+    - apk add git
+  script:
+    # 这里的 URL 格式会自动使用你设置的变量进行认证
+    - git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_USER}/你的项目名.git
+    - git push github HEAD:main --force
+  only:
+    - main
