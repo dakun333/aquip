@@ -1,0 +1,251 @@
+{
+  "manifest": {
+    "name": "Aquipay"
+  },
+  "metadata": {
+    "default_title": "Aquipay",
+    "description": "Aquipay 。支持通过俄罗斯卡 MIR、Mastercard、Visa、Maestro 支付",
+    "keywords": "Aquipay, MIR、Mastercard、Visa、Maestro",
+    "template": "Aquipay"
+  },
+  "common": {
+    "select_all": "全选",
+    "cancel_select_all": "取消全选"
+  },
+  "home": {
+    "tabs": {
+      "home": "首页",
+      "msg": "消息",
+      "cart": "购物车",
+      "my": "我的",
+      "pay": "支付"
+    }
+  },
+  "msg": {
+    "title": "消息",
+    "header": "消息{num, plural, =0 {} other { ({num})}}"
+  },
+  "cart": {
+    "title": "购物车",
+    "total": "总计",
+    "discount": "共减",
+    "pay_voucher": "领券结算({num})"
+  },
+  "my": {
+    "title": "个人中心",
+    "id": "ID",
+    "name": "姓名",
+    "email": "邮箱",
+    "logout": "退出登录",
+    "register": "注册",
+    "login": "登录",
+    "all_users": "所有用户",
+    "loading": "加载中...",
+    "load_failed": "加载失败",
+    "no_users": "暂无用户"
+  },
+  "wallet": {
+    "title": "钱包",
+    "balance": "余额",
+    "income": "收入",
+    "expense": "支出",
+    "total_income": "总收入",
+    "total_expense": "总支出",
+    "records": "交易记录",
+    "no_records": "暂无交易记录",
+    "all": "全部",
+    "recharge": "充值",
+    "shopping": "购物",
+    "order": "订单",
+    "service": "服务",
+    "refund": "退款"
+  },
+  "sign": {
+    "sign_in": {
+      "title": "登录",
+      "description": "请输入您的邮箱登录账户",
+      "email": "邮箱",
+      "email_placeholder": "m@example.com",
+      "password": "密码",
+      "password_placeholder": "password",
+      "forgot_password": "忘记密码？",
+      "remember_me": "记住我",
+      "login_button": "登录",
+      "better_auth_login": "Better Auth 登录",
+      "login_failed": "登录失败"
+    },
+    "sign_up": {
+      "title": "注册",
+      "description": "请输入您的信息创建账户",
+      "first_name": "名",
+      "first_name_placeholder": "Max",
+      "last_name": "姓",
+      "last_name_placeholder": "Robinson",
+      "email": "邮箱",
+      "email_placeholder": "m@example.com",
+      "password": "密码",
+      "password_placeholder": "密码",
+      "confirm_password": "确认密码",
+      "confirm_password_placeholder": "确认密码",
+      "profile_image": "头像（可选）",
+      "profile_preview": "头像预览",
+      "sign_up_button": "注册",
+      "better_auth_sign_up": "Better Auth 注册",
+      "create_account": "创建账户",
+      "fill_required": "请填写所有必填项",
+      "password_mismatch": "密码不匹配",
+      "register_failed": "注册失败",
+      "role": "角色",
+      "role_user": "普通用户",
+      "role_editor": "编辑者",
+      "role_admin": "管理员"
+    }
+  },
+  "checkout": {
+    "enter_amount": "请输入支付金额：",
+    "submit_amount": "提交 {amount}",
+    "crypto_pay": "加密货币支付 {amount}",
+    "card_pay": "银行卡支付 {amount}",
+    "total": "总计",
+    "pay_amount": "支付 {amount}",
+    "modify_amount": "修改金额",
+    "secure_payment": "加密安全支付",
+    "select_card": "选择银行卡",
+    "select_card_title": "选择银行卡",
+    "verify_title": "验证码",
+    "verify_desc": "请输入发送到您手机的验证码",
+    "verify_code_placeholder": "请输入验证码",
+    "resend_prefix": "重新发送验证码倒计时",
+    "resend_code": "重新发送",
+    "verify_button": "验证",
+    "change_phone": "更换手机号？",
+    "wallet_address": "钱包地址",
+    "copy_address": "复制地址",
+    "address_copied": "地址已复制",
+    "copy_failed": "复制失败，请重试",
+    "supported_token": "支持的币种",
+    "supported_chain": "支持的网络",
+    "min_deposit": "最低 {amount}",
+    "deposit_address": "您的充值地址",
+    "terms_apply": "适用条款",
+    "price_impact": "价格影响",
+    "max_slippage": "最大滑点",
+    "processing_time": "处理时间",
+    "have_questions": "有疑问？",
+    "get_help": "获取帮助",
+    "auto": "自动",
+    "less_than_min": "< {min} 分钟",
+    "amount_range": "支付限制",
+    "min_amount": "最低 {amount}",
+    "max_amount": "最高 {amount}",
+    "wallet_balance": "钱包余额",
+    "balance": "{amount}",
+    "loading": "处理中...",
+    "initializing_payment": "正在初始化支付...",
+    "retry": "重试",
+    "back_home": "返回首页",
+    "no_api_key": "无 API 密钥",
+    "check_order_info": "请检查您的订单信息",
+    "invalid_amount": "无效金额",
+    "order_paid": "订单已支付",
+    "order_finished": "订单已结束",
+    "payment_status": {
+      "processing": "支付处理中, 请等待3-5分钟...",
+      "verifying": "正在验证信息...",
+      "confirming": "正在确认交易...",
+      "completing": "正在完成支付...",
+      "error": "支付失败",
+      "completed": "支付完成",
+      "success": "支付成功",
+      "failed": "支付失败，请重试",
+      "close": "关闭",
+      "confirm": "确认"
+    },
+    "form": {
+      "cardholder_name": "持卡人姓名",
+      "cardholder_name_placeholder": "卡片上的姓名",
+      "card_number": "卡号",
+      "card_number_placeholder": "**** **** **** ****",
+      "expiry_date": "有效期",
+      "expiry_date_placeholder": "MM/YY",
+      "cvv": "CVV / CVC",
+      "cvv_placeholder_amex": "****",
+      "cvv_placeholder": "***",
+      "errors": {
+        "card_number_required": "卡号必须为16位数字",
+        "cardholder_name_required": "请输入持卡人姓名",
+        "invalid_date": "日期格式无效",
+        "invalid_cvv": "CVV无效",
+        "invalid_cvv_length": "CVV长度无效"
+      }
+    }
+  },
+  "admin": {
+    "title": "管理后台",
+    "description": "Aquipay后台管理系统",
+    "total_users": "总用户数",
+    "total_sessions": "总会话数",
+    "admin_users": "管理员数",
+    "user_list": "用户列表",
+    "role": "角色",
+    "loading": "加载中...",
+    "load_failed": "加载失败",
+    "no_users": "暂无用户",
+    "access_denied": "访问被拒绝",
+    "admin_required": "需要管理员权限",
+    "pagination": {
+      "rows_per_page": "每页条数",
+      "page_of": "第 {page} 页 / 共 {totalPages} 页",
+      "go_to_page": "跳转",
+      "first_page": "第一页",
+      "prev_page": "上一页",
+      "next_page": "下一页",
+      "last_page": "最后一页"
+    }
+  },
+  "chat": {
+    "title": "聊天",
+    "online": "在线",
+    "offline": "离线",
+    "typing": "正在输入...",
+    "send": "发送",
+    "input_placeholder": "输入消息... (Shift+Enter 换行)",
+    "upload_image": "上传图片",
+    "upload_file": "上传文件",
+    "file_size_limit": "文件大小不能超过 10MB",
+    "no_messages": "暂无消息，开始聊天吧",
+    "send_failed": "发送失败，请重试",
+    "file_sent": "发送了文件",
+    "image_sent": "发送了图片",
+    "input_hint": "按 Enter 发送，Shift+Enter 换行 • 支持图片和文件上传（最大10MB）"
+  },
+  "admin_auth": {
+    "title": "Aquippay",
+    "login": "登录",
+    "id": "ID",
+    "id_placeholder": "请输入ID",
+    "password": "密码",
+    "password_placeholder": "请输入密码",
+    "login_button": "立即登录",
+    "login_success": "登录成功",
+    "login_failed": "登录失败，请检查ID或密码"
+  },
+  "admin_order": {
+    "title": "订单管理",
+    "order_id": "订单ID",
+    "amount": "金额",
+    "status": "状态",
+    "created_at": "创建时间",
+    "search": "查询",
+    "reset": "重置",
+    "status_enum": {
+      "pending": "待支付",
+      "processing": "处理中",
+      "completed": "已完成",
+      "failed": "已失败"
+    }
+  },
+  "api": {
+    "end_error": "操作失败，请联系客服"
+  }
+}

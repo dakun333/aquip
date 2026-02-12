@@ -1,0 +1,14 @@
+{
+  // 禁用 koroFileHeader 扩展的自动添加文件头功能
+  "fileheader.configObj": {
+    "autoAdd": false
+  },
+  // 禁用保存时自动添加文件头
+  "fileheader.customMade": {},
+  // 禁用其他文件头扩展
+  "fileheader.autoAdd": false,
+  // 禁用保存时自动更新文件头
+  "fileheader.autoAddOnBlur": false,
+  // 禁用保存时自动更新最后编辑时间
+  "fileheader.autoAddOnSave": false
+}

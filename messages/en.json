@@ -1,0 +1,235 @@
+{
+  "manifest": {
+    "name": "Aquipay"
+  },
+  "metadata": {
+    "default_title": "Aquipay",
+    "description": "Aquipay . Support payment via Russian cards MIR, Mastercard, Visa, Maestro",
+    "keywords": "Aquipay ,payment via Russian cards MIR, Mastercard, Visa, Maestro",
+    "template": "Aquipay"
+  },
+  "common": {
+    "select_all": "Select All",
+    "cancel_select_all": "Deselect All"
+  },
+  "home": {
+    "tabs": {
+      "home": "Home",
+      "msg": "Messages",
+      "cart": "Cart",
+      "my": "My",
+      "pay": "Pay"
+    }
+  },
+  "msg": {
+    "title": "Messages",
+    "header": "Messages{num, plural, =0 {} other { ({num})}}"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "total": "Total",
+    "discount": "Discount",
+    "pay_voucher": "Checkout with Voucher ({num})"
+  },
+  "my": {
+    "title": "User Center",
+    "id": "ID",
+    "name": "Name",
+    "email": "Email",
+    "logout": "Logout",
+    "register": "Register",
+    "login": "Login",
+    "all_users": "All Users",
+    "loading": "Loading...",
+    "load_failed": "Load Failed",
+    "no_users": "No users"
+  },
+  "wallet": {
+    "title": "Wallet",
+    "balance": "Balance",
+    "income": "Income",
+    "expense": "Expense",
+    "total_income": "Total Income",
+    "total_expense": "Total Expense",
+    "records": "Transaction Records",
+    "no_records": "No transaction records",
+    "all": "All",
+    "recharge": "Recharge",
+    "shopping": "Shopping",
+    "order": "Order",
+    "service": "Service",
+    "refund": "Refund"
+  },
+  "sign": {
+    "sign_in": {
+      "title": "Sign In",
+      "description": "Enter your email below to login to your account",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Password",
+      "password_placeholder": "password",
+      "forgot_password": "Forgot your password?",
+      "remember_me": "Remember me",
+      "login_button": "Login",
+      "better_auth_login": "Better Auth Login",
+      "login_failed": "Login failed"
+    },
+    "sign_up": {
+      "title": "Sign Up",
+      "description": "Enter your information to create an account",
+      "first_name": "First name",
+      "first_name_placeholder": "Max",
+      "last_name": "Last name",
+      "last_name_placeholder": "Robinson",
+      "email": "Email",
+      "email_placeholder": "m@example.com",
+      "password": "Password",
+      "password_placeholder": "Password",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm Password",
+      "profile_image": "Profile Image (optional)",
+      "profile_preview": "Profile preview",
+      "sign_up_button": "Sign Up",
+      "better_auth_sign_up": "Better Auth Sign Up",
+      "create_account": "Create an account",
+      "fill_required": "Please fill all required fields",
+      "password_mismatch": "Passwords do not match",
+      "register_failed": "Register failed",
+      "role": "Role",
+      "role_user": "User",
+      "role_editor": "Editor",
+      "role_admin": "Admin"
+    }
+  },
+  "checkout": {
+    "enter_amount": "Enter payment amount:",
+    "submit_amount": "Submit {amount}",
+    "crypto_pay": "Crypto Payment {amount}",
+    "card_pay": "Card Payment {amount}",
+    "total": "Total",
+    "pay_amount": "Pay {amount}",
+    "modify_amount": "Modify Amount",
+    "secure_payment": "Encrypted & Secure Payment",
+    "select_card": "Select Card",
+    "select_card_title": "Select Card",
+    "verify_title": "Verify Code",
+    "verify_desc": "Please enter the verification code sent to your phone",
+    "verify_code_placeholder": "Enter verification code",
+    "resend_prefix": "Resend code in",
+    "resend_code": "Resend",
+    "verify_button": "Verify",
+    "change_phone": "Change phone number?",
+    "wallet_address": "Wallet Address",
+    "copy_address": "Copy Address",
+    "address_copied": "Address Copied",
+    "copy_failed": "Copy failed, please try again",
+    "supported_token": "Supported token",
+    "supported_chain": "Supported chain",
+    "min_deposit": "Min {amount}",
+    "deposit_address": "Your deposit address",
+    "terms_apply": "Terms apply",
+    "price_impact": "Price impact",
+    "max_slippage": "Max slippage",
+    "processing_time": "Processing time",
+    "have_questions": "Have questions?",
+    "get_help": "Get help",
+    "auto": "Auto",
+    "less_than_min": "< {min} min",
+    "amount_range": "Payment Limit",
+    "min_amount": "Min {amount}",
+    "max_amount": "Max {amount}",
+    "wallet_balance": "Wallet Balance",
+    "balance": "{amount}",
+    "loading": "Processing...",
+    "initializing_payment": "Initializing payment...",
+    "retry": "Retry",
+    "back_home": "Back to Home",
+    "no_api_key": "No API key",
+    "check_order_info": "Please check your order info",
+    "invalid_amount": "Invalid Amount",
+    "order_paid": "Order Paid",
+    "order_finished": "Order Finished",
+    "payment_status": {
+      "processing": "Payment processing, please wait 3-5 minutes...",
+      "verifying": "Verifying information...",
+      "confirming": "Confirming transaction...",
+      "completing": "Completing payment...",
+      "error": "Payment failed",
+      "completed": "Payment completed",
+      "success": "Payment successful",
+      "failed": "Payment failed, please try again",
+      "close": "Close",
+      "confirm": "Confirm"
+    },
+    "form": {
+      "cardholder_name": "Cardholder Name",
+      "cardholder_name_placeholder": "Name on card",
+      "card_number": "Card Number",
+      "card_number_placeholder": "**** **** **** ****",
+      "expiry_date": "Expiry Date",
+      "expiry_date_placeholder": "MM/YY",
+      "cvv": "CVV / CVC",
+      "cvv_placeholder_amex": "****",
+      "cvv_placeholder": "***",
+      "errors": {
+        "card_number_required": "Card number must be 16 digits",
+        "cardholder_name_required": "Cardholder name required",
+        "invalid_date": "Invalid date",
+        "invalid_cvv": "Invalid CVV",
+        "invalid_cvv_length": "Invalid CVV length"
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "description": "Aquipay Admin Dashboard",
+    "total_users": "Total Users",
+    "total_sessions": "Total Sessions",
+    "admin_users": "Admin Users",
+    "user_list": "User List",
+    "role": "Role",
+    "loading": "Loading...",
+    "load_failed": "Load Failed",
+    "no_users": "No users",
+    "access_denied": "Access Denied",
+    "admin_required": "Admin access required",
+    "pagination": {
+      "rows_per_page": "Rows per page",
+      "page_of": "Page {page} of {totalPages}",
+      "go_to_page": "Go to page",
+      "first_page": "First page",
+      "prev_page": "Previous page",
+      "next_page": "Next page",
+      "last_page": "Last page"
+    }
+  },
+  "admin_auth": {
+    "title": "Aquippay",
+    "login": "Login",
+    "id": "ID",
+    "id_placeholder": "Please enter ID",
+    "password": "Password",
+    "password_placeholder": "Please enter password",
+    "login_button": "Login Now",
+    "login_success": "Login successful",
+    "login_failed": "Login failed, please check ID or password"
+  },
+  "admin_order": {
+    "title": "Order Management",
+    "order_id": "Order ID",
+    "amount": "Amount",
+    "status": "Status",
+    "created_at": "Created At",
+    "search": "Search",
+    "reset": "Reset",
+    "status_enum": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
+  "api": {
+    "end_error": "Operation failed, please contact customer service"
+  }
+}

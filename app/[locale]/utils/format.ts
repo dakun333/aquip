@@ -1,0 +1,139 @@
+import { uuidv4 } from "zod";
+import { CurrencyUnit, UNIT, CurrencyValue } from "./constant";
+import { v4 as uuid } from "uuid";
+interface Config {
+  unit?: CurrencyValue; // 可以是 CurrencyUnit 对象或 value 值（从 UNIT 列表推断）
+  position?: "left" | "right";
+  decimal?: number;
+}
+
+// 默认使用 UNIT 列表中的 rmb
+const defaultCurrency = UNIT[0];
+const defaultConfig = {
+  unit: defaultCurrency,
+  decimal: 2,
+  position: "left" as const,
+};
+
+/**
+ * 金额格式化
+ * @param money 金额数值或字符串
+ * @returns 格式化后的金额字符串
+ */
+export function formatMoney(
+  money: number | string | undefined,
+  config?: Config
+): string {
+  if (money === undefined) {
+    return "";
+  }
+  // 仅进行一次对象合并。
+  // 合并后的 mergedConfig 保证所有属性都来自 defaultConfig 或 config。
+  const mergedConfig = { ...defaultConfig, ...config };
+
+  // 直接从合并后的对象中解构，无需再设置默认值
+  const { unit: unitConfig, decimal, position } = mergedConfig;
+
+  // 从 UNIT 列表中找到对应的币种
+  let currency: CurrencyUnit;
+  if (typeof unitConfig === "string") {
+    // 如果是字符串，从列表中查找
+    currency = UNIT.find((u) => u.value === unitConfig) || defaultCurrency;
+  } else if (unitConfig && typeof unitConfig === "object") {
+    // 如果已经是 CurrencyUnit 对象，直接使用
+    currency = unitConfig;
+  } else {
+    // 否则使用默认币种
+    currency = defaultCurrency;
+  }
+
+  // 使用币种的 sign 属性作为显示符号
+  const unit = currency.sign;
+
+  // TypeScript 提示：这里的 decimal 已经是 number 类型 (2) 或用户传入的值
+
+  // 确保 decimal 是非负整数
+  const finalDecimal = Math.max(
+    0,
+    Math.floor(decimal ?? defaultConfig.decimal)
+  );
+
+  // 处理 undefined 或 null 的情况
+  if (money === null || money === undefined) {
+    return `${unit} 0.${"0".repeat(finalDecimal)}`;
+  }
+
+  // ... (其余代码保持不变) ...
+
+  // 类型转换和清理
+  let numValue: number;
+  if (typeof money === "string") {
+    // 去除空格并尝试转换
+    const trimmed = money.trim();
+    if (trimmed === "") {
+      return `${unit} 0.${"0".repeat(finalDecimal)}`;
+    }
+    // 注意：parseFloat 会忽略非数字字符，这可能不是期望的行为，但保留您的逻辑。
+    numValue = parseFloat(trimmed);
+  } else {
+    numValue = money;
+  }
+
+  // 处理 NaN 和 Infinity
+  if (!isFinite(numValue)) {
+    return `${unit} 0.${"0".repeat(finalDecimal)}`;
+  }
+
+  // 格式化为指定小数位数的字符串
+  // 注意：这里使用 finalDecimal
+  const numberString = numValue.toFixed(finalDecimal);
+
+  // 添加千分位分隔符
+  const parts = numberString.split(".");
+  const integerPart = parts[0];
+  const decimalPart = parts[1];
+
+  // 对整数部分添加千分位分隔符
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  // 合并整数部分和小数部分
+  const formattedNumber =
+    decimalPart !== undefined
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
+
+  // 添加货币符号，并根据 position 决定其位置
+  if (position === "left") {
+    return `${unit} ${formattedNumber}`;
+  } else {
+    return `${formattedNumber} ${unit}`;
+  }
+}
+
+/**
+ * 格式化倒计时
+ * @param seconds 总秒数
+ * @param format 自定义格式，支持：
+ *   H / HH   小时、两位小时
+ *   m / mm   分钟、两位分钟
+ *   s / ss   秒、两位秒
+ */
+export function FormatCountdown(seconds: number, format = "mm:ss") {
+  let h = Math.floor(seconds / 3600);
+  let m = Math.floor((seconds % 3600) / 60);
+  let s = seconds % 60;
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return format
+    .replace(/HH/g, pad(h))
+    .replace(/H/g, String(h))
+    .replace(/mm/g, pad(m))
+    .replace(/m/g, String(m))
+    .replace(/ss/g, pad(s))
+    .replace(/s/g, String(s));
+}
+
+export function getUserId() {
+  return uuid().toString();
+}
