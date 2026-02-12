@@ -1,6 +1,7 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
-// This page only renders when the app is built statically (output: 'export')
+// Root requests are rewritten by i18n middleware to /[locale].
+// If this route renders, the middleware did not rewrite as expected.
 export default function RootPage() {
-  redirect("/");
+  notFound();
 }

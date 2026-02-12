@@ -31,9 +31,16 @@ function CheckoutContent() {
   })} - ${tc("max_amount", {
     amount: formatMoney(AMOUNT_CONFIG.max, { decimal: 0 }),
   })}`;
+  const parseAmount = (raw: string | null): number | undefined => {
+    if (!raw) return undefined;
+    const value = Number(raw);
+    if (!Number.isFinite(value)) return undefined;
+    return Math.round(value * 100) / 100;
+  };
+
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState<number | undefined>(
-    urlAmount && !isNaN(parseInt(urlAmount, 10)) ? parseInt(urlAmount, 10) : 100
+    parseAmount(urlAmount) ?? 100
   );
   const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const [step, setStep] = useState<"card" | "crypto">("card");
@@ -99,12 +106,8 @@ function CheckoutContent() {
   );
 
   useEffect(() => {
-    if (urlAmount) {
-      const parsed = parseInt(urlAmount, 10);
-      if (!isNaN(parsed)) {
-        setAmount(parsed);
-      }
-    }
+    const parsed = parseAmount(urlAmount);
+    if (parsed !== undefined) setAmount(parsed);
   }, [urlAmount]);
 
   useEffect(() => {
