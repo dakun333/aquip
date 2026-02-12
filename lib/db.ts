@@ -7,21 +7,24 @@
  */
 import { neon, Pool } from "@neondatabase/serverless";
 
-// 优先使用 DATABASE_URL，其次兼容 NEON_DATABASE_URL
 const connectionString = process.env.DATABASE_URL;
 
-if (!connectionString) {
-  throw new Error("DATABASE_URL/NEON_DATABASE_URL is not set");
-}
-
 type NeonClient = ReturnType<typeof neon>;
-// 共享的 Pool 实例，Better-Auth 需要它
-const pool = new Pool({ connectionString });
+const notConfigured = () => {
+  throw new Error("Database connection is not configured");
+};
+
+const pool: Pool = connectionString
+  ? new Pool({ connectionString })
+  : ({ query: notConfigured } as unknown as Pool);
 const globalForDb = globalThis as unknown as {
   __db?: NeonClient;
 };
 
-const db: NeonClient = globalForDb.__db ?? neon(connectionString);
+const db: NeonClient = globalForDb.__db
+  ?? (connectionString
+    ? neon(connectionString)
+    : (notConfigured as unknown as NeonClient));
 
 // if (process.env.NODE_ENV !== "production") {
 globalForDb.__db = db;
